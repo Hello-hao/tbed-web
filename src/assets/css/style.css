@@ -1,0 +1,132 @@
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+body {
+    font-family: JetBrainsMono,Noto Sans SC,"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    overflow: hidden;
+}
+.layout-footer-center{
+    text-align: center;
+}
+.ivu-upload-drag{
+    background: rgba(255, 255, 255, 0);
+    border: 1px dashed #dcd9d9;
+}
+::-webkit-scrollbar{
+    width: 5px;
+    height: 7px;
+    background-color: #F5F5F5;
+}
+
+.Hollowed{
+    background: rgba(251,251,251,0.65);
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+    background-color: #989797;
+}
+
+
+
+/*以下是树选择器修改的样式 和首页保持一直*/
+
+.vue-treeselect__option-arrow {
+    width: 18px;
+    height: 18px;
+}
+.vue-treeselect__label{
+    color: #515a6e;
+    font-weight: 500;
+}
+.vue-treeselect__label-container {
+    font-size: 15px;
+    line-height: 36px;
+}
+
+.vue-treeselect__indent-level-4 .vue-treeselect__option {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-4 .vue-treeselect__option {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-4 .vue-treeselect__tip {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-4 .vue-treeselect__tip {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-5 .vue-treeselect__option {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-5 .vue-treeselect__option {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-5 .vue-treeselect__tip {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-5 .vue-treeselect__tip {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-6 .vue-treeselect__option {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-6 .vue-treeselect__option {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-6 .vue-treeselect__tip {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-6 .vue-treeselect__tip {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-7 .vue-treeselect__option {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-7 .vue-treeselect__option {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-7 .vue-treeselect__tip {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-7 .vue-treeselect__tip {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-8 .vue-treeselect__option {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-8 .vue-treeselect__option {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.vue-treeselect__indent-level-8 .vue-treeselect__tip {
+    padding-left: 0px;
+}
+[dir="rtl"] .vue-treeselect__indent-level-8 .vue-treeselect__tip {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
+
+
+
