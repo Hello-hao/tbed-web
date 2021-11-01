@@ -15,7 +15,7 @@
 
 官网(含Core版)：[http://Tbed.hellohao.cn](http://Tbed.hellohao.cn)
 
-前端源码：[https://github.com/Hello-hao/tbed-web](https://github.com/Hello-hao/tbed-web)
+后端源码：[https://github.com/Hello-hao/Tbed](https://github.com/Hello-hao/Tbed)
 
 文档地址：[http://doc.hellohao.cn](http://doc.hellohao.cn)
 
