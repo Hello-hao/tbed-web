@@ -158,6 +158,8 @@ export default {
         tosearch(){
             this.pageNum = 1;
             this.imglist = [];
+            this.selectIndex = [];
+            this.selectImgUrl = [];
             this.selectPhoto();
         },
         imgInfo (e) {
@@ -232,6 +234,8 @@ export default {
                             }
                         }
                     }
+                    this.selectIndex = [];
+                    this.selectImgUrl = [];
                     this.$Spin.hide();
                     if(res.data.code=='200'){
                         this.$Message.success(res.data.info);

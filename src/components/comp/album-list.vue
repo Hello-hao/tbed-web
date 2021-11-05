@@ -3,8 +3,8 @@
     <div style="margin:0 auto;max-height: 60vh;overflow-x: hidden;overflow-y: auto;">
       <Divider>画廊信息</Divider>
       <Row>
-        <Col span="12"><Input v-model="albumtitle" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend">标题</span></Input></Col>
-        <Col span="12"><Input v-model="password" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend">密码</span></Input></Col>
+        <Col :xs="24" :sm="24" :md="12" :lg="12"><Input v-model="albumtitle" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend" placeholder="画廊标题">标题</span></Input></Col>
+        <Col :xs="24" :sm="24" :md="12" :lg="12"><Input v-model="password" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend" placeholder="可留空">密码</span></Input></Col>
       </Row>
 
       <Divider>图片列表</Divider>
