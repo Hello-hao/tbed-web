@@ -11,6 +11,7 @@ body {
 .ivu-upload-drag{
     background: rgba(255, 255, 255, 0);
     border: 1px dashed #dcd9d9;
+    width: 100%;
 }
 ::-webkit-scrollbar{
     width: 5px;

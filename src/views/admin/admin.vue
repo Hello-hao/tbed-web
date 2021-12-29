@@ -10,6 +10,10 @@
 <!--            <img @click="goHome" :src="$store.state.metaInfo.logo" style="width: 135px;" v-if="$store.state.metaInfo.logo!=null || $store.state.metaInfo.logo!=''" />-->
             <img @click="goHome" :src="$store.state.metaInfo.logo==null?hellohaologo:$store.state.metaInfo.logo" style="width: 135px;"  />
           </MenuItem>
+          <MenuItem name="control" style="background: #515a6e;" @click.native="goHome">
+            <Icon type="md-home" class="menucolo"/>
+            <span class="menucolo">首 页</span>
+          </MenuItem>
           <MenuItem name="control" style="background: #515a6e;" @click.native="adminmenuItem('/',null)">
             <Icon type="md-speedometer" class="menucolo"/>
             <span class="menucolo">仪表盘</span>
@@ -57,7 +61,7 @@
           <Submenu name="men4" v-if="$store.state.RoleLevel=='admin'">
             <template slot="title">
               <Icon type="md-git-branch" class="menucolo"/>
-              <Badge dot :offset="wzxy" :count="isshow"><span class="menucolo" >更多</span></Badge>
+              <Badge dot :offset="wzxy" :count="isshow"><span class="menucolo" >更 多</span></Badge>
             </template>
             <MenuItem name="about" @click.native="adminmenuItem('/about','系统设置')" ><Badge dot :count="isshow" :offset="wzxy2">关于程序</Badge></MenuItem>
           </Submenu>
