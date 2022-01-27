@@ -113,9 +113,9 @@ export default {
   methods: {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
-        console.log(valid)
+        // console.log(valid)
         if (valid) {
-          console.log(this.formInline.username)
+          // console.log(this.formInline.username)
           if(!this.formInline.username){
             this.$Message.info('请输入用户名');
             return false;
@@ -140,7 +140,7 @@ export default {
             this.$Message.info('密码输入不一致');
             return false;
           }
-          console.log(JSON.stringify(this.formInline));
+          // console.log(JSON.stringify(this.formInline));
           // var params = {
           //   data: this.formInline
           // };
@@ -149,7 +149,6 @@ export default {
               "/user/register",
               this.formInline).then(res => {
                 this.$Spin.hide();
-                console.log(res);
                 if(res.status==200){
                   var json = res.data;
                   if(json.code=='200'){

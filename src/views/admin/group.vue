@@ -47,12 +47,12 @@
           </Select>
         </FormItem>
 
-        <FormItem label="图像压缩">
-          <i-switch v-model="formItem.compress" size="large">
-            <span slot="1">开启</span>
-            <span slot="0">关闭</span>
-          </i-switch>
-        </FormItem>
+<!--        <FormItem label="图像压缩">-->
+<!--          <i-switch v-model="formItem.compress" size="large">-->
+<!--            <span slot="1">开启</span>-->
+<!--            <span slot="0">关闭</span>-->
+<!--          </i-switch>-->
+<!--        </FormItem>-->
         <div style="color: rgb(228 102 70);font-size: 12px; font-weight: 200;">
           <p>分发群组优先级判定：</p>
           <p>未指定用户组的分发群组且已经分配给指定用户使用的优先级最高，其次是设置有用户组的分发群组。若以上所属的分发群组都没有指定，则一律进默认群组。</p>
@@ -115,19 +115,19 @@ export default {
             }
           }
         },
-        {
-          title: '无损压缩',
-          align:'center',
-          width:100,
-          // key: 'memory'
-          render: (h, params) => {
-            if(params.row.compress==1){
-              return (<Icon type="md-radio-button-off" title="已开启" size="20" color="#499c54" />);//h('span', {}, '开启');
-            }else{
-              return (<Icon type="md-power" title="未开启" size="20" color="#c75450" />);//h('span', {}, '关闭');
-            }
-          }
-        },
+        // {
+        //   title: '无损压缩',
+        //   align:'center',
+        //   width:100,
+        //   // key: 'memory'
+        //   render: (h, params) => {
+        //     if(params.row.compress==1){
+        //       return (<Icon type="md-radio-button-off" title="已开启" size="20" color="#499c54" />);//h('span', {}, '开启');
+        //     }else{
+        //       return (<Icon type="md-power" title="未开启" size="20" color="#c75450" />);//h('span', {}, '关闭');
+        //     }
+        //   }
+        // },
         {
           title: '操作',
           align:'center',
@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     toPageIndex(pageNum){
-      console.log(pageNum);
+      // console.log(pageNum);
       this.pageNum = pageNum;
       this.getUserList();
 

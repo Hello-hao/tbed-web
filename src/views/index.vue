@@ -1,14 +1,24 @@
 
 <template>
     <Layout style="width: 100%;height: 100%;background: #fff;background-repeat: no-repeat; background-size: 100% 100%; -moz-background-size: 100% 100%; ">
-      <Drawer title="资讯" placement="top" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">
-        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 125px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">
+<!--      <Drawer title="资讯" placement="top" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">-->
+<!--        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 125px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">-->
+<!--        </div>-->
+<!--        <div style="height: 50px; text-align: center; position: absolute; bottom: 10px; left: 0; right: 0; margin: auto;">-->
+<!--              <Checkbox style="font-size: 14px;" v-model="noticeSwitch">三天内不再通知</Checkbox>-->
+<!--              <p><Button shape="circle" @click="noticeChange"> 好 的 </Button></p>-->
+<!--        </div>-->
+<!--      </Drawer>-->
+
+      <Drawer title="资讯" placement="top" height ="276" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">
+        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 135px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">
         </div>
-        <div style="height: 50px; text-align: center; position: absolute; bottom: 10px; left: 0; right: 0; margin: auto;">
-              <Checkbox style="font-size: 14px;" v-model="noticeSwitch">三天内不再通知</Checkbox>
-              <p><Button shape="circle" @click="noticeChange"> 好 的 </Button></p>
+        <div style="height: 60px; text-align: center; position: absolute; bottom: 10px; left: 0; right: 0; margin: auto;">
+          <Checkbox style="font-size: 14px;" v-model="noticeSwitch">三天内不再通知</Checkbox>
+          <p><Button shape="circle" @click="noticeChange"> 好 的 </Button></p>
         </div>
       </Drawer>
+
       <Header :style="{position: 'fixed', width: '100%',zIndex:'1',padding:'0 10px',height: '64px',background: '#fff',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}" class="animate__animated animate__fadeInDownBig"  >
         <Menu mode="horizontal" style="height: 64px;" theme="light"  :active-name="$route.params.activeName">
           <div class="layout-logo" style="height: 100%;">

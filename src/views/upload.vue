@@ -68,7 +68,7 @@
           :action="this.$http.defaults.baseURL+'/upload'"
           type="drag"
           style="display:contents;width:120px;">
-        <div style="width: 120px;height:118px;/*line-height: 118px;*/">
+        <div style="width: 100%;height:118px;">
           <div style="width: 98px;height: 64px;margin: 0px auto;text-align: center;position: absolute;left: 0;right: 0;top: 30px;" >
             <Icon type="ios-camera" size="36"></Icon>
             <p style="text-align: center;color: #515a6e;font-size: xx-small;">拖拽图像到此处</p>

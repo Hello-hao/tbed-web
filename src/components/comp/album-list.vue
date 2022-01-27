@@ -58,7 +58,7 @@ export default {
         password:this.password,
         albumlist:this.albumlist
       }
-      console.log("====="+JSON.stringify(param))
+      // console.log("====="+JSON.stringify(param))
       request(
           "/SaveForAlbum",
           param,

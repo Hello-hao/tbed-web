@@ -6,7 +6,7 @@
           <Layout style="background: #fff;">
             <Header>
               <Icon type="md-finger-print" style="font-size: xx-large;" />
-              <span style="font-size: large; font-weight: bold;">Login</span>
+              <span style="font-size: 22px; font-weight: bold; letter-spacing: 2px; color: #5a5a5a;">Login</span>
             </Header>
             <Content>
             <Form ref="formInline" :model="formInline" :rules="ruleInline" inline @submit.native.prevent>
@@ -168,7 +168,7 @@ export default {
             return false;
           }
 
-          console.log(JSON.stringify(this.formInline));
+          // console.log(JSON.stringify(this.formInline));
           // var params = {
           //   data: this.formInline
           // };
