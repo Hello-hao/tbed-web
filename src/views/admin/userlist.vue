@@ -1,5 +1,5 @@
 <template>
-  <Layout style="margin-top: 50px;">
+  <Layout style="margin-top: 50px;margin-bottom: 50px;">
       <Content :style="{margin: '15px 20px 0'}">
         <p style="position: fixed;right: 58px;z-index: 1;bottom: 68px;">
           <Button type="primary" shape="circle" icon="ios-search" style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;" @click="showSeach">筛 选</Button>

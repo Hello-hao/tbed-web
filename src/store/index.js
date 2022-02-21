@@ -7,9 +7,9 @@ vue.use(vuex)
 
 const store = new vuex.Store({
     state:{
-        version:20220127,
+        version:20220221,
         serverHost:null,
-        copyAllUrl:'',//一键复制存储内容
+        copyAllUrl:null,//一键复制存储内容
         userName:'' || localStorage.getItem('userName'),
         RoleLevel:'' || localStorage.getItem('RoleLevel'),
         linkName:'name',
@@ -42,7 +42,6 @@ const store = new vuex.Store({
     mutations:{
         handleUserName: (state, name) => {
             state.userName = name
-            // 把登录的用户的名保存到localStorage中，防止页面刷新，导致vuex重新启动，用户名就成为初始值（初始值为空）的情况
             localStorage.setItem('userName', name)
         },
         setCopyAllUrl(state, copyAllUrl) {

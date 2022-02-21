@@ -29,13 +29,14 @@ export default {
             selectImgUrl:[],
             bucketname:null,
             bucketlist:[],
+            selectUserType:'me',
             searchtype:'1',//查询的文本类型
             searchtext:null,//查询的文本
             searchbucket:'',
             searchStartDate:null,
             searchStopDate:null,
             submitData:[],
-            toolBottom:5,
+            toolBottom:8,
             nextButloading:false,
             btntext:'加载更多',
             treePopup: false,
@@ -46,6 +47,7 @@ export default {
         }
     },
     methods: {
+
         selectPhoto(){
             this.issearchimg = false;
             // this.$Spin.show();
@@ -53,8 +55,14 @@ export default {
             var paramJson={};
             paramJson.pageNum=this.pageNum;
             paramJson.pageSize=this.pageSize;
-            paramJson.selecttype = this.searchtype;
-            paramJson.username = this.searchtext;
+            paramJson.selectUserType = this.selectUserType;
+            if(this.selectUserType=='me'){
+                paramJson.selecttype = null;
+                paramJson.username = null;
+            }else{
+                paramJson.selecttype = this.searchtype;
+                paramJson.username = this.searchtext;
+            }
             paramJson.source=this.searchbucket;
             paramJson.starttime=this.searchStartDate==''?null:this.searchStartDate;
             paramJson.stoptime=this.searchStopDate==''?null:this.searchStopDate;

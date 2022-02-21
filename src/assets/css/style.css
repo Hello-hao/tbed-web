@@ -5,6 +5,16 @@ body {
     font-weight: 400;
     overflow: hidden;
 }
+.upcard{
+    min-height: 260px;
+    background-size:  contain;
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    background-image: url("../img/uploadImg.png");
+}
+.ivu-card-head {
+    border-bottom: 0px solid #6b6b6b;
+}
 .layout-footer-center{
     text-align: center;
 }

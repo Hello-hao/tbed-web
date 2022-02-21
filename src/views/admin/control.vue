@@ -64,23 +64,9 @@
 }
 </style>
 
-<!--
-仪表盘显示内容：
-管理员：图片总数  用户总数  非法图片  游客容量
-个人 ： 我的图片数  我的画廊  全景图总数  我的容量  更多（token）
-
-
-图：
-管理员：本站本年每月展示总数  用户上传排名
-用户 个人本年每月总数
-个人 token
-
-
-
--->
 <template>
 
-  <Layout style="margin-top: 50px;">
+  <Layout style="margin-top: 50px;margin-bottom: 50px;">
     <Spin size="large" fix v-if="spinShow"></Spin>
       <Content :style="{margin: '15px 20px 0', minHeight: '500px'}">
         <Row :gutter="16" v-if="this.$store.state.RoleLevel=='admin' " class="animate__animated animate__fadeIn animate__delay-0.6s">

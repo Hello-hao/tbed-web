@@ -19,6 +19,8 @@ import './assets/css/style.css'
 import md5 from "js-md5";
 import "babel-polyfill";
 import locStorage from './assets/js/utils/locStorage.js'
+import img404 from './assets/img/img404.jpg'
+import imgloading from './assets/img/imgloading.gif'
 
 Vue.config.productionTip = false
 
@@ -67,8 +69,11 @@ Vue.use(Iview).use(preview,options).use(Viewer,{
   }
 }).use(MetaInfo)
 
+// 配置项
 Vue.use(VueLazyload, {
   preLoad: 1.3,
+  error: img404,
+  loading: imgloading,
   attempt: 1
 })
 

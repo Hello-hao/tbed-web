@@ -1,22 +1,38 @@
 <template>
-  <Layout style="margin-top: 50px;">
+  <Layout style="margin-top: 50px;margin-bottom: 50px;">
       <Content :style="{margin: '15px 20px 0'}">
         <Row :gutter="16" >
           <Col flex="1" v-for="(sto,index) in storageList" :key="index">
             <Card :bordered="true" :shadow="true" style="margin-top: 10px;min-width: 300px;">
-              <p slot="title" style="display: inline-block;height: 25px;"><img style="max-width: 85px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')" /> <Tooltip :content="(takeEffect(sto.id) || sto.storageType==5)?'当前状态:可用':'当前状态:不可用'" theme="light" style="float: right;"> <Icon type="md-radio-button-off" size="20" color="#499c54" v-if="(takeEffect(sto.id) || sto.storageType==5)" /> <Icon type="md-power" size="20" color="#c75450" v-else /> </Tooltip></p>
+<!--              <p slot="title" style="display: inline-block;height: 25px;"><img style="max-width: 85px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')" /> <Tooltip :content="(takeEffect(sto.id) || sto.storageType==5)?'当前状态:可用':'当前状态:不可用'" theme="light" style="float: right;"> <Icon type="md-radio-button-off" size="20" color="#499c54" v-if="(takeEffect(sto.id) || sto.storageType==5)" /> <Icon type="md-power" size="20" color="#c75450" v-else /> </Tooltip></p>-->
+              <div style="text-align: center;">
+                <img style="width: 80px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')" />
+                <p style="color: #545454;font-size: 14px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;max-width: 130px; margin: auto;">{{sto.keyname}}</p>
+              </div>
+
               <div class="stostyle">
-                <p >{{sto.keyname}}</p>
-                <p style="position: absolute; bottom: 33px;"><span>已用空间：</span><span style="font-weight: bold;color: #464c5b;">
-                  {{usedCapacity(sto.id)}}
-                </span></p>
-                <ButtonGroup size="small" shape="circle" class="cardSty">
-                  <Button type="primary" @click="getStorageById(sto.id)">
-                    <Tooltip content="编辑"  theme="light" style="float: right;">
-                    <Icon type="md-build" />
-                    </Tooltip>
-                  </Button>
-                </ButtonGroup>
+                <!--                <p >{{sto.keyname}}</p>-->
+
+                <!--                <p style="position: absolute; bottom: 33px;">-->
+                <Tag color="primary">{{usedCapacity(sto.id)}}</Tag>
+                <!--                <Tag color="geekblue">{{usedCapacity(sto.id)}}</Tag>-->
+                <Tag color="success" v-if="(takeEffect(sto.id) || sto.storageType==5)">可用</Tag>
+                <Tag color="error" v-else>停用</Tag>
+                <!--                  <Tooltip :content="(takeEffect(sto.id) || sto.storageType==5)?'当前状态:可用':'当前状态:不可用'" theme="light" style="float: right;"> <Icon type="md-radio-button-off" size="20" color="#499c54" v-if="(takeEffect(sto.id) || sto.storageType==5)" /> <Icon type="md-power" size="20" color="#c75450" v-else /> </Tooltip>-->
+                <!--                </p>-->
+                <p style="margin-top: 10px;" ><a @click="getStorageById(sto.id)">编辑</a><Divider type="vertical" /><a @click="deleStorage(sto.id,index)">删除</a></p>
+                <!--                <ButtonGroup size="small" shape="circle" class="cardSty">-->
+                <!--                  <Button type="primary" @click="getStorageById(sto.id)">-->
+                <!--                    <Tooltip content="编辑"  theme="light" style="float: right;">-->
+                <!--                    <Icon type="md-build" />-->
+                <!--                    </Tooltip>-->
+                <!--                  </Button>-->
+                <!--                  <Button type="primary" :disabled="sto.storageType==5" @click="deleStorage(sto.id,index)" style="background: #e86868;border-color: #e86868;">-->
+                <!--                    <Tooltip content="删除" theme="light" style="float: right;">-->
+                <!--                    <Icon color="#FFF" type="md-trash" />-->
+                <!--                    </Tooltip>-->
+                <!--                  </Button>-->
+                <!--                </ButtonGroup>-->
               </div>
             </Card>
           </Col>
@@ -152,11 +168,15 @@
 </script>
 <style scoped>
 .stostyle{
-  height: 80px;
+  height: 45px;
   width: 80px;
   min-width: 180px;
   font-size: 14px;
-
+  color: #6b6b6b;
+  text-align: center;
+  margin: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 .cardSty{
   position: absolute;
@@ -166,5 +186,4 @@
 .ivu-card-head {
   border-bottom: 0px solid #e8eaec;
 }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
 
-  <Layout style="margin-top: 50px;">
+  <Layout style="margin-top: 50px;margin-bottom: 50px;">
       <Content :style="{margin: '15px 20px 0'}">
 
         <Card class="cardShadow" style="margin-top: 10px;padding-left: 8px; padding-right: 8px;">

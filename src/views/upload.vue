@@ -34,10 +34,10 @@
     </Row>
   </div>
 
-  <Card id="box" class="mycard img_list_box animate__animated  animate__delay-0.8s animate__fadeInUp" :style="{background:'linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('+uploadImg+')',minHeight:'260px',backgroundSize:  '262px',backgroundRepeat: 'no-repeat'}"
+  <Card id="box" class="mycard upcard img_list_box animate__animated  animate__delay-0.8s animate__fadeInUp"
          :class="{'Hollowed':false,'testback':true}">
     <div class="img_list_arr" style="text-align:center;">
-      <div class="demo-upload-list" v-for="(item,index) in uploadList" v-bind:key="item.uid">
+      <div class="demo-upload-list animate__animated animate__delay-1.5s  animate__fadeIn" v-for="(item,index) in uploadList" v-bind:key="item.uid">
         <template v-if="item.status === 'finished'" >
           <img style="cursor:pointer;"  preview="2" :data-pswp-uid="index" :preview-text="item.name"  :src="item.response.data.url" />
           <div class="demo-upload-list-cover">
@@ -53,6 +53,7 @@
       <Upload
           ref="upload"
           :paste="true"
+          :disabled="getUploadSwitch"
           :show-upload-list="false"
           :default-file-list="defaultList"
           :format="uploadInfo.suffix"
@@ -69,9 +70,12 @@
           type="drag"
           style="display:contents;width:120px;">
         <div style="width: 100%;height:118px;">
-          <div style="width: 98px;height: 64px;margin: 0px auto;text-align: center;position: absolute;left: 0;right: 0;top: 30px;" >
+          <div style="width: 98px;height: 64px;margin: 0px auto;text-align: center;position: absolute;left: 0;right: 0;top: 30px;" v-show="!getUploadSwitch">
             <Icon type="ios-camera" size="36"></Icon>
             <p style="text-align: center;color: #515a6e;font-size: xx-small;">拖拽图像到此处</p>
+          </div>
+          <div style="height: 64px;margin: 0px auto;text-align: center;position: absolute;left: 0;right: 0;top: 30px;" v-show="getUploadSwitch">
+            <p style="text-align: center;color: #515a6e;font-size: x-small;">{{this.uploadInfo.uploadInfo}}</p>
           </div>
         </div>
       </Upload>
@@ -122,10 +126,12 @@
         <br />
         <Form  @submit.native.prevent>
           <FormItem >
-            <Input v-model="imgUrl" prefix="ios-contact" placeholder="填写图片URL" size="large" style="width: 100%" />
+            <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"   placeholder="图像链接请按照每行一条填写" />
           </FormItem>
+          <p style="text-align: center;color: #d55757;" v-show="tempURLErr" >您所输入的行数已经超过单次可上传的数量</p>
+          <p style="text-align: center;color: #5f5f5f;" v-text="'单次批量上传 '+tempLink+'/'+this.uploadInfo.imgcount"></p>
           <FormItem>
-            <Button type="primary" :loading="loading" icon="md-cloud-upload" long shape="circle" @click="uploadForUrl" >UPLOAD</Button>
+            <Button :disabled="tempURLErr" type="primary" :loading="loading" icon="md-cloud-upload" long shape="circle" @click="uploadForUrl" >UPLOAD</Button>
           </FormItem>
         </Form>
       </Modal>
@@ -144,7 +150,10 @@
 
     </div>
   </Card>
-
+  <Spin fix v-if="spinShow">
+    <Icon type="ios-loading" size=42 style="color: #5f5f5f" class="hellohao-spin-icon-load"></Icon>
+    <div style="line-height: 42px;color: #5f5f5f">批量上传中，请耐心等待</div>
+  </Spin>
 </div>
 
 </template>
@@ -237,23 +246,10 @@
 .demo::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }
-
-.demo {
-  scrollbar-width: none; /* firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 .infotitle{
   font-size: 16px;
 }
-.testback{
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('http://img.wwery.com/Hellohao/386f20802054547.png');
-  /*background-position: 100% 100%;这个是按从左往右，从上往下的百分比位置进行调整*/
-  background-size:  300px;/*按比例缩放*/
-  /*background-size: 100px 100px;!*这个是按数值缩放*!*/
-  background-repeat: no-repeat;/*还有repeat-x,y等*/
-}
+
 .myupdiv{
   text-align:center;
   height: 80px;

@@ -170,7 +170,7 @@ export default {
                     break;
                 }
             }
-            return b;
+            return b==0?'0B ':b;
         },
         getBucketName(id) {
             for (let i = 0; i < this.bucketlist.length; i++) {

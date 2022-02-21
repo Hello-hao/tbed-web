@@ -1,12 +1,17 @@
 <template>
 
-  <Layout style="margin-top: 50px;">
+  <Layout style="margin-top: 50px;margin-bottom: 50px;">
 
     <Drawer title="图像类别" :closable="false"  v-model="treePopup"  :width="screenWidth<=368?screenWidth:368">
 
       <Form  @submit.native.prevent style="margin-top: 30px;">
-
-        <FormItem label="存储源">
+        <FormItem  >
+          <RadioGroup v-model="selectUserType" type="button" >
+            <Radio label="me">我的图像</Radio>
+            <Radio label="all">所有图像</Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="存储源" v-if="$store.state.RoleLevel=='admin'">
               <Select v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
                 <Option v-for="item in bucketlist" :value="item.storageType" :key="item.id">{{ item.keyname }}</Option>
               </Select>
@@ -17,7 +22,7 @@
         <FormItem label="结束日期">
           <DatePicker @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
         </FormItem>
-        <FormItem label="用户名">
+        <FormItem label="用户名" v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
           <Input v-model="searchtext" placeholder="填写用户名">
             <Select v-model="searchtype" slot="prepend" style="width: 100px">
               <Option value="1">包含</Option>
@@ -25,7 +30,7 @@
             </Select>
           </Input>
         </FormItem>
-        <FormItem label="图像类型">
+        <FormItem label="图像类型" >
           <CheckboxGroup>
             <Checkbox label="违规图片" v-model="violation" border></Checkbox>
           </CheckboxGroup>
@@ -66,8 +71,10 @@
             <Col flex="1" v-for="(item,index) in imglist" :key="index">
               <div class="imgdivstyle"  :class="[viewType==1?'divimgstyle-max':'divimgstyle-min']">
                 <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>
-                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" :src="item.imgurl+''"   >
-<!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" :src="'666'"  onerror="this.src='http://tc.hellohao.cn/img/img404.jpg'" >-->
+<!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" :src="item.imgurl+''"   >-->
+
+                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
+
                 <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">
                   <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>
                   <Icon style="cursor:pointer;" type="md-link icostyle cobyOrderSn"   title="链接" data-clipboard-action="copy" :data-clipboard-text="item.imgurl" @click.native="copy" />

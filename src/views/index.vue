@@ -1,6 +1,6 @@
 
 <template>
-    <Layout style="width: 100%;height: 100%;background: #fff;background-repeat: no-repeat; background-size: 100% 100%; -moz-background-size: 100% 100%; ">
+    <Layout  style="width: 100%;height: 100%;background: #fff;background-repeat: no-repeat; background-size: 100% 100%; -moz-background-size: 100% 100%; ">
 <!--      <Drawer title="资讯" placement="top" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">-->
 <!--        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 125px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">-->
 <!--        </div>-->
@@ -77,16 +77,27 @@
         </Menu>
       </Header>
 
-      <Content :style="{margin: '50px auto', minWidth:'45vh',width: '95%',background: '#FFF'}" >
-          <router-view ref='indexTarget' @showBtn="isShowBtn"></router-view>
-          <div :offset-bottom="10" style="position: fixed;right: 55px;bottom: 132px;" class="animate__animated" :class="{'animate__bounce' : isShow}" v-show="isShow">
-            <ButtonGroup shape="circle">
-              <Button  size="large" icon="md-bulb" style="font-size: 19px;"  title="更多功能" @click="getTools"></Button>
-              <Button  size="large"  class="cobyOrderSn" icon="ios-copy" style="font-size: 22px;" title="复制全部" data-clipboard-action="copy" :data-clipboard-text="urlTexts"  @click="copyAll"></Button>
 
-            </ButtonGroup>
-          </div>
-        </Content>
+      <Content :style="{margin: '50px auto', minWidth:'45vh',width: '95%',background: '#FFF'}" >
+        <router-view ref='indexTarget' @showBtn="isShowBtn"></router-view>
+        <div :offset-bottom="10" style="position: fixed;right: 55px;bottom: 132px;" class="animate__animated" :class="{'animate__bounce' : isShow}" v-show="isShow">
+          <ButtonGroup shape="circle">
+            <Button  size="large" icon="md-color-palette " style="font-size: 19px;"  title="更多功能" @click="getTools"></Button>
+            <Button  size="large" icon="ios-copy" style="font-size: 19px;"  title="复制全部" @click="getCopyMsg"></Button>
+          </ButtonGroup>
+        </div>
+      </Content>
+
+<!--      <Content :style="{margin: '50px auto', minWidth:'45vh',width: '95%',}" v-show="this.$store.state.preludeSwitch">-->
+<!--        <router-view ref='indexTarget' @showBtn="isShowBtn"></router-view>-->
+<!--        <div v-show="isShow" :offset-bottom="10" style="position: fixed;right: 55px;bottom: 132px;" class="animate__animated btnStyle" :class="{'animate__bounce' : isShow}" >-->
+<!--          <ButtonGroup shape="circle">-->
+<!--            <Button  size="large" icon="md-color-palette " style="font-size: 19px;"  title="更多功能" @click="getTools"></Button>-->
+<!--            <Button  size="large" icon="ios-copy" style="font-size: 19px;"  title="复制全部" @click="getCopyMsg"></Button>-->
+<!--            &lt;!&ndash;              <Button  size="large"  class="cobyOrderSn " icon="ios-copy" style="font-size: 20px;background: #FFF;" title="复制全部" data-clipboard-action="copy" :data-clipboard-text="urlTexts"  @click="copyAll"></Button>&ndash;&gt;-->
+<!--          </ButtonGroup>-->
+<!--        </div>-->
+<!--      </Content>-->
 
       <Footer class="layout-footer-center " style="position: fixed; bottom: 0; width: 100%;"  v-html="this.$store.state.metaInfo.links?this.$store.state.metaInfo.links:''" ></Footer>
 
@@ -96,6 +107,23 @@
           <div style="text-align:center" v-html="$store.state.metaInfo.aboutinfo">
 
           </div>
+        </Card>
+      </Modal>
+
+      <Modal  v-model="isCopyMsg" :footer-hide="true">
+        <br />
+        <Card :dis-hover="true" :bordered="false" :shadow="false">
+          <Divider><span style=" color: #5a5a5a;">一键复制格式</span></Divider>
+          <Button type="success"  class="cobyOrderSn_url" data-clipboard-action="copy" :data-clipboard-text="urlTexts_url"  @click="copyAll('url')"  long>URL格式</Button>
+          <br><br>
+          <Button type="primary" class="cobyOrderSn_html" data-clipboard-action="copy" :data-clipboard-text="urlTexts_html" @click="copyAll('html')" long>HTML格式</Button>
+          <br><br>
+          <Button type="warning" class="cobyOrderSn_md" data-clipboard-action="copy" :data-clipboard-text="urlTexts_md" @click="copyAll('md')" long>Markdown格式</Button>
+          <br><br>
+          <Button type="error" class="cobyOrderSn_diy" data-clipboard-action="copy" :data-clipboard-text="urlTexts_diy" @click="copyAll('diy')" long>自定义格式</Button>
+          <br><br>
+          <Input v-model="myurl" placeholder="请输入要复制的链接格式"  :clearable="true" />
+          <p style="color: #6b6b6b;font-size: 12px;">格式说明：<br />在输入框填入你想生成并复制的链接格式，格式中的图片链接用<b style="color: #eb3e21;"> @myurl@ </b> 通配符填充</p>
         </Card>
       </Modal>
 
@@ -119,6 +147,12 @@ export default {
       actName:'ishome',
       isModule:'imgUpload',//imgUpload
       isShow:false,
+      isCopyMsg:false,
+      myurl:'[url=@myurl@][img]@myurl@[/img][/url]',
+      urlTexts_url:'',
+      urlTexts_html:'',
+      urlTexts_md:'',
+      urlTexts_diy:'',
 
     }
   },
@@ -147,14 +181,63 @@ export default {
     isShowBtn(arr){
       if(arr.length>0){
         this.isShow = true;
+      }else{
+        this.isShow = false;
       }
     },
     getTools(){
       this.$refs.indexTarget.allSett();
     },
-    copyAll(){
-      this.urlTexts = this.$store.state.copyAllUrl;
-      var clipboard = new this.clipboard('.cobyOrderSn')
+    getCopyMsg(){
+      let arr = this.$store.state.copyAllUrl;
+      if(arr==null || arr==undefined || arr.length==0){
+        return;
+      }
+      this.isCopyMsg = true;
+      if(arr.length>0){
+        this.urlTexts_url = '';
+        this.urlTexts_html = '';
+        this.urlTexts_md = '';
+        for (let i = 0; i < arr.length; i++) {
+          if(arr[i].response.code=='200'){
+            this.urlTexts_url+=arr[i].response.data.url+'\n'
+            this.urlTexts_html+= '<img src="'+arr[i].response.data.url+'" alt="'+arr[i].response.data.name+'" />\n'
+            this.urlTexts_md+= '!['+arr[i].response.data.name+']('+arr[i].response.data.url+')\n';
+          }
+        }
+      }
+    },
+    copyAll(type){
+      let arr = this.$store.state.copyAllUrl;
+      var clipboard = null;
+      switch(type)
+      {
+        case 'url':
+          clipboard = new this.clipboard('.cobyOrderSn_url');
+          break;
+        case 'html':
+          clipboard = new this.clipboard('.cobyOrderSn_html');
+          break;
+        case 'md':
+          clipboard = new this.clipboard('.cobyOrderSn_md');
+          break;
+        default:
+          clipboard = new this.clipboard('.cobyOrderSn_diy');
+          if(this.myurl.search("@myurl@") == -1){
+            this.$Message.warning('链接格式中必须包含通配符：@myurl@');
+            return;
+          }
+          if(arr.length>0){
+            this.urlTexts_diy = '';
+            let reg=new RegExp('@myurl@','g')//g代表全部
+            for (let i = 0; i < arr.length; i++) {
+              if(arr[i].response.code=='200'){
+                var temp=this.myurl.replace(reg,arr[i].response.data.url);
+                this.urlTexts_diy+=temp+'\n'
+              }
+            }
+          }
+      }
       clipboard.on('success', e => {
         this.$Message.success('复制成功');
         // 释放内存

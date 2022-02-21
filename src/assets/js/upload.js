@@ -44,7 +44,8 @@ export default {
             uploadInfo:{
                 suffix:null,
                 filesize:null,
-                imgcount:null,
+                imgcount:1,
+                uploadSwitch:0,
             },
             isAlbum:false,
             ViewURL:null,
@@ -54,8 +55,7 @@ export default {
                 "Authorization":localStorage.getItem('Authorization')
             },
             data:{
-                day:0,
-                classifications:null
+                day:0
             },
             imgListShow:'show',
             selectIndex:[],
@@ -76,7 +76,12 @@ export default {
             dayList:[{"label":"永久","value":0},{"label":"1天","value":1},{"label":"3天","value":3},{"label":"7天","value":7},{"label":"30天","value":30}],
             IsShowtagMsg:false,
             tagInfo:null,
-            tempNum:0//验证是否提示过单次上传个数弹窗
+            tempNum:0,//验证是否提示过单次上传个数弹窗
+            tempLink:0,
+            tempURLErr:false,
+            upUrlNum:-1,
+            ismsg:null,
+            spinShow:false
 
         }
     },
@@ -104,6 +109,8 @@ export default {
                                 this.$Message.success(res.data.info);
                                 const fileList = this.$refs.upload.fileList;
                                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+                                this.$store.commit("setCopyAllUrl", this.$refs.upload.fileList);
+                                this.$emit('showBtn',this.uploadList);
                             }else{
                                 this.$Message.error(res.data.info);
                             }
@@ -134,8 +141,10 @@ export default {
             if(res.length>0){
                 this.images.push(res[0]);
             }
-            let urlText = this.$store.state.copyAllUrl+res.data.url+'\n';
-            this.$store.commit("setCopyAllUrl", urlText);
+            // let urlText = this.$store.state.copyAllUrl+res.data.url+'\n';
+            // this.$store.commit("setCopyAllUrl", urlText);
+            this.$store.commit("setCopyAllUrl", this.$refs.upload.fileList);
+
             this.$emit('showBtn',this.uploadList);
             const box = document.getElementById('box');
             box.scrollTop = box.scrollHeight;
@@ -194,45 +203,81 @@ export default {
 
         },
         uploadForUrl(){
+            if(this.imgUrl==null || this.imgUrl==''){
+                this.$Message.warning("请先输入图像链接");
+                return;
+            }
             if(this.imgUrl!=null && this.imgUrl!=''){
                 if(this.imgUrl.indexOf("http")!=-1 && this.imgUrl.indexOf("://") !=-1 && this.imgUrl.indexOf(".") !=-1){
                     this.loading = true;
-                    this.sendUploadForUrl();
+                    this.sendUploadForUrl(this.imgUrl);
+                    this.loading = false;
+                    this.urlUploadMsg = false;
+                    this.spinShow = true;
                 }else{
                     this.$Message.warning("请输入正确格式的链接地址");
                 }
             }else{
                 this.$Message.warning("请先输入图像链接");
             }
-
         },
-        sendUploadForUrl(){
+        sendUploadForUrl(urlText){
             var param={
                 day:0,
-                imgUrl:this.imgUrl
+                imgUrl:urlText
             }
             request(
                 "/uploadForUrl",
-                param).then(res => {
-                this.loading = false;
-                this.urlUploadMsg = false;
+                param,1000 * 60 * 120).then(res => {
+                // this.loading = false;
+                // this.urlUploadMsg = false;
+                this.spinShow = false;
+                // setTimeout(this.ismsg, 1);
                 if(res.status==200){
+                    this.upUrlNum++;
                     if(res.data.code=='200'){
-                        var json = {
-                            "status":"finished",
-                            "name":"link.png",
-                            "size":0,
-                            "percentage":100,
-                            "uid":this.getUuid(14,14),
-                            "showProgress":false,
-                            "response":res.data,
-                            "exceptions":null
+                        console.log("URl上传成功返回值测试");
+                        console.log(res.data);
+                        let jsonData = res.data.data;
+                        if(jsonData.urls.length>0){
+                            for (let i = 0; i < jsonData.urls.length; i++) {
+                                var json = {
+                                    "status":"finished",
+                                    "name":"link.png",
+                                    "size":0,
+                                    "percentage":100,
+                                    "uid":this.getUuid(14,14),
+                                    "showProgress":false,
+                                    "response":jsonData.urls[i],
+                                    "exceptions":null
+                                }
+                                this.$refs.upload.fileList.push(json);
+                                // let urlText = this.$store.state.copyAllUrl+jsonData.urls[i].url+'\n';
+                                // this.$store.commit("setCopyAllUrl", urlText);
+                            }
+                            this.$store.commit("setCopyAllUrl", this.$refs.upload.fileList);
+                            this.$emit('showBtn',this.uploadList);
                         }
-                        this.$refs.upload.fileList.push(json);
-                        let urlText = this.$store.state.copyAllUrl+res.data.url+'\n';
-                        this.$store.commit("setCopyAllUrl", urlText);
-                        this.$emit('showBtn',this.uploadList)
-                        this.$Message.success("上传成功");
+                        this.imgUrl = null;
+                        var text = "";
+                        if(jsonData.excess>0){
+                            text = "欲上传总数为: <font color='#6495ed' style='font-size: 16px;'>"+jsonData.counts+
+                                "</font><br/>上传失败数为: <font color='#a52a2a' style='font-size: 16px;'>"+jsonData.errcounts+
+                                "</font><br/>受系统限制单次上传数量限制，其中<font color='#ff7f50' style='font-size: 16px; '>"+jsonData.excess+
+                                "</font>个链接不被执行上传操作";
+                        }else{
+                            text = "欲上传总数为: <font color='#6495ed' style='font-size: 16px;'>"+jsonData.counts+
+                                "</font><br/>上传失败数为: <font color='#a52a2a' style='font-size: 16px;'>"+jsonData.errcounts;
+                        }
+                        this.$Modal.info({
+                            title: "批量上传执行完毕",
+                            content: text
+                        });
+                        // this.$Message.success({
+                        //     content: "批量上传执行完毕,共",
+                        //     duration: 5
+                        // });
+
                     }else{
                         this.$Message.warning(res.data.info);
                     }
@@ -242,8 +287,8 @@ export default {
                 }
             }).catch(err => {
                 this.$Spin.hide();
-                this.loading = false;
-                this.urlUploadMsg = false;
+                // this.loading = false;
+                // this.urlUploadMsg = false;
                 console.log(err);
                 this.$Message.error('服务器请求错误');
             })
@@ -327,7 +372,11 @@ export default {
             this.isAlbum=true;
         },
         showUrlUploadMsg(){
-            this.urlUploadMsg = true;
+            if(this.uploadInfo.uploadSwitch==1){
+                this.urlUploadMsg = true;
+            }else{
+                this.$Message.warning(this.uploadInfo.uploadInfo);
+            }
         },
         showtermMsg(){
             this.termMsg = true;
@@ -379,6 +428,22 @@ export default {
             }
             return uuid.join('');
         },
+        onGetLines() {
+            var tempText = this.imgUrl;
+
+            if(this.imgUrl==''){
+                this.tempLink = 0;
+            }else{
+                let lines = tempText.split(/\r*\n/);
+                let linesCount = lines.length - (navigator.userAgent.indexOf('MSIE') !== -1);
+                this.tempLink = linesCount;
+                if(this.uploadInfo.imgcount<linesCount){
+                    this.tempURLErr = true;
+                }else{
+                    this.tempURLErr = false;
+                }
+            }
+        }
 
     },
     mounted () {
@@ -392,7 +457,9 @@ export default {
         Treeselect
     },
     computed:{
-
+        getUploadSwitch:function(){
+            return this.uploadInfo.uploadSwitch==1?false:true;
+        },
     }
 
 }
