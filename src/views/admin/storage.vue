@@ -9,30 +9,11 @@
                 <img style="width: 80px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')" />
                 <p style="color: #545454;font-size: 14px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;max-width: 130px; margin: auto;">{{sto.keyname}}</p>
               </div>
-
               <div class="stostyle">
-                <!--                <p >{{sto.keyname}}</p>-->
-
-                <!--                <p style="position: absolute; bottom: 33px;">-->
                 <Tag color="primary">{{usedCapacity(sto.id)}}</Tag>
-                <!--                <Tag color="geekblue">{{usedCapacity(sto.id)}}</Tag>-->
                 <Tag color="success" v-if="(takeEffect(sto.id) || sto.storageType==5)">可用</Tag>
                 <Tag color="error" v-else>停用</Tag>
-                <!--                  <Tooltip :content="(takeEffect(sto.id) || sto.storageType==5)?'当前状态:可用':'当前状态:不可用'" theme="light" style="float: right;"> <Icon type="md-radio-button-off" size="20" color="#499c54" v-if="(takeEffect(sto.id) || sto.storageType==5)" /> <Icon type="md-power" size="20" color="#c75450" v-else /> </Tooltip>-->
-                <!--                </p>-->
-                <p style="margin-top: 10px;" ><a @click="getStorageById(sto.id)">编辑</a><Divider type="vertical" /><a @click="deleStorage(sto.id,index)">删除</a></p>
-                <!--                <ButtonGroup size="small" shape="circle" class="cardSty">-->
-                <!--                  <Button type="primary" @click="getStorageById(sto.id)">-->
-                <!--                    <Tooltip content="编辑"  theme="light" style="float: right;">-->
-                <!--                    <Icon type="md-build" />-->
-                <!--                    </Tooltip>-->
-                <!--                  </Button>-->
-                <!--                  <Button type="primary" :disabled="sto.storageType==5" @click="deleStorage(sto.id,index)" style="background: #e86868;border-color: #e86868;">-->
-                <!--                    <Tooltip content="删除" theme="light" style="float: right;">-->
-                <!--                    <Icon color="#FFF" type="md-trash" />-->
-                <!--                    </Tooltip>-->
-                <!--                  </Button>-->
-                <!--                </ButtonGroup>-->
+                <p style="margin-top: 10px;" ><a @click="getStorageById(sto.id)">编辑</a></p>
               </div>
             </Card>
           </Col>

@@ -13,13 +13,13 @@
 
 开源版编译包下载: [下载开源版程序包](https://github.com/Hello-hao/Tbed/releases)
 
-官网(含Core版)：[http://Tbed.hellohao.cn](http://Tbed.hellohao.cn)
+官网(含Core版)：[https://Tbed.hellohao.cn](http://Tbed.hellohao.cn)
 
 后端源码：[https://github.com/Hello-hao/Tbed](https://github.com/Hello-hao/Tbed)
 
-文档地址：[http://doc.hellohao.cn](http://doc.hellohao.cn)
+文档地址：[https://doc.hellohao.cn](http://doc.hellohao.cn)
 
-程序展示：[http://tc.hellohao.cn](http://tc.hellohao.cn)
+程序展示：[https://tc.hellohao.cn](http://tc.hellohao.cn)
 
-作者博客：[http://www.hellohao.cn](http://www.hellohao.cn)
+作者博客：[https://www.hellohao.cn](http://www.hellohao.cn)
 
