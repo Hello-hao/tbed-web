@@ -9,7 +9,6 @@
               <span style="font-size: large; font-weight: bold;">Register</span>
             </Header>
             <Content>
-<!--               @submit.native.prevent-->
             <Form ref="formInline" :model="formInline" :rules="ruleInline" inline @submit.native.prevent>
               <FormItem prop="username" style="display: inline-block;width: 80%;">
                 <Input prefix="md-contact" size="large" :maxlength="20" show-word-limit v-model="formInline.username" autocomplete="new-password" placeholder="用户名 可数字字母下划线" style="width: 100%;height: 40px;" />
@@ -18,10 +17,10 @@
                 <Input prefix="md-mail" size="large" v-model="formInline.email" :maxlength="200" placeholder="邮箱" autocomplete="new-password" style="width: 100%;height: 40px;" />
               </FormItem>
               <FormItem prop="password" style="display: inline-block;width: 80%;">
-                <Input prefix="md-lock"  size="large"  :maxlength="200"   v-model="formInline.password" autocomplete="new-password" placeholder="用户密码" style="width: 100%;height: 40px;" />
+                <Input prefix="md-lock" type="password" size="large"  :maxlength="200"   v-model="formInline.password" autocomplete="new-password" placeholder="用户密码" style="width: 100%;height: 40px;" />
               </FormItem>
               <FormItem prop="password" style="display: inline-block;width: 80%;">
-                <Input prefix="md-lock"  size="large"  :maxlength="200"   v-model="formInline.passwordtow" autocomplete="new-password" placeholder="确认用户密码" style="width: 100%;height: 40px;" />
+                <Input prefix="md-lock" type="password" size="large"  :maxlength="200"   v-model="formInline.passwordtow" autocomplete="new-password" placeholder="确认用户密码" style="width: 100%;height: 40px;" />
               </FormItem>
               <FormItem style="display: inline-block;width: 80%;">
               <Row>
@@ -34,15 +33,12 @@
               </Row>
               </FormItem>
               <FormItem>
-                <!--            <Button type="success" @click="handleSubmit('formInline')" long>SUBMIT</Button>-->
-                <!--            <Button type="primary" shape="circle" icon="ios-search">Search</Button>-->
                 <ButtonGroup shape="circle">
                   <Button type="primary" @click="handleSubmit('formInline')">注 册</Button>
                 </ButtonGroup>
               </FormItem>
             </Form>
             </Content>
-            <Footer class="layout-footer-center"></Footer>
           </Layout>
 
         </Form>

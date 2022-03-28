@@ -42,12 +42,11 @@ export default {
             treePopup: false,
             violation:false,
             moveImgLoading:false,
-            noImgMsg : false//没有图像的时候提示
+            noImgMsg : false,//没有图像的时候提示
 
         }
     },
     methods: {
-
         selectPhoto(){
             this.issearchimg = false;
             // this.$Spin.show();
@@ -67,7 +66,7 @@ export default {
             paramJson.starttime=this.searchStartDate==''?null:this.searchStartDate;
             paramJson.stoptime=this.searchStopDate==''?null:this.searchStopDate;
             paramJson.violation = this.violation;
-
+            this.treePopup = false;
             request(
                 "/admin/selectPhoto",
                 paramJson).then(res => {
@@ -75,7 +74,6 @@ export default {
                     if(res.data.code=='200'){
                         var arr = res.data.data.rows;
                         this.nextButloading=false;
-                        this.treePopup = false;
                         if(arr.length>0){
                             this.imglist=this.imglist.concat(arr);
                             this.pageNum++;

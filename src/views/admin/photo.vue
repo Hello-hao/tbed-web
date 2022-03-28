@@ -12,24 +12,25 @@
           </RadioGroup>
         </FormItem>
         <FormItem label="存储源" v-if="$store.state.RoleLevel=='admin'">
-              <Select v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
+              <Select style="width: 250px" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
                 <Option v-for="item in bucketlist" :value="item.storageType" :key="item.id">{{ item.keyname }}</Option>
               </Select>
         </FormItem>
-        <FormItem label="起始日期">
-          <DatePicker @on-change="startDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="起始日期段(默认不限)"></DatePicker>
-        </FormItem>
-        <FormItem label="结束日期">
-          <DatePicker @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
-        </FormItem>
         <FormItem label="用户名" v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
-          <Input v-model="searchtext" placeholder="填写用户名">
-            <Select v-model="searchtype" slot="prepend" style="width: 100px">
+          <Input v-model="searchtext" placeholder="填写用户名"  style="width: 250px">
+            <Select v-model="searchtype" slot="prepend" style="width: 80px">
               <Option value="1">包含</Option>
               <Option value="0">排除</Option>
             </Select>
           </Input>
         </FormItem>
+        <FormItem label="起始日期">
+          <DatePicker style="width: 250px;" @on-change="startDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="起始日期段(默认不限)"></DatePicker>
+        </FormItem>
+        <FormItem label="结束日期">
+          <DatePicker style="width: 250px;" @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
+        </FormItem>
+
         <FormItem label="图像类型" >
           <CheckboxGroup>
             <Checkbox label="违规图片" v-model="violation" border></Checkbox>
@@ -152,8 +153,6 @@
         </TabPane>
       </Tabs>
       </Modal>
-
-
     <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
       </Layout>
 

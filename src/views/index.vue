@@ -10,8 +10,8 @@
 <!--        </div>-->
 <!--      </Drawer>-->
 
-      <Drawer title="资讯" placement="top" height ="276" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">
-        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 135px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">
+      <Drawer title="资讯" placement="top" height ="363" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">
+        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 220px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">
         </div>
         <div style="height: 60px; text-align: center; position: absolute; bottom: 10px; left: 0; right: 0; margin: auto;">
           <Checkbox style="font-size: 14px;" v-model="noticeSwitch">三天内不再通知</Checkbox>
