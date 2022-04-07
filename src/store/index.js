@@ -7,7 +7,7 @@ vue.use(vuex)
 
 const store = new vuex.Store({
     state:{
-        version:20220328,
+        version:20220407,
         serverHost:null,
         copyAllUrl:null,//一键复制存储内容
         userName:'' || localStorage.getItem('userName'),

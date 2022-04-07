@@ -22,7 +22,7 @@ export default {
             isimginfo:false,
             imglist: [],
             pageNum:1,
-            pageSize:20,
+            pageSize:30,
             selecttype:2,
             type:'picture',
             selectIndex:[],
