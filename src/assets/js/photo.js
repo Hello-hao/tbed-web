@@ -2,7 +2,7 @@ import {request} from "@/network/request";
 import vueQr from 'vue-qr'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-
+import albumList from '../../components/comp/album-list.vue'
 
 export default {
     name: "photo",
@@ -27,6 +27,7 @@ export default {
             type:'picture',
             selectIndex:[],
             selectImgUrl:[],
+            selectImgUid:[],
             bucketname:null,
             bucketlist:[],
             selectUserType:'me',
@@ -43,6 +44,12 @@ export default {
             violation:false,
             moveImgLoading:false,
             noImgMsg : false,//没有图像的时候提示
+            //画廊
+            isAlbum:false,
+            visible: false,
+            albumlist:[],
+            albumData:{},
+            spinShow:true
 
         }
     },
@@ -111,7 +118,57 @@ export default {
             }else{
                 this.selectImgUrl.splice(this.selectImgUrl.indexOf(item.imgurl),1);
             }
+            if(this.selectImgUid.indexOf(item.imguid) == -1){
+                this.selectImgUid.push(item.imguid);
+            }else{
+                this.selectImgUid.splice(this.selectImgUid.indexOf(item.imguid),1);
+            }
 
+        },
+        //显示画廊窗
+        allSett(){
+            if(this.selectIndex.length>0){
+                this.getAlbumImgList();
+                this.visible = true;
+            }else{
+                this.$Message.info('请选择要操作的图片');
+            }
+        },
+        //获取选中的画廊图片信息
+        getAlbumImgList(){
+            var param={
+                imguidlist:this.selectImgUid//JSON.stringify(this.selectIndex),
+            }
+            request(
+                "/getAlbumImgList",
+                param).then(res => {
+                this.$Spin.hide();
+                if(res.status==200){
+                    var json = res.data.data;
+                    this.albumlist = json;
+
+                    this.selectIndex = [];
+                    this.selectImgUrl = [];
+                    this.selectImgUid = [];
+
+                    this.spinShow = false;
+                }else{
+                    this.$Message.error("请求时出现错误");
+                }
+            }).catch(err => {
+                this.$Spin.hide();
+                console.log(err);
+                this.$Message.error('服务器请求错误');
+            })
+        },
+        returnData(data){
+            this.visible = false;
+            this.albumData = data;
+            if(this.albumData.password==null || this.albumData==''){
+                this.albumData.password='无';
+            }
+            this.albumData.url = window.location.protocol+'//'+window.location.host+'/h/'+data.url;
+            this.isAlbum=true;
         },
         selectAll(){
             this.selectIndex = [];
@@ -325,6 +382,7 @@ export default {
         this.selectPhoto();
     },
     components:{
+        albumList,
         Treeselect,
         vueQr,
     }

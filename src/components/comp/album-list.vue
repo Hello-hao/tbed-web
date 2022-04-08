@@ -8,10 +8,32 @@
       </Row>
 
       <Divider>图片列表</Divider>
-      <List style="max-height: 60vh;overflow: auto;" v-for="(album,key) in albumlist" :key="key">
+      <List style="max-height: 60vh;overflow: auto;" v-for="(album,index) in albumlist" :key="index">
         <ListItem>
-          <ListItemMeta :avatar="album.imgurl"  />
-          <Input  type="textarea" v-model="album.notes" :rows="2" maxlength="100" placeholder="图片说明/描述,可留空" />
+<!--          <ListItemMeta :avatar="album.imgurl"  />-->
+          <div style="width: 100%;padding: 0 10px;">
+          <Row>
+            <Col flex="100px">
+                <div style="width: 100%;text-align: center;">
+                  <img :src="album.imgurl" style="height: 70px; max-width:80px;object-fit:cover; border-radius: 5px;" />
+                </div>
+            </Col>
+            <Col flex="auto">
+              <Input  type="textarea" v-model="album.notes" :rows="3" maxlength="500" placeholder="图片说明/描述,可留空" />
+            </Col>
+            <Col flex="60px" v-if="ischange">
+              <div calss="toolbar" style="width: 100%;height: 80px; text-align: center;">
+                <div style=" height: 36px; line-height: 36px;">
+                  <Button  size="small">修改</Button>
+                </div>
+                <div style=" height: 36px; line-height: 36px;">
+                  <Button  size="small">删除</Button>
+                </div>
+              </div>
+            </Col>
+          </Row>
+    </div>
+
         </ListItem>
       </List>
     </div>
@@ -32,7 +54,22 @@ export default {
       type: Array,
       // default: () => [],
       require:true
-    }
+    },
+    ischange: {
+      type: Boolean,
+      default: () => false,
+      require:false
+    },
+    atitle: {
+      type: String,
+      default: () => null,
+      require:false
+    },
+    apass: {
+      type: String,
+      default: () => null,
+      require:false
+    },
   },
   data () {
     return {
@@ -41,7 +78,11 @@ export default {
     }
   },
   mounted(){
-    this.shuoming = this.albumlist;
+    console.log(this.albumlist.length)
+    // if(this.ischange && this.albumlist.length>0){
+    //   this.albumlist = this.albumlist[0].albumlist;
+    //   this.password = this.albumlist[0].password;
+    // }
   },
   methods: {
     submitAlbum(){

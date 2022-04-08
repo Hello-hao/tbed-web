@@ -60,6 +60,7 @@
                   <Icon type="ios-arrow-down"></Icon>
                 </Button>
                 <DropdownMenu slot="list">
+                  <DropdownItem  @click.native="allSett"><Icon type="ios-book" size="16"  /> 生成画廊</DropdownItem>
                   <DropdownItem  @click.native="selectAll"><Icon type="md-checkmark-circle" size="16"  /> 全部选中</DropdownItem>
                   <DropdownItem  @click.native="noselectAll"><Icon type="md-checkmark-circle-outline" size="16"  /> 取消选中</DropdownItem>
                   <DropdownItem @click.native="delSelectImg"><Icon type="md-trash" size="16"  /> 删除选中</DropdownItem>
@@ -153,6 +154,36 @@
         </TabPane>
       </Tabs>
       </Modal>
+
+    <!-- 生成画廊 -->
+    <Modal  v-model="visible" :footer-hide="true"  width="620" >
+      <Tabs>
+        <TabPane label="画廊" icon="ios-images" >
+          <Spin size="large" fix v-if="spinShow"></Spin>
+          <album-list :albumlist="albumlist"  @return-data='returnData' />
+        </TabPane>
+      </Tabs>
+    </Modal>
+
+    <!--            画廊生成后显示详情界面-->
+    <Modal  v-model="isAlbum" :footer-hide="true" :title="albumData.title">
+      <Form  @submit.native.prevent :label-width="70" style="margin-top: 30px;height: 303px;" >
+        <FormItem label="链接">
+          <Input v-model="albumData.url" style="width: auto;width: 100%"  />
+        </FormItem>
+        <FormItem label="密码">
+          <Input v-model="albumData.password" style="width: auto;width: 100px;"  />
+          <Button style="position: absolute;right: 30px;" size="small" type="primary" shape="circle" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="'画廊链接：'+albumData.url+'提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'" @click.native="copy">复 制</Button>
+        </FormItem>
+      </Form>
+      <div class="QRCodestyle2"  style="text-align: center;">
+        <vue-qr  :text="albumData.url?albumData.url:'无法获取图像地址'" :size="200"></vue-qr>
+      </div>
+      <div style="text-align: center;">
+        <p>对方通过扫码即可访问画廊</p>
+      </div>
+    </Modal>
+
     <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
       </Layout>
 

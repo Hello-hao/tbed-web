@@ -10,7 +10,7 @@
                 <strong>{{ row.name }}</strong>
               </template>
               <template slot-scope="{row,index}" slot="action" >
-<!--                <Icon type="md-settings tablebut"  @click="showsettingGroup(row,index)" />-->
+                <Icon type="ios-create tablebut"  @click="upGallery(row.albumkey)" />
                 <Icon type="md-trash tablebut" :value="index" @click="deleGallery(row.albumkey)" />
                 <!--        <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>-->
                 <!--        <Button type="error" size="small" @click="remove(index)">Delete</Button>-->
@@ -28,6 +28,17 @@
 
       </Content>
     <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
+
+    <!-- 生成画廊 -->
+    <Modal  v-model="visible" :footer-hide="true"  width="620" >
+      <Tabs>
+        <TabPane label="画廊" icon="ios-images" >
+          <Spin size="large" fix v-if="spinShow"></Spin>
+          <album-list :albumlist="albumlist" :ischange="true" :atitle="datas.atitle" :apass="datas.apass"  />
+        </TabPane>
+      </Tabs>
+    </Modal>
+
     </Layout>
 
 
@@ -35,16 +46,27 @@
 </template>
 <script>
 import {request} from "@/network/request";
+import albumList from '../../components/comp/album-list.vue'
 export default {
   name: "gallery",
+  components:{
+    albumList
+  },
   data () {
     return {
+      datas:{
+        atitle:null,
+        apass:null
+      },
       loading:true,
       pageNum:1,
       pageSize:10,
       total:0,
       GalleryList:[],
       albumkeyList:[],
+      albumlist:[],
+      spinShow:true,
+      visible: false,
       columns: [
         {
           type: 'selection',
@@ -168,6 +190,41 @@ export default {
         onCancel: () => { }
       });
     },
+    upGallery(id){
+      this.getAlbumListForKey(id);
+      this.visible = true;
+    },
+    //获取选中的画廊图片信息
+    getAlbumListForKey(id){
+      var param={
+        key:id//JSON.stringify(this.selectIndex),
+      }
+      request(
+          "/admin/getAlbumListForKey",
+          param).then(res => {
+        this.$Spin.hide();
+        if(res.status==200){
+          var json = res.data.data;
+          this.albumlist = json;
+          if(this.albumlist.length>0){
+            this.datas.atitle = json[0].albumtitle;
+            this.datas.apass = json[0].password;
+          }
+          //
+          // this.selectIndex = [];
+          // this.selectImgUrl = [];
+          // this.selectImgUid = [];
+
+          this.spinShow = false;
+        }else{
+          this.$Message.error("请求时出现错误");
+        }
+      }).catch(err => {
+        this.$Spin.hide();
+        console.log(err);
+        this.$Message.error('服务器请求错误');
+      })
+    },
     deleGallery(id){
       this.$Modal.confirm({
         title: '确认删除',
@@ -221,7 +278,8 @@ export default {
 </script>
 <style>
 .tablebut{
-  font-size: 18px;
-  margin-left: 10px;
+  font-size: 19px;
+  margin-left: 6px;
+  cursor: pointer;
 }
 </style>
