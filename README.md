@@ -1,6 +1,6 @@
 ###  Hellohao图像托管-前端源码
 
-![banner.png](http://img.wwery.com/Hellohao/HqXVDR2b.png)
+![宣传图Banner](https://upload.cc/i1/2022/02/11/HSg5tX.png)
 
 ### 前言
 
