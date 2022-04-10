@@ -34,7 +34,7 @@
       <Tabs>
         <TabPane label="画廊" icon="ios-images" >
           <Spin size="large" fix v-if="spinShow"></Spin>
-          <album-list :albumlist="albumlist" :ischange="true" :atitle="datas.atitle" :apass="datas.apass"  />
+          <album-list :albumlist="albumlist"  ref="album" :ischange="true"  />
         </TabPane>
       </Tabs>
     </Modal>
@@ -54,10 +54,6 @@ export default {
   },
   data () {
     return {
-      datas:{
-        atitle:null,
-        apass:null
-      },
       loading:true,
       pageNum:1,
       pageSize:10,
@@ -207,9 +203,9 @@ export default {
           var json = res.data.data;
           this.albumlist = json;
           if(this.albumlist.length>0){
-            this.datas.atitle = json[0].albumtitle;
-            this.datas.apass = json[0].password;
+            this.$refs.album.getTilePass(json[0].albumtitle,json[0].password);
           }
+
           //
           // this.selectIndex = [];
           // this.selectImgUrl = [];

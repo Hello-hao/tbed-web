@@ -74,9 +74,7 @@
               <div class="imgdivstyle"  :class="[viewType==1?'divimgstyle-max':'divimgstyle-min']">
                 <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>
 <!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" :src="item.imgurl+''"   >-->
-
                 <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
-
                 <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">
                   <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>
                   <Icon style="cursor:pointer;" type="md-link icostyle cobyOrderSn"   title="链接" data-clipboard-action="copy" :data-clipboard-text="item.imgurl" @click.native="copy" />
