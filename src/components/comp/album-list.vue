@@ -6,30 +6,24 @@
         <Col :xs="24" :sm="24" :md="12" :lg="12"><Input v-model="albumtitle" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend" placeholder="画廊标题">标题</span></Input></Col>
         <Col :xs="24" :sm="24" :md="12" :lg="12"><Input v-model="password" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend" placeholder="可留空">密码</span></Input></Col>
       </Row>
-
+      <Row>
+        <div style=" height: 40px; width: 95%;margin: auto; text-align: center; line-height: 50px;margin-top: 10px;">
+          <Button @click="updateImg" type="primary" long>编辑图像</Button>
+        </div>
+      </Row>
       <Divider>图片列表</Divider>
       <List style="max-height: 60vh;overflow: auto;" v-for="(album,index) in albumlist" :key="index">
         <ListItem>
 <!--          <ListItemMeta :avatar="album.imgurl"  />-->
           <div style="width: 100%;padding: 0 10px;">
           <Row>
-            <Col flex="100px">
+            <Col flex="130px">
                 <div style="width: 100%;text-align: center;">
-                  <img :src="album.imgurl" style="height: 70px; max-width:80px;object-fit:cover; border-radius: 5px;" />
+                  <img :src="album.imgurl" style="height: 80px; max-width:100px;object-fit:cover; border-radius: 5px;" />
                 </div>
             </Col>
             <Col flex="auto">
-              <Input  type="textarea" v-model="album.notes" :rows="3" maxlength="500" placeholder="图片说明/描述,可留空" />
-            </Col>
-            <Col flex="60px" v-if="ischange">
-              <div calss="toolbar" style="width: 100%;height: 80px; text-align: center;">
-                <div style=" height: 36px; line-height: 36px;">
-                  <Button size="small" @click="updateImg(index)">修改</Button>
-                </div>
-                <div style=" height: 36px; line-height: 36px;">
-                  <Button size="small">删除</Button>
-                </div>
-              </div>
+              <Input  type="textarea" v-model="album.notes" :rows="4" maxlength="500" placeholder="图片说明/描述,可留空" />
             </Col>
           </Row>
     </div>
@@ -37,7 +31,7 @@
         </ListItem>
       </List>
     </div>
-    <Button type="primary" shape="circle" @click.native="submitAlbum" style="float: right;margin-right: 10px;" >保存</Button>
+    <Button type="primary"   @click.native="submitAlbum" style="position: absolute;bottom: 10px;right: 10px;" >保存</Button>
     <!-- 个人相册弹窗 -->
     <Modal  v-model="isMyImages" :footer-hide="true"  width="800" >
       <Content :style="{margin: '15px 5px 0', }" style="overflow-y: auto;height:600px;">
@@ -45,8 +39,8 @@
           <Row class="animate__animated animate__fadeIn animate__delay-1.5s">
             <Col flex="1" v-for="(item,index) in imglist" :key="index">
               <div class="imgdivstyle divimgstyle-min" >
-<!--                <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>-->
-                <img class="imgstyle-min imgstyle"  style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
+                <span @click="noSelectImageClick(item.id)" class="formatTag" v-show="selectImage.indexOf(item.id)>-1"><Icon type="md-done-all" size="50" style="margin-top: 50px;" /></span>
+                <img @click="selectImageClick(index)" class="imgstyle-min imgstyle"  style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
               </div>
             </Col>
           </Row>
@@ -59,6 +53,9 @@
           <Button type="dashed" :loading="nextButloading"  @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'" long>{{btntext}}</Button>
         </div>
       </Content>
+      <div class="example-code-more">
+        <Button type="primary" @click="saveNewAlbumlist" style="position: absolute;bottom: 10px;right: 10px;" >确定</Button>
+      </div>
     </Modal>
   </div>
 
@@ -85,6 +82,7 @@ export default {
   },
   data () {
     return {
+      newAlbumlist:[],
       albumtitle:null,
       password:null,
       pageNum:1,
@@ -94,6 +92,8 @@ export default {
       btntext:'加载更多',
       noImgMsg:false,
       nextButloading:false,
+      selectImage:[],
+      operatState:'update',//add
     }
   },
   mounted(){
@@ -147,9 +147,13 @@ export default {
       })
     },
     //修改画廊的方法
-    updateImg(index){
-      console.log(this.albumlist[index])
+    updateImg(){
       this.isMyImages = true;
+      // this.operatState = 'update';
+      this.selectImage = [];
+      for (let i = 0; i < this.albumlist.length; i++) {
+        this.selectImage.push(this.albumlist[i].id);
+      }
       this.selectPhoto();
     },
     selectPhoto(){
@@ -168,8 +172,12 @@ export default {
           if(res.data.code=='200'){
             var arr = res.data.data.rows;
             if(arr.length>0){
+              // if(){
+              //
+              // }
               this.imglist=this.imglist.concat(arr);
               this.pageNum++;
+              this.nextButloading = false;
               if(this.imglist.length<this.pageSize){
                 this.btntext='所有数据加载完毕';
               }else{
@@ -192,6 +200,33 @@ export default {
         this.$Message.error('服务器请求错误');
       })
 
+    },
+    //选中的图片
+    selectImageClick(index){
+      if( this.selectImage.indexOf(this.imglist[index].id) == -1){
+        this.selectImage.push(this.imglist[index].id);
+      }
+      // if(this.operatState == 'update'){
+      //   this.selectImage=[];
+      //   this.selectImage.push(this.imglist[index].id);
+      // }else{
+      //
+      // }
+
+    },
+    noSelectImageClick(id){
+      this.selectImage.splice(this.selectImage.indexOf(id),1);
+      // if(this.operatState == 'add'){
+      //
+      // }
+    },
+    saveNewAlbumlist(){
+      var oldArr =  [];
+      for (let i = 0; i <this.albumlist.length; i++) {
+        // if(){
+        //
+        // }
+      }
     }
 
   }
@@ -216,20 +251,22 @@ export default {
 }
 .divimgstyle-min{
   min-width: 155px;
-  height: 150px;
+  height: 151px;
+  filter:opacity(.7);
   margin: 10px;
+  border-radius: 5px;
+  transition: all .1s;
 }
 .formatTag{
   display: block;
-  width: 50px;
-  height: 20px;
+  width: 100%;
+  height: 100%;
   background: rgba(38, 38, 38 ,.72);
-  position: absolute;
-  top: 12px;
-  left: 12px;
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
-  box-shadow: 0 1px 6px rgba(255, 255, 255, .2);
-  color: #e3e1e1;
+  /*box-shadow: 0 1px 6px rgba(255, 255, 255, .2);*/
+  color: #ededed;
   border-radius: 3px;
 }
 .imgstyle-min{

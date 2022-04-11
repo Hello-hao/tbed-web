@@ -31,12 +31,11 @@
 
     <!-- 生成画廊 -->
     <Modal  v-model="visible" :footer-hide="true"  width="620" >
-      <Tabs>
-        <TabPane label="画廊" icon="ios-images" >
-          <Spin size="large" fix v-if="spinShow"></Spin>
-          <album-list :albumlist="albumlist"  ref="album" :ischange="true"  />
-        </TabPane>
-      </Tabs>
+      <div style="padding: 30px 5px;">
+        <Spin size="large" fix v-if="spinShow"></Spin>
+        <album-list :albumlist="albumlist"  ref="album" :ischange="true"  />
+      </div>
+
     </Modal>
 
     </Layout>
