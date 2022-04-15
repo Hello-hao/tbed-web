@@ -33,7 +33,7 @@
     <Modal  v-model="visible" :footer-hide="true"  width="620" >
       <div style="padding: 30px 5px;">
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <album-list :albumlist="albumlist"  ref="album" :ischange="true"  />
+        <album-list :albumlist="albumlist"  ref="album" :ischange="true"  @return-data='returnData' />
       </div>
 
     </Modal>
@@ -127,7 +127,6 @@ export default {
           slot: 'action',
         }
       ],
-
       groupList: []
     }
   },
@@ -186,6 +185,7 @@ export default {
       });
     },
     upGallery(id){
+      this.albumlist = [];
       this.getAlbumListForKey(id);
       this.visible = true;
     },
@@ -200,10 +200,8 @@ export default {
         this.$Spin.hide();
         if(res.status==200){
           var json = res.data.data;
-          this.albumlist = json;
-          if(this.albumlist.length>0){
-            this.$refs.album.getTilePass(json[0].albumtitle,json[0].password);
-          }
+          this.albumlist = json.imagesList;
+          this.$refs.album.getTilePass(json.album.albumtitle,json.album.password,id,this.albumlist);
 
           //
           // this.selectIndex = [];
@@ -265,7 +263,16 @@ export default {
         console.log(err);
         this.$Message.error('服务器请求错误');
       })
-    }
+    },
+    returnData(data){
+      this.visible = false;
+      // this.albumData = data;
+      // if(this.albumData.password==null || this.albumData==''){
+      //   this.albumData.password='无';
+      // }
+      // this.albumData.url = window.location.protocol+'//'+window.location.host+'/h/'+data.url;
+      // this.isAlbum=true;
+    },
 
 
   }

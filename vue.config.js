@@ -1,5 +1,8 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 module.exports = {
+    devServer: {
+        disableHostCheck: true,
+    },
     productionSourceMap: false,
     chainWebpack: config => {
         config.plugin('html').tap(args => {

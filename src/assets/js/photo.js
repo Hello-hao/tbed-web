@@ -173,9 +173,11 @@ export default {
         selectAll(){
             this.selectIndex = [];
             this.selectImgUrl = [];
+            this.selectImgUid = [];
             for (let i = 0; i < this.imglist.length; i++) {
                 this.selectIndex.push(this.imglist[i].id);
                 this.selectImgUrl.push(this.imglist[i].imgurl);
+                this.selectImgUid.push(this.imglist[i].imguid);
             }
             this.$Message.success("已选中"+this.selectIndex.length+"张图像");
         },

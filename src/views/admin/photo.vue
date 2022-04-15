@@ -60,7 +60,7 @@
                   <Icon type="ios-arrow-down"></Icon>
                 </Button>
                 <DropdownMenu slot="list">
-                  <DropdownItem  @click.native="allSett"><Icon type="ios-book" size="16"  /> 生成画廊</DropdownItem>
+                  <DropdownItem  @click.native="allSett"><Icon type="ios-book" size="16" /> 生成画廊</DropdownItem>
                   <DropdownItem  @click.native="selectAll"><Icon type="md-checkmark-circle" size="16"  /> 全部选中</DropdownItem>
                   <DropdownItem  @click.native="noselectAll"><Icon type="md-checkmark-circle-outline" size="16"  /> 取消选中</DropdownItem>
                   <DropdownItem @click.native="delSelectImg"><Icon type="md-trash" size="16"  /> 删除选中</DropdownItem>

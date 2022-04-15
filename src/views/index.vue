@@ -81,25 +81,16 @@
       <Content :style="{margin: '50px auto', minWidth:'45vh',width: '95%',background: '#FFF'}" >
         <router-view ref='indexTarget' @showBtn="isShowBtn"></router-view>
         <div :offset-bottom="10" style="position: fixed;right: 55px;bottom: 132px;" class="animate__animated" :class="{'animate__bounce' : isShow}" v-show="isShow">
-          <ButtonGroup shape="circle">
-            <Button  size="large" icon="md-color-palette " style="font-size: 19px;"  title="更多功能" @click="getTools"></Button>
-            <Button  size="large" icon="ios-copy" style="font-size: 19px;"  title="复制全部" @click="getCopyMsg"></Button>
-          </ButtonGroup>
+          <Tooltip content="更多功能在这里哦" placement="top" :always="true" :disabled="qpShow"  >
+            <ButtonGroup shape="circle">
+              <Button  size="large" icon="md-color-palette" style="font-size: 19px;"  title="更多功能" @click="getTools"></Button>
+              <Button  size="large" icon="ios-copy" style="font-size: 19px;"  title="复制全部" @click="getCopyMsg"></Button>
+            </ButtonGroup>
+          </Tooltip>
         </div>
       </Content>
-
-<!--      <Content :style="{margin: '50px auto', minWidth:'45vh',width: '95%',}" v-show="this.$store.state.preludeSwitch">-->
-<!--        <router-view ref='indexTarget' @showBtn="isShowBtn"></router-view>-->
-<!--        <div v-show="isShow" :offset-bottom="10" style="position: fixed;right: 55px;bottom: 132px;" class="animate__animated btnStyle" :class="{'animate__bounce' : isShow}" >-->
-<!--          <ButtonGroup shape="circle">-->
-<!--            <Button  size="large" icon="md-color-palette " style="font-size: 19px;"  title="更多功能" @click="getTools"></Button>-->
-<!--            <Button  size="large" icon="ios-copy" style="font-size: 19px;"  title="复制全部" @click="getCopyMsg"></Button>-->
-<!--            &lt;!&ndash;              <Button  size="large"  class="cobyOrderSn " icon="ios-copy" style="font-size: 20px;background: #FFF;" title="复制全部" data-clipboard-action="copy" :data-clipboard-text="urlTexts"  @click="copyAll"></Button>&ndash;&gt;-->
-<!--          </ButtonGroup>-->
-<!--        </div>-->
-<!--      </Content>-->
-
-      <Footer class="layout-footer-center " style="position: fixed; bottom: 0; width: 100%;"  v-html="this.$store.state.metaInfo.links?this.$store.state.metaInfo.links:''" ></Footer>
+<!--      <Footer class="layout-footer-center " style="position: fixed; bottom: 0; width: 100%;"  v-html="this.$store.state.metaInfo.links?this.$store.state.metaInfo.links:''"  v-show="this.$store.state.preludeSwitch" ></Footer>-->
+      <Footer class="layout-footer-center"   v-html="this.$store.state.metaInfo.links?this.$store.state.metaInfo.links:''"></Footer>
 
       <Modal  v-model="IsAbout" :footer-hide="true">
         <br />
@@ -153,6 +144,7 @@ export default {
       urlTexts_html:'',
       urlTexts_md:'',
       urlTexts_diy:'',
+      qpShow:false,
 
     }
   },
@@ -181,6 +173,10 @@ export default {
     isShowBtn(arr){
       if(arr.length>0){
         this.isShow = true;
+        var than = this;
+        setTimeout(function () {
+          than.qpShow = true;
+        },5000);
       }else{
         this.isShow = false;
       }
@@ -391,6 +387,8 @@ export default {
 
 .layout-footer-center{
   text-align: center;
+  padding: 10px;
+  position: initial;
 }
 .ivu-input-group .ivu-input, .ivu-input-group .ivu-input-inner-container {
   width: 100%;
