@@ -15,15 +15,15 @@
       <List style="max-height: 60vh;overflow: auto;" v-for="(album,index) in ischange?thisAlbumlist:albumlist" :key="index">
         <ListItem>
           <!--          <ListItemMeta :avatar="album.imgurl"  />-->
-          <div style="width: 100%;padding: 0 10px;">
+          <div style="width: 100%;padding: 0 10px;min-width: 295px;">
             <Row>
-              <Col flex="130px">
+              <Col flex="83px">
                 <div style="width: 100%;text-align: center;">
-                  <img :src="album.imgurl" style="height: 80px; max-width:100px;object-fit:cover; border-radius: 5px;" />
+                  <img :src="album.imgurl" style="height: 70px; max-width:80px;object-fit:cover; border-radius: 5px;" />
                 </div>
               </Col>
               <Col flex="auto">
-                <Input  type="textarea" v-model="album.notes" :rows="3" maxlength="500" placeholder="图片说明/描述,可留空" />
+                <Input  type="textarea" v-model="album.notes" :rows="3" maxlength="500"  placeholder="图片说明/描述,可留空" />
               </Col>
             </Row>
           </div>
@@ -39,7 +39,7 @@
       <div @click="toShowDrawer" style="width: 84%;height: 30px;margin: 0 auto;cursor: pointer;text-align: center;line-height: 30px;box-shadow: 0 1px 6px 0 rgba(32, 33, 36,.28);border-radius: 5px;">
         已选图像<Icon type="ios-arrow-dropdown" size="16" />
       </div>
-      <Drawer :inner="true" :transfer="false" title="Basic Drawer" placement="top" :closable="false" v-model="showDrawer">
+      <Drawer :inner="true" :transfer="false" title="已选图像" placement="top" :closable="false" v-model="showDrawer">
         <div style="width: 100%">
           <ul  id="menu" v-for="(img,index) in BrowseImages" :key="index">
             <li>

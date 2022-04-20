@@ -10,8 +10,8 @@
                 <strong>{{ row.name }}</strong>
               </template>
               <template slot-scope="{row,index}" slot="action" >
-                <Icon type="ios-create tablebut"  @click="upGallery(row.albumkey)" />
-                <Icon type="md-trash tablebut" :value="index" @click="deleGallery(row.albumkey)" />
+                <Icon title="编辑" type="md-reverse-camera tablebut"  @click="upGallery(row.albumkey)" />
+                <Icon title="删除" type="md-trash tablebut" :value="index" @click="deleGallery(row.albumkey)" />
                 <!--        <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>-->
                 <!--        <Button type="error" size="small" @click="remove(index)">Delete</Button>-->
               </template>
@@ -139,7 +139,7 @@ export default {
   methods: {
     toPageIndex(pageNum){
       this.pageNum = pageNum;
-      this.getUserList();
+      this.getGalleryList();
 
     },
     toPageSize(pageSize){
@@ -155,6 +155,7 @@ export default {
             if(res.status==200){
               this.loading = false;
               this.GalleryList = res.data.data;
+              this.total = res.data.count;
             }
       }).catch(err => {
         console.log(err);
