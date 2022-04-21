@@ -23,7 +23,7 @@
                 </div>
               </Col>
               <Col flex="auto">
-                <Input  type="textarea" v-model="album.notes" :rows="3" maxlength="500"  placeholder="图片说明/描述,可留空" />
+                <Input  type="textarea" v-model="album.notes" :rows="3" maxlength="500" placeholder="图片说明/描述,可留空" />
               </Col>
             </Row>
           </div>
@@ -272,38 +272,45 @@ export default {
     },
     noSelectImageClick(id){
       var than = this;
-      than.selectImage.splice(than.selectImage.indexOf(id),1);
-      than.BrowseImages.forEach((item,index) =>{
-        if(id==item.id){
-          than.BrowseImages.splice(than.BrowseImages.indexOf(index),1);
+      than.selectImage.splice(this.selectImage.indexOf(id),1);
+      for (let i = 0; i < than.BrowseImages.length; i++) {
+        if(id==than.BrowseImages[i].id){
+          than.BrowseImages.splice(i,1);
+          break;
         }
-      })
+      }
+
+      // than.BrowseImages.forEach((item,index) =>{
+      //   if(id==item.id){
+      //     than.BrowseImages.splice(index,1);
+      //     throw Error();
+      //   }
+      // })
     },
     saveNewAlbumlist(){
-      for (let i = 0; i <this.selectImage.length; i++) {
-        var cunzai = false;
-        var obj = {};
-        for (let j = 0; j <this.thisAlbumlist.length; j++) {
-          //this.albumlist.splice(j,1);
-          if(this.thisAlbumlist[j].id==this.selectImage[i]){
-            obj = this.thisAlbumlist[j];
-            this.newAlbumArr.push(obj);
-            cunzai = true;
-            break;
-          }
-        }
-        if(!cunzai){
-          this.imglist.forEach(item=>{
-            if(this.selectImage[i] === item.id){
-              var json = item;
-              json.notes = '';
-              this.newAlbumArr.push(json);
-            }
-          })
-        }
-        cunzai = false;
-      }
-      this.thisAlbumlist = this.newAlbumArr;
+      // for (let i = 0; i <this.selectImage.length; i++) {
+      //   var cunzai = false;
+      //   var obj = {};
+      //   for (let j = 0; j <this.thisAlbumlist.length; j++) {
+      //     if(this.thisAlbumlist[j].id==this.selectImage[i]){
+      //       obj = this.thisAlbumlist[j];
+      //       this.newAlbumArr.push(obj);
+      //       cunzai = true;
+      //       break;
+      //     }
+      //   }
+      //   if(!cunzai){
+      //     this.imglist.forEach(item=>{
+      //       if(this.selectImage[i] === item.id){
+      //         var json = item;
+      //         json.notes = '';
+      //         this.newAlbumArr.push(json);
+      //       }
+      //     })
+      //   }
+      //   cunzai = false;
+      // }
+      // this.thisAlbumlist = this.newAlbumArr;
       this.isMyImages = false;
     },
     //点击已选缩略图按钮的时候
@@ -315,7 +322,7 @@ export default {
       than.BrowseImages.splice(index,1);
       than.selectImage.forEach((item,index) =>{
         if(id==item){
-          than.selectImage.splice(than.selectImage.indexOf(index),1);
+          than.selectImage.splice(index,1);
         }
       })
     }

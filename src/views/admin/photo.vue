@@ -1,22 +1,20 @@
 <template>
 
   <Layout style="margin-top: 50px;margin-bottom: 50px;">
-
     <Drawer title="图像类别" :closable="false"  v-model="treePopup"  :width="screenWidth<=368?screenWidth:368">
-
       <Form  @submit.native.prevent style="margin-top: 30px;">
         <FormItem  >
-          <RadioGroup v-model="selectUserType" type="button" >
+          <RadioGroup v-model="selectUserType" type="button" style="width: 100%">
             <Radio label="me">我的图像</Radio>
             <Radio label="all">所有图像</Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="存储源" v-if="$store.state.RoleLevel=='admin'">
-              <Select style="width: 250px" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
+        <FormItem v-if="$store.state.RoleLevel=='admin'">
+              <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
                 <Option v-for="item in bucketlist" :value="item.storageType" :key="item.id">{{ item.keyname }}</Option>
               </Select>
         </FormItem>
-        <FormItem label="用户名" v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
+        <FormItem v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
           <Input v-model="searchtext" placeholder="填写用户名"  style="width: 250px">
             <Select v-model="searchtype" slot="prepend" style="width: 80px">
               <Option value="1">包含</Option>
@@ -24,20 +22,19 @@
             </Select>
           </Input>
         </FormItem>
-        <FormItem label="起始日期">
-          <DatePicker style="width: 250px;" @on-change="startDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="起始日期段(默认不限)"></DatePicker>
+        <FormItem>
+          <DatePicker style="width: 100%;" @on-change="startDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="起始日期段(默认不限)"></DatePicker>
         </FormItem>
-        <FormItem label="结束日期">
-          <DatePicker style="width: 250px;" @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
+        <FormItem >
+          <DatePicker style="width: 100%;" @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
         </FormItem>
 
-        <FormItem label="图像类型" >
+        <FormItem >
           <CheckboxGroup>
             <Checkbox label="违规图片" v-model="violation" border></Checkbox>
           </CheckboxGroup>
         </FormItem>
       </Form>
-
       <div style="width: 100%; height: 55px; position: absolute; bottom: 0; left: 0;text-align: right; padding: 10px;">
         <div style="width: 75px; display: inline-block;">
           <Button shape="circle" @click="treePopup = false">取消</Button>
@@ -47,7 +44,6 @@
         </div>
       </div>
     </Drawer>
-
 <!--        minHeight: '500px'-->
         <Content :style="{margin: '15px 5px 0', }">
           <viewer :images="imglist">
@@ -64,17 +60,16 @@
                   <DropdownItem  @click.native="selectAll"><Icon type="md-checkmark-circle" size="16"  /> 全部选中</DropdownItem>
                   <DropdownItem  @click.native="noselectAll"><Icon type="md-checkmark-circle-outline" size="16"  /> 取消选中</DropdownItem>
                   <DropdownItem @click.native="delSelectImg"><Icon type="md-trash" size="16"  /> 删除选中</DropdownItem>
-                  <DropdownItem divided @click.native="showViewType"><Icon type="md-eye" size="16"  /> {{viewType==1?'小图模式':'大图模式'}}</DropdownItem>
+<!--                  <DropdownItem divided @click.native="showViewType"><Icon type="md-eye" size="16"  /> {{viewType==1?'小图模式':'大图模式'}}</DropdownItem>-->
                 </DropdownMenu>
               </Dropdown>
             </p>
-
            <Row class="animate__animated animate__fadeIn animate__delay-1.5s">
             <Col flex="1" v-for="(item,index) in imglist" :key="index">
               <div class="imgdivstyle"  :class="[viewType==1?'divimgstyle-max':'divimgstyle-min']">
                 <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>
-<!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" :src="item.imgurl+''"   >-->
-                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
+<!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >-->
+                <img   class="imgstyle imgstyle-min" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
                 <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">
                   <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>
                   <Icon style="cursor:pointer;" type="md-link icostyle cobyOrderSn"   title="链接" data-clipboard-action="copy" :data-clipboard-text="item.imgurl" @click.native="copy" />
@@ -202,15 +197,12 @@
   font-weight: bold;
 }
 .imgdivstyle{
-  /*width:300px;*/
   height: 160px;
   margin-top: 10px;
-  /*background: #e86868;*/
   text-align: center;
   margin-right: 2px;
 }
 .imgstyle-max{
-  /*width: 300px;*/
   width: 100%;
   height: 160px;
   object-fit: cover;
@@ -322,6 +314,10 @@
   color: #e3e1e1;
   border-radius: 3px;
 
+}
+.ivu-radio-wrapper{
+  width: 50%;
+  text-align: center;
 }
 
 </style>

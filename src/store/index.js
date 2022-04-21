@@ -7,7 +7,7 @@ vue.use(vuex)
 
 const store = new vuex.Store({
     state:{
-        version:20220407,
+        version:20220421,
         serverHost:null,
         copyAllUrl:null,//一键复制存储内容
         userName:'' || localStorage.getItem('userName'),
@@ -18,7 +18,6 @@ const store = new vuex.Store({
         Authorization:localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
         auth:true,
         authInfo:'验证失败页面',
-        // preludeSwitch:true,//序幕开关 true 是关闭
         metaInfo: {
             favicon:"",
             webname: "" || window.location.host,

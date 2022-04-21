@@ -11,7 +11,6 @@ export default {
             screenWidth:document.body.clientWidth,
             httpText:window.location.protocol,
             hostText:window.location.host,
-            viewType:1,//1-大图模式 2-小图
             upName:null,
             imgage:null,
             isViolation:{
@@ -22,7 +21,7 @@ export default {
             isimginfo:false,
             imglist: [],
             pageNum:1,
-            pageSize:30,
+            pageSize:40,
             selecttype:2,
             type:'picture',
             selectIndex:[],
@@ -37,7 +36,7 @@ export default {
             searchStartDate:null,
             searchStopDate:null,
             submitData:[],
-            toolBottom:8,
+            toolBottom:10,
             nextButloading:false,
             btntext:'加载更多',
             treePopup: false,
@@ -354,22 +353,22 @@ export default {
             })
         },
         formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]},
-        showViewType(){
-            this.$Spin.show();
-            setTimeout(() =>{
-                if(this.viewType==1){
-                    this.toolBottom = 15;
-                    this.viewType=2;
-                    this.selectPhoto();
-                }else{
-                    this.toolBottom = 5;
-                    this.viewType=1;
-                    this.selectPhoto();
-                }
-                this.$Spin.hide();
-            },1000);
-
-        },
+        // showViewType(){
+        //     this.$Spin.show();
+        //     setTimeout(() =>{
+        //         if(this.viewType==1){
+        //             this.toolBottom = 15;
+        //             this.viewType=2;
+        //             this.selectPhoto();
+        //         }else{
+        //             this.toolBottom = 5;
+        //             this.viewType=1;
+        //             this.selectPhoto();
+        //         }
+        //         this.$Spin.hide();
+        //     },1000);
+        //
+        // },
 
     },
     mounted(){

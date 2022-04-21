@@ -111,6 +111,8 @@ export default {
                                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
                                 this.$store.commit("setCopyAllUrl", this.$refs.upload.fileList);
                                 this.$emit('showBtn',this.uploadList);
+                                this.selectIndex.splice(this.selectIndex.indexOf(file.response.data.imguid),1);
+                                this.selectIndexUid.splice(this.selectIndexUid.indexOf(file.uid),1);
                             }else{
                                 this.$Message.error(res.data.info);
                             }
