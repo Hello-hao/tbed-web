@@ -9,13 +9,14 @@
             <Radio label="all">所有图像</Radio>
           </RadioGroup>
         </FormItem>
+        <Divider plain>高级选项</Divider>
         <FormItem v-if="$store.state.RoleLevel=='admin'">
               <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
                 <Option v-for="item in bucketlist" :value="item.storageType" :key="item.id">{{ item.keyname }}</Option>
               </Select>
         </FormItem>
         <FormItem v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
-          <Input v-model="searchtext" placeholder="填写用户名"  style="width: 250px">
+          <Input style="width: 100%" size="default"  v-model="searchtext" placeholder="填写用户名"  >
             <Select v-model="searchtype" slot="prepend" style="width: 80px">
               <Option value="1">包含</Option>
               <Option value="0">排除</Option>
@@ -66,13 +67,13 @@
             </p>
            <Row class="animate__animated animate__fadeIn animate__delay-1.5s">
             <Col flex="1" v-for="(item,index) in imglist" :key="index">
-              <div class="imgdivstyle"  :class="[viewType==1?'divimgstyle-max':'divimgstyle-min']">
+              <div class="imgdivstyle divimgstyle-min">
                 <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>
 <!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >-->
                 <img   class="imgstyle imgstyle-min" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
                 <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">
                   <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>
-                  <Icon style="cursor:pointer;" type="md-link icostyle cobyOrderSn"   title="链接" data-clipboard-action="copy" :data-clipboard-text="item.imgurl" @click.native="copy" />
+                  <Icon style="cursor:pointer;" type="md-link icostyle"   title="链接" @click.native="showCopyImgUrl(item)" />
                   <Icon style="cursor:pointer;" type="md-trash icostyle" @click.native="delImg(item.id,index)"  title="删除" ></Icon>
                   <Icon style="cursor:pointer;" :color="item.violation==null?'':'rgb(228 102 70)'" type="md-information-circle icostyle" @click.native="imgInfo(item)" title="信息"></Icon>
                 </div>
@@ -177,8 +178,39 @@
       </div>
     </Modal>
 
+    <!-- 删除失败的图像 -->
+    <Modal v-model="isDelImgModal" :footer-hide="true" title="存在删除失败的图像，请检查">
+      <Form @submit.native.prevent :label-width="70" style="margin-top: 10px;height: 350px;min-height: 150px;overflow-y:auto; ">
+        <List header="Header" footer="Footer" border size="small" v-for="(item,index) in delProgress.errorlist?delProgress.errorlist:[]" :key="index">
+          <ListItem>{{item}}</ListItem>
+        </List>
+      </Form>
+    </Modal>
+
+    <!--复制直链弹窗-->
+    <Modal  v-model="copyImgUrl.IsImgLink" :footer-hide="true" >
+      <br />
+      <List :split="false">
+        <ListItem>
+          <Input v-model="copyImgUrl.imgLinkForUrl" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="copyImgUrl.imgLinkForUrl" @click.native="copy" ><span slot="prepend">U R L</span></Input>
+        </ListItem>
+        <ListItem >
+          <Input v-model="copyImgUrl.imgLinkForHtml" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="copyImgUrl.imgLinkForHtml" @click.native="copy" ><span slot="prepend">HTML</span></Input>
+        </ListItem>
+        <ListItem >
+          <Input v-model="copyImgUrl.imgLinkForMD" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="copyImgUrl.imgLinkForMD" @click.native="copy" ><span slot="prepend">Markdown</span></Input>
+        </ListItem>
+      </List>
+    </Modal>
+
+    <Spin v-if="isDelfun" fix style="color: #5F5F5FFF;">
+      <svg viewBox="25 25 50 50">
+        <circle cx="50" cy="50" r="20"></circle>
+      </svg>
+      <div style="font-size: 16px;letter-spacing: 2px;">{{delProgress.succ?delProgress.succ:0}}/{{delImgCount}}</div>
+    </Spin>
     <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
-      </Layout>
+  </Layout>
 
 
 </template>
@@ -188,6 +220,44 @@
 </script>
 
 <style>
+svg {
+  width: 3.75em;
+  transform-origin: center;
+  animation: rotate 2s linear infinite;
+}
+
+circle {
+  fill: none;
+  stroke: #2f72fc;
+  stroke-width: 4;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dashoffset: -125px;
+  }
+}
+
+
+
 .example-code-more {
   text-align: center;
   cursor: pointer;

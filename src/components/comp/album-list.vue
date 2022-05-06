@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div style="margin:0 auto;max-height: 60vh;overflow-x: hidden;overflow-y: auto;">
+  <div style="height: 510px;">
+    <div style="margin:0 auto;height: 500px;overflow-x: hidden;overflow-y: auto;">
       <Divider>画廊信息</Divider>
       <Row>
         <Col :xs="24" :sm="24" :md="12" :lg="12"><Input v-model="albumtitle" maxlength="30" style="width: 266px;margin: auto;"><span slot="prepend" placeholder="画廊标题">标题</span></Input></Col>
@@ -52,9 +52,7 @@
 
         </div>
       </Drawer>
-
-
-      <Content :style="{margin: '15px 5px 0', }" style="overflow-y: auto;max-height:600px;min-height: 260px;">
+      <Content :style="{margin: '15px 5px 0', }" style="overflow-y: auto;height: 500px;">
         <viewer>
           <Row class="animate__animated animate__fadeIn animate__delay-1.5s">
             <Col flex="1" v-for="(item,index) in imglist" :key="index">

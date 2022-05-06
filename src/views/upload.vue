@@ -171,11 +171,6 @@
 
 <style>
 
-/*.ivu-upload-drag{*/
-/*  background: rgba(255, 255, 255, 0);*/
-/*  border: 1px dashed #dcd9d9;*/
-/*}*/
-
 .demo-upload-list {
   line-height: 28px;
   width: 120px;
@@ -198,7 +193,6 @@
   left: 73px;
   background: #57a3f3;
 }
-
 .select-img-icon{
   position: absolute;
   top: 4px;
@@ -223,38 +217,30 @@
   min-width: 40vh;
   overflow-y: auto;
 }
-
 .ivu-modal-header p, .ivu-modal-header-inner {
   width: 85%;
   font-size: xx-small;
 
 }
-
 .ivu-avatar {
   width: 42px;
   height: 42px;
   border-radius: 5px;
 }
-
 .ivu-card-bordered {
   border: 0;
   border-color: #e8eaec;
   box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
 }
-
-
 .demo::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }
 .infotitle{
   font-size: 16px;
 }
-
 .myupdiv{
   text-align:center;
   height: 80px;
-  /*padding: 10px;*/
-  /*font-weight: bold;*/
   min-width: 65px;
   -webkit-transition:all 0.5s ease 0s;
   -moz-transition:all 0.5s ease 0s;
@@ -268,7 +254,6 @@
 }
 .myupdiv:hover{
   opacity: 0.5;
-  /*margin-top: 10px;*/
   -webkit-transition:all 0.5s ease 0s;
   -moz-transition:all 0.5s ease 0s;
   transition:all 0.5s ease 0s;
