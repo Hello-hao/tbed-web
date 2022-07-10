@@ -58,8 +58,6 @@
 }
 .cardShadow{
   border-radius: 10px;
-  /*box-shadow: 3px 3px 5px #e5e5e5, -3px -3px 5px #e5e5e5;*/
-  /*box-shadow:0 3px 6px 0 rgba(67,67,67,.25);*/
   margin-top: 10px;
 }
 </style>
@@ -149,8 +147,8 @@
           <Col flex="1" style="padding: 8px;">
             <Card class="cardShadow" style="margin-top: 10px;">
               <div class="mydiv" style="cursor:pointer;" @click="showToken">
-                <p><Icon type="md-happy" style="color: #5cdbd3;" class="myico"/></p>
-                <p style="font-size: 16px;line-height: 32px; cursor:pointer;">{{helloText}}{{$store.state.userName}}</p>
+                <p><Icon type="md-key" style="color: #5cdbd3;" class="myico"/></p>
+                <p style="font-size: 18px;line-height: 32px; cursor:pointer;">token</p>
               </div>
             </Card>
           </Col>
@@ -233,6 +231,16 @@
           @on-ok="SpaceExpansion">
         <p style="text-align: center;"><Input v-model="SpaceCode" size="large" prefix="md-pint" placeholder="请输入你的扩容码" style="width: 88%" /></p>
       </Modal>
+      <Modal  v-model="myTokenMsg" :footer-hide="true">
+        <br />
+        <Card :dis-hover="true" :bordered="false" :shadow="false">
+          <div style="text-align:center">
+            <p style="font-weight: bold;">{{this.mytoken==null?'点击下方按钮更新Token':this.mytoken}}</p>
+            <Divider />
+            <Button size="small" :loading="tokenLoading" @click.native="updateToken">更新Token</Button>
+          </div>
+        </Card>
+      </Modal>
     </Layout>
 
 </template>
@@ -249,7 +257,9 @@ export default {
 
   data() {
     return {
-      helloText:'Hi',
+      tokenLoading:false,
+      myTokenMsg:false,
+      mytoken:'',
       spinShow:true,
       top1:require("../../assets/img/NO.1.png"),
       top2:require("../../assets/img/NO.2.png"),
@@ -307,9 +317,7 @@ export default {
   mounted() {
     window.onresize = () => {
       return (() => {
-        //获取高度
         this.myCharth = document.getElementById('container').clientHeight;
-        //获取宽度
         this.myChartw = document.getElementById('container').clientWidth;
         this.myChart.resize({
           width: this.myChartw,
@@ -318,25 +326,6 @@ export default {
       })()
     }
 
-    var now = new Date();
-    var hour = now.getHours();
-    if(hour < 6) {
-      this.helloText="早上好！";
-    }else if(hour < 9) {
-      this.helloText="早上好！";
-    }else if(hour < 12) {
-      this.helloText="上午好！";
-    }else if(hour < 14) {
-      this.helloText="中午好！";
-    }else if(hour < 17) {
-      this.helloText="下午好！";
-    }else if(hour < 19) {
-      this.helloText="傍晚好！";
-    }else if (hour < 22) {
-      this.helloText="晚上好！";
-    }else{
-      this.helloText="夜里好！";
-    }
     this.getDatas();
     this.getRecently();
     this.getYyyy();
@@ -345,9 +334,7 @@ export default {
   methods: {
     initChart(){
       this.myCharth = document.getElementById('container').clientHeight;
-      //获取宽度
       this.myChartw = document.getElementById('container').clientWidth;
-      // 基于准备好的dom，初始化echarts实例
       this.myChart = echarts.init(document.getElementById('container'))
       this.myChart.resize({
         width: this.myChartw,
@@ -367,6 +354,7 @@ export default {
           var json = res.data.data;
           if(res.data.code=='200'){
             this.ok=json.ok;
+            this.mytoken = json.myToken;
             this.imgTotal=json.imgTotal?json.imgTotal:0;
             this.userTotal=json.userTotal?json.userTotal:0;
             this.ViolationImgTotal=json.ViolationImgTotal?json.ViolationImgTotal:0;
@@ -514,9 +502,33 @@ export default {
       this.getChart();
     },
     showToken(){
-      console.log("Hellohao!")
+      this.myTokenMsg = true;
     },
+    updateToken(){
+      this.tokenLoading= true;
+      setTimeout(() =>{
+        request(
+            "/admin/updateToken",
+            {}).then(res => {
+          if(res.status==200){
+            var token = res.data.data;
+            if(res.data.code=='200'){
+              this.tokenLoading= false;
+              this.$Message.success(res.data.info);
+              this.mytoken = token;
+            }else{
+              this.$Message.error(res.data.info);
+            }
+          }else{
+            this.$Message.error("请求时出现错误");
+          }
+        }).catch(err => {
+          console.log(err);
+          this.$Message.error('服务器请求updateToken错误');
+        })
+      },2000);
 
+    },
     getRecently(){
       request(
           "/admin/getRecently",
@@ -541,7 +553,7 @@ export default {
         console.log(err);
         this.$Message.error('服务器请求getRecently错误');
       })
-    }
+    },
 
 
   }

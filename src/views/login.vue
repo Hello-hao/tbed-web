@@ -154,7 +154,6 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-
           if(this.formInline.email=='' || this.formInline.email==null){
             this.$Message.info('请输入邮箱');
             return false;

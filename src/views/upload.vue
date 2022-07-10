@@ -7,7 +7,7 @@
               :class="{'Hollowed':true}"
               @mouseover="mouseOver"
               @mouseleave="mouseLeave"
-              style="margin-top: 10px;padding-left: 8px; padding-right: 8px;cursor:pointer;" @click.native="showUrlUploadMsg">
+              style="background: #FFF;margin-top: 10px;padding-left: 8px; padding-right: 8px;cursor:pointer;" @click.native="showUrlUploadMsg">
           <div class="myupdiv" >
             <img :src="linkImg" referrerpolicy="no-referrer" style="width: 45px;" class="toolImg"  />
             <p style="font-size: 18px;margin-top: 5px;line-height: 32px; font-size: 1.0vh;color: #808794;text-align: right;">

@@ -165,7 +165,7 @@ export default {
           "/admin/root/getGroupList",
           paramJson).then(res => {
         if(res.status==200){
-          var arr = res.data.data;
+          var arr = res.data.data.list;
           this.total = res.data.count;
           if(arr.length>0){
             this.groupList = arr;

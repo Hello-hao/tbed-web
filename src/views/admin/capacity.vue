@@ -150,7 +150,7 @@ export default {
           "/admin/root/selectCodeList",
           paramJson).then(res => {
         if(res.status==200){
-          var arr = res.data.data;
+          var arr = res.data.data.list;
           this.total = res.data.count;
           if(arr.length>0){
             this.codeList = arr;

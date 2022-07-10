@@ -216,12 +216,6 @@
                     </FormItem>
                     <FormItem label="站点关键词" :label-width="90">
                        <Input v-model="config.webkeywords" maxlength="500"  placeholder="多个关键词用(英文)“ , ”隔开"  />
-<!--                      <Tooltip placement="top">-->
-<!--                        <Icon type="md-information-circle" size="18" />-->
-<!--                        <div slot="content">-->
-<!--                          <p>多个关键词用(英文)“ , ”隔开</p>-->
-<!--                        </div>-->
-<!--                      </Tooltip>-->
                     </FormItem>
                     <FormItem label="站点描述" :label-width="90">
                       <Input   type="textarea" v-model="config.webms" :rows="4" maxlength="500"  placeholder="请输入站点描述文本" />
@@ -232,10 +226,6 @@
                     <FormItem label="关于弹窗" :label-width="90">
                       <Input   type="textarea" v-model="config.aboutinfo" :rows="4" maxlength="500"  placeholder="请输入站内关于菜单的内容,支持html标签" />
                     </FormItem>
-
-<!--                    <FormItem label="统计JS代码" :label-width="90">-->
-<!--                      <Input   type="textarea" v-model="config.baidu" :rows="4" maxlength="2000"  placeholder="添加网站统计的JS代码，不需要要添加<script>标签</script>" />-->
-<!--                    </FormItem>-->
                     <FormItem label="备案显示" :label-width="90">
                       <Input   type="textarea"  v-model="config.links" :rows="4" maxlength="5000"  placeholder="站点底部备案信息，不填写则不显示" />
                     </FormItem>
@@ -246,17 +236,44 @@
             </Row>
 
           </TabPane>
-          <TabPane label="其他配置" icon="ios-filing" disabled>敬请期待</TabPane>
+          <TabPane label="客户端配置" icon="md-desktop">
+            <Row>
+              <Col span="24" style="margin-bottom: 10px;">
+                <Card shadow>
+                  <p slot="title"><Icon type="md-desktop"  size="18" /> 客户端配置</p>
+                  <Form style="padding: 16px;">
+                    <FormItem label="程序控制" :label-width="110">
+                      <Input clearable v-model="appclient.isuse" maxlength="50"  placeholder="on\off（其他字符均为关闭）" style="max-width: 600px;" />
+                    </FormItem>
+                    <FormItem label="程序标题" :label-width="110">
+                      <Input clearable v-model="appclient.appname" maxlength="20"  placeholder="程序主界面标题" style="max-width: 600px;" />
+                    </FormItem>
+                    <FormItem label="标题LOGO" :label-width="110">
+                      <Input clearable v-model="appclient.applogo" maxlength="500"  placeholder="程序主界面图标，图像比例为1:1，如：300x300" style="max-width: 600px;" />
+                    </FormItem>
+                    <FormItem label="是否更新" :label-width="110">
+                      <Input clearable v-model="appclient.appupdate" maxlength="50"  placeholder="on\off（其他字符均为关闭）" style="max-width: 600px;" />
+                    </FormItem>
+                    <FormItem label="新版地址(WIN)" :label-width="110">
+                      <Input clearable v-model="appclient.winpackurl" maxlength="500"  placeholder="新版本安装包下载地址" style="max-width: 600px;"  />
+                    </FormItem>
+                    <FormItem label="新版地址(MAC)" :label-width="110">
+                      <Input clearable v-model="appclient.macpackurl" maxlength="500"  placeholder="新版本安装包下载地址" style="max-width: 600px;"  />
+                    </FormItem>
+                    <FormItem>
+                      <p>图床客户端程序可在<a target="_blank" href="http://tbed.hellohao.cn">Hellohao图像托管官网</a>获取</p>
+                      <p style="font-size: 12px;position: absolute;color: rgb(228 102 70);">注意：欲要向用户推送新版本，需要将“是否更新”开启为on,然后填写新版本的下载地址。</p>
+                    </FormItem>
+
+                  </Form>
+                </Card>
+              </Col>
+            </Row>
+          </TabPane>
         </Tabs>
-
-
       </Content>
     <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
     </Layout>
-
-
-
-
 
 </template>
 
@@ -270,7 +287,8 @@ export default {
       loading:false,
       uploadConfig:{},
       sysConfig:{},
-      config:{}
+      config:{},
+      appclient:{},
 
   }
   },
@@ -290,6 +308,7 @@ export default {
             this.uploadConfig=json.uploadConfig;
             this.config = json.config;
             this.sysConfig=json.sysConfig;
+            this.appclient = json.appClient;
           }else{
             this.$Message.error("获取数据失败，请稍后再试");
           }
@@ -338,6 +357,7 @@ export default {
         uploadConfig:this.uploadConfig,
         config:this.config,
         sysConfig:this.sysConfig,
+        appClient:this.appclient
       }
       request(
           "/admin/root/updateConfig",

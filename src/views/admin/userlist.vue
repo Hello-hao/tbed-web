@@ -222,7 +222,7 @@ export default {
           paramJson).then(res => {
         this.isSearchUser = false;
         if(res.status==200){
-          var arr = res.data.users;
+          var arr = res.data.data.list;
           this.total = res.data.count;
           if(arr.length>0){
             this.userList = arr;

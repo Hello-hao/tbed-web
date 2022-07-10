@@ -154,7 +154,7 @@ export default {
           paramJson).then(res => {
             if(res.status==200){
               this.loading = false;
-              this.GalleryList = res.data.data;
+              this.GalleryList = res.data.data.list;
               this.total = res.data.count;
             }
       }).catch(err => {
