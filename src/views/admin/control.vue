@@ -136,7 +136,7 @@
               <div class="mydiv" style="padding: 6px 15px;">
                 <Tooltip content="我的容量" theme="light" placement="right-start" >
                 <i-circle :percent="myMemory" dashboard :size="70" stroke-color="#30c479" :stroke-width="9" :trail-width="9">
-                  <p style="font-size:14px">{{myMemory}}%</p>
+                  <p style="font-size:11px">{{myMemory}}%</p>
                   <p @click="ShowSpaceExpansion" style="font-size: smaller;color: #32a0e9; cursor:pointer; line-height: 23px;font-weight: 300;"><u>扩容</u></p>
                 </i-circle>
                 <p style="font-size: 14px;line-height: 16px;">{{myMemorySum}}</p>
