@@ -21,7 +21,7 @@
                 <span style="line-height: 16px;padding: 8px;min-width: 100px;"><a style="color: #515a6e;" href="https://github.com/Hello-hao/Tbed">https://github.com/Hello-hao/Tbed</a></span>
               </p>
               <p style="font-size: 14px;"><span >作者:</span>&nbsp;
-                <span style="line-height: 16px;padding: 8px;min-width: 100px;"><a style="color: #515a6e;" href="http://www.hellohao.cn">Hellohao开发</a></span>
+                <span style="line-height: 16px;padding: 8px;min-width: 100px;"><a style="color: #515a6e;" href="http://tbed.hellohao.cn">Hellohao</a></span>
               </p>
               <p style="font-size: 14px;"><span >开发者交流群:</span>&nbsp;
                 <span style="line-height: 16px;padding: 8px;min-width: 100px;">864800972</span>
