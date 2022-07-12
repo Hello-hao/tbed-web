@@ -3,6 +3,10 @@
       <Content :style="{margin: '15px 20px 0', minHeight: '500px'}">
         <Card style="width:100%; margin:10px auto; box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 3px 2px;" :bordered="false" >
           <div >
+            <p slot="title">客户端对接</p>
+            <p style="font-size: 16px;font-weight: bold;"># Token方式</p>
+            <p style="color: #cc2a5b">服务器地址：{{$store.state.serverHost}}</P>
+            <br />
             <p slot="title">图像上传</p>
             <p style="color: #cc2a5b">上传头需要是Content-Type: multipart/form-data;</P>
             <br />

@@ -1,14 +1,6 @@
 
 <template>
     <Layout  style="width: 100%;height: 100%;background: #fff;background-repeat: no-repeat; background-size: 100% 100%; -moz-background-size: 100% 100%; ">
-<!--      <Drawer title="资讯" placement="top" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">-->
-<!--        <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 125px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">-->
-<!--        </div>-->
-<!--        <div style="height: 50px; text-align: center; position: absolute; bottom: 10px; left: 0; right: 0; margin: auto;">-->
-<!--              <Checkbox style="font-size: 14px;" v-model="noticeSwitch">三天内不再通知</Checkbox>-->
-<!--              <p><Button shape="circle" @click="noticeChange"> 好 的 </Button></p>-->
-<!--        </div>-->
-<!--      </Drawer>-->
 
       <Drawer title="资讯" placement="top" height ="363" :closable="false" v-model="$store.state.noticePopup" v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">
         <div style="padding: 0 20px;letter-spacing: 2px; line-height: 26px; font-size: 16px;height: 220px; overflow: auto;" v-html="this.$store.state.metaInfo.explain">
@@ -70,13 +62,10 @@
                 </DropdownMenu>
               </Dropdown>
             </template>
-
             <Badge :status="$store.state.loginStatus?'success':'warning'" />
-
           </div>
         </Menu>
       </Header>
-
 
       <Content :style="{margin: '50px auto', minWidth:'45vh',width: '95%',background: '#FFF'}" >
         <router-view ref='indexTarget' @showBtn="isShowBtn"></router-view>
@@ -89,7 +78,6 @@
           </Tooltip>
         </div>
       </Content>
-<!--      <Footer class="layout-footer-center " style="position: fixed; bottom: 0; width: 100%;"  v-html="this.$store.state.metaInfo.links?this.$store.state.metaInfo.links:''"  v-show="this.$store.state.preludeSwitch" ></Footer>-->
       <Footer class="layout-footer-center"   v-html="this.$store.state.metaInfo.links?this.$store.state.metaInfo.links:''"></Footer>
 
       <Modal  v-model="IsAbout" :footer-hide="true">
@@ -325,7 +313,6 @@ export default {
   width: 100%;
   height: 100%;
   position: fixed;
-  /*background: #696c6f;*/
   background: #fff;
   overflow: hidden;
   z-index: 999;

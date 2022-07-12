@@ -219,12 +219,14 @@
 
 </script>
 
-<style>
+<style scoped>
 svg {
   width: 3.75em;
   transform-origin: center;
   animation: rotate 2s linear infinite;
 }
+</style>
+<style>
 
 circle {
   fill: none;
@@ -255,8 +257,6 @@ circle {
     stroke-dashoffset: -125px;
   }
 }
-
-
 
 .example-code-more {
   text-align: center;
