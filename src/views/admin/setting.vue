@@ -251,8 +251,8 @@
                     <FormItem label="标题LOGO" :label-width="110">
                       <Input clearable v-model="appclient.applogo" maxlength="500"  placeholder="程序主界面图标，图像比例为1:1，如：300x300" style="max-width: 600px;" />
                     </FormItem>
-                    <FormItem label="是否更新" :label-width="110">
-                      <Input clearable v-model="appclient.appupdate" maxlength="50"  placeholder="on\off（其他字符均为关闭）" style="max-width: 600px;" />
+                    <FormItem label="程序版本" :label-width="110">
+                      <Input clearable v-model="appclient.appupdate" maxlength="50"  placeholder="填写开发者发布的最新版本号" style="max-width: 600px;" />
                     </FormItem>
                     <FormItem label="新版地址(WIN)" :label-width="110">
                       <Input clearable v-model="appclient.winpackurl" maxlength="500"  placeholder="新版本安装包下载地址" style="max-width: 600px;"  />
@@ -261,8 +261,9 @@
                       <Input clearable v-model="appclient.macpackurl" maxlength="500"  placeholder="新版本安装包下载地址" style="max-width: 600px;"  />
                     </FormItem>
                     <FormItem>
-                      <p>图床客户端程序可在<a target="_blank" href="http://tbed.hellohao.cn">Hellohao图像托管官网</a>获取</p>
-                      <p style="font-size: 12px;position: absolute;color: rgb(228 102 70);">注意：欲要向用户推送新版本，需要将“是否更新”开启为on,然后填写新版本的下载地址。</p>
+                      <p style="font-size: 12px;">程序获取：图床客户端程序可在<a target="_blank" href="http://tbed.hellohao.cn">Hellohao图像托管官网</a>获取</p>
+                      <p style="font-size: 12px;">版本号填写：查看开发者的<a target="_blank" href="http://tbed.hellohao.cn">程序发布平台</a>，获取最新的程序版本号，按照规定格式填写进上方对应输入框(如：6.5.1)，当用户版本小于此版本时会触发更新。</p>
+<!--                      <p style="font-size: 12px;position: absolute;color: rgb(228 102 70);">注意：欲要向用户推送新版本，需要将“是否更新”开启为on,然后填写新版本的下载地址。</p>-->
                     </FormItem>
 
                   </Form>
