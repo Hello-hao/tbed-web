@@ -126,7 +126,7 @@
     <Modal  v-model="isimginfo" :footer-hide="true">
 
       <List :split="false" >
-        <ListItem><span style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;"><Icon style="font-size: 32px;" type="md-image" />&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;">{{imgage==null?'暂缺数据':imgage.imgname}}</span></span></ListItem>
+        <ListItem><span style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;"><Icon style="font-size: 32px;" type="md-image" />&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;cursor: pointer;text-decoration:underline;" @click="updateFileName">{{imgage==null?'暂缺数据':imgage.idname}}</span></span></ListItem>
       </List>
 
       <Tabs>

@@ -422,6 +422,57 @@ export default {
             })
         },
 
+        updateFileName(){
+            var newStr = this.imgage.idname;
+            this.$Modal.confirm({
+                render: (h) => {
+                    return h('Input', {
+                        props: {
+                            value: this.imgage.idname,
+                            autofocus: true,
+                            placeholder: '请输入图像名称'
+                        },
+                        on: {
+                            input: (val) => {
+                                newStr = val.replace(/\s*/g,"");
+                            }
+                        }
+                    })
+                },
+                onOk: () => {
+                    this.sendUpdateFileName(newStr)
+                }
+            })
+        },
+
+        sendUpdateFileName(newStr){
+            var paramJson={};
+            if(newStr.length<1 || newStr.length>50){
+                this.$Message.warning("请填写有效名称");
+                return false;
+            }else{
+                paramJson.name=newStr
+                paramJson.imgname = this.imgage.imgname
+                request(
+                    "/admin/setImgFileName",
+                    paramJson).then(res => {
+                    if(res.status==200){
+                        if(res.data.code=='200'){
+                            this.$Message.success("名称修改成功");
+                            this.imgage.idname = newStr;
+                        }else{
+                            this.$Message.warning("名称修改失败");
+                        }
+                    }else{
+                        this.$Message.error("请求时出现错误");
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.$Message.error('服务器请求错误');
+                })
+            }
+        },
+
     },
     mounted(){
         window.onresize = () => {
