@@ -101,17 +101,14 @@ export default {
     }
   },
   mounted() {
-    // console.log("====="+JSON.stringify(this.$route))
-    this.verifyCodeURL=this.$http.defaults.baseURL+"/verifyCodeForRegister";
     // console.log("组件传送开始"+this.$serverHost)
     this.$emit('getRouterInfo', "ahahha");
+    this.getVerifyCode();
   },
   methods: {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
-        // console.log(valid)
         if (valid) {
-          // console.log(this.formInline.username)
           if(!this.formInline.username){
             this.$Message.info('请输入用户名');
             return false;
@@ -178,13 +175,27 @@ export default {
       // this.$Spin.hide();
     },
     reloadCode(){
-      var getTimestamp = new Date().getTime();
-      if (this.verifyCodeURL.indexOf("?") > -1) {
-        this.verifyCodeURL = this.verifyCodeURL + "&timestamp=" + getTimestamp
-      } else {
-        this.verifyCodeURL = this.verifyCodeURL + "?timestamp=" + getTimestamp
-      }
-    }
+      this.getVerifyCode()
+
+    },
+    //获取验证码
+    getVerifyCode(){
+      request(
+          "/verifyCodeForRegister",
+          {}).then(res => {
+        if(res.status==200){
+          var json = res.data;
+          localStorage.setItem('verifyCodeForRegister',json.data.codeKey)
+          this.verifyCodeURL = 'data:image/gif;base64,'+json.data.codeImg
+
+        }else{
+          this.$Message.error("请求时出现错误");
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$Message.error('服务器请求错误');
+      })
+    },
   }
 
 }

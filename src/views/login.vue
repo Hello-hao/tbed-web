@@ -22,7 +22,7 @@
                   <Input prefix="md-barcode" :maxlength="10" :rules="ruleInline" @keyup.enter.native="handleSubmit('formInline')" v-model="formInline.verifyCode" size="large"   style="width: 100%;height: 40px;" />
                 </Col>
                 <Col span="4" offset="1">
-                  <img @click="reloadCode(1)" :src="verifyCodeURL" />
+                  <img @click="reloadCode('verifyCode')" :src="verifyCodeURL" />
                 </Col>
               </Row>
               </FormItem>
@@ -41,7 +41,7 @@
             </Form>
             </Content>
             <Footer class="layout-footer-center" style="border-radius: 5px;" >
-              <Button type="text" ghost style="color: #598abb;" @click="() => {IsRetrieveMSG = true;reloadCode(3);}">忘记密码</Button>
+              <Button type="text" ghost style="color: #598abb;" @click="() => {IsRetrieveMSG = true;reloadCode('verifyCodeForRetrieve');}">忘记密码</Button>
             </Footer>
           </Layout>
 
@@ -66,7 +66,7 @@
                     <Input prefix="md-barcode" :maxlength="10"   v-model="retrieveData.retrieveCode" size="large"   style="width: 100%;height: 40px;" />
                   </Col>
                   <Col span="4" offset="1">
-                    <img @click="reloadCode(3)" :src="retrieveCodeURL" />
+                    <img @click="reloadCode('verifyCodeForRetrieve')" :src="retrieveCodeURL" />
                   </Col>
                 </Row>
               </FormItem>
@@ -141,16 +141,37 @@ export default {
     }
   },
   mounted() {
-    this.verifyCodeURL=this.$http.defaults.baseURL+"/verifyCode";
-    this.retrieveCodeURL=this.$http.defaults.baseURL+"/verifyCodeForRetrieve";
     // console.log("组件传送开始"+this.$serverHost)
     this.$emit('getRouterInfo', "ahahha");
+    this.getVerifyCode("verifyCode");
   },
   methods: {
     registerClick(){
       this.$router.replace("/register")
       this.isModule = 'register';
     },
+    //获取验证码
+    getVerifyCode(type){
+      request(
+          "/"+type,
+          {}).then(res => {
+        if(res.status==200){
+          var json = res.data;
+          localStorage.setItem(type,json.data.codeKey)
+          if(type=='verifyCode'){
+            this.verifyCodeURL = 'data:image/gif;base64,'+json.data.codeImg
+          }else if(type=='verifyCodeForRetrieve'){
+            this.retrieveCodeURL = 'data:image/gif;base64,'+json.data.codeImg
+          }
+        }else{
+          this.$Message.error("请求时出现错误");
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$Message.error('服务器请求错误');
+      })
+    },
+
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -193,7 +214,7 @@ export default {
                     this.$Message.success(json.info);
                     this.$router.replace("/");//index
                   }else{
-                    this.reloadCode(1);
+                    this.reloadCode('verifyCode');
                     this.formInline.verifyCode = '';
                     this.$Message.error(json.info);
                   }
@@ -203,7 +224,7 @@ export default {
           }).catch(err => {
             this.$Spin.hide();
             console.log(err);
-            this.reloadCode(1);
+            this.reloadCode('verifyCode');
             this.$Message.error('服务器请求错误');
           })
         } else {
@@ -216,35 +237,21 @@ export default {
       // this.$Spin.hide();
     },
     reloadCode(v){
-      var getTimestamp = new Date().getTime();
-      if(v==1){
-        if (this.verifyCodeURL.indexOf("?") > -1) {
-          this.verifyCodeURL = this.verifyCodeURL + "&timestamp=" + getTimestamp
-        } else {
-          this.verifyCodeURL = this.verifyCodeURL + "?timestamp=" + getTimestamp
-        }
-      }else{
-        if (this.retrieveCodeURL.indexOf("?") > -1) {
-          this.retrieveCodeURL = this.retrieveCodeURL + "&timestamp=" + getTimestamp
-        } else {
-          this.retrieveCodeURL = this.retrieveCodeURL + "?timestamp=" + getTimestamp
-        }
-      }
-
+      this.getVerifyCode(v);
     },
     sendRetrievePass(){
       var that = this;
       that.reloadLoading = true;
       if(that.retrieveData.email==null || that.retrieveData.email.replace(/\s*/g,"")=='' || that.retrieveData.retrieveCode==null || that.retrieveData.retrieveCode.replace(/\s*/g,"")==''){
         that.$Message.warning('邮箱和验证码不能为空');
-        that.reloadCode(3);
+        that.reloadCode('verifyCodeForRetrieve');
         that.reloadLoading = false;
         return false;
       }
       var verify = /^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
       if (!verify.test(that.retrieveData.email)) {
         that.$Message.warning('邮箱格式错误, 请重新输入');
-        that.reloadCode(3);
+        that.reloadCode('verifyCodeForRetrieve');
         that.reloadLoading = false;
         return false;
       }
@@ -255,7 +262,7 @@ export default {
           request(
               "/user/retrievePass",
               that.retrieveData).then(res => {
-            that.reloadCode(3);
+            that.reloadCode('verifyCodeForRetrieve');
             that.reloadLoading = false;//释放按钮
             if(res.status==200){
               var json = res.data;

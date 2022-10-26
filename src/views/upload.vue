@@ -126,7 +126,7 @@
         <br />
         <Form  @submit.native.prevent>
           <FormItem >
-            <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"   placeholder="图像链接请按照每行一条填写" />
+            <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"   placeholder="图像链接请按照每行一条填写(部分非直链图像或防盗链图像可能会转存失败)" />
           </FormItem>
           <p style="text-align: center;color: #d55757;" v-show="tempURLErr" >您所输入的行数已经超过单次可上传的数量</p>
           <p style="text-align: center;color: #5f5f5f;" v-text="'单次批量上传 '+tempLink+'/'+this.uploadInfo.imgcount"></p>

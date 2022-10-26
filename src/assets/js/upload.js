@@ -374,11 +374,12 @@ export default {
             this.isAlbum=true;
         },
         showUrlUploadMsg(){
-            if(this.uploadInfo.uploadSwitch==1){
-                this.urlUploadMsg = true;
-            }else{
-                this.$Message.warning(this.uploadInfo.uploadInfo);
-            }
+            this.urlUploadMsg = true;
+            // if(this.uploadInfo.uploadSwitch==1){
+            //     this.urlUploadMsg = true;
+            // }else{
+            //     this.$Message.warning(this.uploadInfo.uploadInfo);
+            // }
         },
         showtermMsg(){
             this.termMsg = true;
