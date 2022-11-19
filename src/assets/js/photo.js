@@ -3,113 +3,152 @@ import vueQr from 'vue-qr'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import albumList from '../../components/comp/album-list.vue'
+import {v4 as uuidv4} from 'uuid';
 
 export default {
     name: "photo",
-    data () {
+    data() {
         return {
-            isPageLoad:true,
-            isDelfun:false, //删除时的遮罩控制
-            delProgress:{},//删除时的实时数据
-            delOver:false,//是否删除完成了
-            delImgCount:0,//删除选中图片的总个数
-            isDelImgModal:false,//删除失败的图像展示框
-            screenWidth:document.body.clientWidth,
-            httpText:window.location.protocol,
-            hostText:window.location.host,
-            upName:null,
-            imgage:null,
-            isViolation:{
-                isControl:false,
-                info:"此图像可能存在违规内容 建议删除"
+            pageUUID: null,
+            imgWidth: 160,
+            rightClickData: {},
+            isPageLoad: true,
+            isDelfun: false, //删除时的遮罩控制
+            delProgress: {},//删除时的实时数据
+            delOver: false,//是否删除完成了
+            delImgCount: 0,
+            isDelImgModal: false,//删除失败的图像展示框
+            screenWidth: document.body.clientWidth,
+            httpText: window.location.protocol,
+            hostText: window.location.host,
+            upName: null,
+            isViolation: {
+                isControl: false,
+                info: "此图像可能存在违规内容 建议删除"
             },
-            issearchimg:false,
-            isimginfo:false,
+            isimginfo: false,
             imglist: [],
-            pageNum:1,
-            pageSize:40,
-            selecttype:2,
-            type:'picture',
-            selectIndex:[],
-            selectImgUrl:[],
-            selectImgUid:[],
-            bucketname:null,
-            bucketlist:[],
-            selectUserType:'me',
-            searchtype:'1',//查询的文本类型
-            searchtext:null,//查询的文本
-            searchbucket:'',
-            searchStartDate:null,
-            searchStopDate:null,
-            submitData:[],
-            toolBottom:10,
-            nextButloading:false,
-            btntext:'加载更多',
+            pageNum: 1,
+            pageSize: 100,
+            selecttype: 2,
+            type: 'picture',
+            bucketname: null,
+            bucketlist: [],
+            selectUserType: 'me',
+            searchtype: '1',//查询的文本类型
+            searchtext: null,//查询的文本
+            searchbucket: '',
+            searchStartDate: null,
+            searchStopDate: null,
+            submitData: [],
+            toolBottom: 10,
+            nextButloading: false,
+            btntext: '加载更多',
             treePopup: false,
-            violation:false,
-            moveImgLoading:false,
-            noImgMsg : false,//没有图像的时候提示
+            violation: false,
+            moveImgLoading: false,
+            noImgMsg: false,//没有图像的时候提示
             //画廊
-            isAlbum:false,
+            isAlbum: false,
             visible: false,
-            albumlist:[],
-            albumData:{},
-            spinShow:true,
-            copyImgUrl:{
-                IsImgLink:false,
-                imgLinkForUrl:null,
-                imgLinkForMD:null,
-                imgLinkForHtml:null,
-            }
+            albumlist: [],
+            albumData: {},
+            spinShow: true,
+            copyAllImgUrl: {
+                isCopyMsg: false,
+                myurl: '[url=@myurl@][img]@myurl@[/img][/url]',
+                urlTexts_url: '',//多选复制
+                urlTexts_html: '',//多选复制
+                urlTexts_md: '',//多选复制
+                urlTexts_diy: '', //多选复制
+            },
+            select: {
+                selectIndex: [],
+                selectImgUrl: [],
+                selectImgUid: [],
+            },
 
         }
     },
+    mounted() {
+        this.pageUUID = uuidv4();
+        //滚轮监听
+        window.addEventListener("scroll", this.handleScroll, true);
+        if (this.$refs.dom.clientWidth <= 356) {
+            this.imgWidth = 130;
+        } else {
+            this.imgWidth = 160;
+        }
+        const that = this
+        window.onresize = () => {
+            return (() => {
+                try {
+                    window.screenWidth = document.body.clientWidth
+                    that.screenWidth = window.screenWidth
+                    that.clientWidth = that.$refs.dom.clientWidth + 'px';
+                    if (that.$refs.dom.clientWidth <= 356) {
+                        that.imgWidth = 130;
+                    } else {
+                        that.imgWidth = 160;
+                    }
+                } catch (e) {
+                    that.imgWidth = 160;
+                }
+            })()
+        }
+
+        this.$Spin.show();
+        this.getStorage();
+        this.selectPhoto();
+    },
     methods: {
-        selectPhoto(){
-            this.issearchimg = false;
+        lookImg(img) {
+            this.$refs[`myImages_${img.id}`][0].click()
+        },
+        selectPhoto() {
             // this.$Spin.show();
-            this.nextButloading=true;
-            var paramJson={};
-            paramJson.pageNum=this.pageNum;
-            paramJson.pageSize=this.pageSize;
+            this.nextButloading = true;
+            var paramJson = {};
+            paramJson.pageNum = this.pageNum;
+            paramJson.pageSize = this.pageSize;
             paramJson.selectUserType = this.selectUserType;
-            if(this.selectUserType=='me'){
+            if (this.selectUserType == 'me') {
                 paramJson.selecttype = null;
                 paramJson.username = null;
-            }else{
+            } else {
                 paramJson.selecttype = this.searchtype;
                 paramJson.username = this.searchtext;
             }
-            paramJson.source=this.searchbucket;
-            paramJson.starttime=this.searchStartDate==''?null:this.searchStartDate;
-            paramJson.stoptime=this.searchStopDate==''?null:this.searchStopDate;
+            paramJson.source = this.searchbucket;
+            paramJson.starttime = this.searchStartDate == '' ? null : this.searchStartDate;
+            paramJson.stoptime = this.searchStopDate == '' ? null : this.searchStopDate;
             paramJson.violation = this.violation;
             this.treePopup = false;
             request(
                 "/admin/selectPhoto",
                 paramJson).then(res => {
-                if(res.status==200){
-                    if(res.data.code=='200'){
+                if (res.status == 200) {
+                    if (res.data.code == '200') {
                         var arr = res.data.data.rows;
-                        this.nextButloading=false;
-                        if(arr.length>0){
-                            this.imglist=this.imglist.concat(arr);
+                        this.nextButloading = false;
+                        if (arr.length > 0) {
+                            this.imglist = this.imglist.concat(arr);
                             this.pageNum++;
-                            if(this.imglist.length<this.pageSize){
-                                this.btntext='所有数据加载完毕';
-                            }else{
-                                this.btntext='加载更多';
+                            if (this.imglist.length < this.pageSize) {
+                                this.btntext = '所有数据加载完毕';
+                            } else {
+                                this.btntext = '加载更多';
                             }
-                        }else{
-                            this.btntext='所有数据加载完毕';
+                        } else {
+                            this.btntext = '所有数据加载完毕';
                         }
-                        if(this.imglist.length==0){
+                        if (this.imglist.length == 0) {
                             this.noImgMsg = true;
                         }
-                    }else{
+                    } else {
                         this.$Message.warning(res.data.info);
                     }
-                }else{
+                } else {
                     this.$Message.error("请求时出现错误");
                 }
             }).catch(err => {
@@ -117,53 +156,62 @@ export default {
                 this.$Message.error('服务器请求错误');
             })
         },
-        selectImgs(item){
-            if(this.selectIndex.indexOf(item.id) == -1){
-                this.selectIndex.push(item.id);
-            }else{
-                this.selectIndex.splice(this.selectIndex.indexOf(item.id),1);
+        selectImgs(item) {
+            // this.rightClickData =
+            if (this.select.selectIndex.indexOf(item.id) == -1) {
+                this.select.selectIndex.push(item.id);
+                this.rightClickData = item
+            } else {
+                this.select.selectIndex.splice(this.select.selectIndex.indexOf(item.id), 1);
+            }
+            console.log(this.select.selectIndex);
+
+            if (this.select.selectImgUrl.indexOf(item.imgurl) == -1) {
+                this.select.selectImgUrl.push(item.imgurl);
+                this.rightClickData = item
+            } else {
+                this.select.selectImgUrl.splice(this.select.selectImgUrl.indexOf(item.imgurl), 1);
             }
 
-            if(this.selectImgUrl.indexOf(item.imgurl) == -1){
-                this.selectImgUrl.push(item.imgurl);
-            }else{
-                this.selectImgUrl.splice(this.selectImgUrl.indexOf(item.imgurl),1);
+            if (this.select.selectImgUid.indexOf(item.imguid) == -1) {
+                this.select.selectImgUid.push(item.imguid);
+                this.rightClickData = item
+            } else {
+                this.select.selectImgUid.splice(this.select.selectImgUid.indexOf(item.imguid), 1);
             }
-            if(this.selectImgUid.indexOf(item.imguid) == -1){
-                this.selectImgUid.push(item.imguid);
-            }else{
-                this.selectImgUid.splice(this.selectImgUid.indexOf(item.imguid),1);
+            if (this.select.selectIndex.length == 1) {
+                for (let i = 0; i < this.imglist.length; i++) {
+                    if (this.imglist[i].id == this.select.selectIndex[0]) {
+                        this.rightClickData = this.imglist[i];
+                        break;
+                    }
+                }
             }
-
         },
         //显示画廊窗
-        allSett(){
-            if(this.selectIndex.length>0){
+        allSett() {
+            if (this.select.selectIndex.length > 0) {
                 this.getAlbumImgList();
                 this.visible = true;
-            }else{
+            } else {
                 this.$Message.info('请选择要操作的图片');
             }
         },
         //获取选中的画廊图片信息
-        getAlbumImgList(){
-            var param={
-                imguidlist:this.selectImgUid//JSON.stringify(this.selectIndex),
+        getAlbumImgList() {
+            var param = {
+                imguidlist: this.select.selectImgUid
             }
             request(
                 "/getAlbumImgList",
                 param).then(res => {
                 this.$Spin.hide();
-                if(res.status==200){
+                if (res.status == 200) {
                     var json = res.data.data;
                     this.albumlist = json;
-
-                    this.selectIndex = [];
-                    this.selectImgUrl = [];
-                    this.selectImgUid = [];
-
+                    this.clearSelectData();
                     this.spinShow = false;
-                }else{
+                } else {
                     this.$Message.error("请求时出现错误");
                 }
             }).catch(err => {
@@ -172,90 +220,79 @@ export default {
                 this.$Message.error('服务器请求错误');
             })
         },
-        returnData(data){
+        returnData(data) {
             this.visible = false;
             this.albumData = data;
-            if(this.albumData.password==null || this.albumData==''){
-                this.albumData.password='无';
+            if (this.albumData.password == null || this.albumData == '') {
+                this.albumData.password = '无';
             }
-            this.albumData.url = window.location.protocol+'//'+window.location.host+'/h/'+data.url;
-            this.isAlbum=true;
+            this.albumData.url = window.location.protocol + '//' + window.location.host + '/h/' + data.url;
+            this.isAlbum = true;
         },
-        selectAll(){
-            this.selectIndex = [];
-            this.selectImgUrl = [];
-            this.selectImgUid = [];
+        selectAll() {
+            this.clearSelectData();
             for (let i = 0; i < this.imglist.length; i++) {
-                this.selectIndex.push(this.imglist[i].id);
-                this.selectImgUrl.push(this.imglist[i].imgurl);
-                this.selectImgUid.push(this.imglist[i].imguid);
+                this.select.selectIndex.push(this.imglist[i].id);
+                this.select.selectImgUrl.push(this.imglist[i].imgurl);
+                this.select.selectImgUid.push(this.imglist[i].imguid);
             }
-            this.$Message.success("已选中"+this.selectIndex.length+"张图像");
+            this.$Message.success("已选中" + this.select.selectIndex.length + "张图像");
         },
-        noselectAll(){
-            if(this.selectIndex.length>0){
-                this.selectIndex = [];
+        noselectAll() {
+            if (this.select.selectIndex.length > 0) {
+                this.select.selectIndex = [];
                 this.$Message.success("已清空所选图像");
-            }else{
+            } else {
                 this.$Message.warning("你还没有选择图像哦");
             }
         },
-        searchimg(){
-            this.issearchimg = true;
-        },
-        startDateChange(e){
+        startDateChange(e) {
             console.log(e)
             this.searchStartDate = e;
         },
-        stopDateChange(e){
+        stopDateChange(e) {
             console.log(e)
             this.searchStopDate = e;
         },
-        //检测两个日期大小
         compareDate(checkStartDate, checkEndDate) {
-            var arys1= new Array();
-            var arys2= new Array();
-            if(checkStartDate != null && checkEndDate != null) {
-                arys1=checkStartDate.split('-');
-                  var sdate=new Date(arys1[0],parseInt(arys1[1]-1),arys1[2]);
-                arys2=checkEndDate.split('-');
-                var edate=new Date(arys2[0],parseInt(arys2[1]-1),arys2[2]);
-                if(sdate > edate) {
+            var arys1 = new Array();
+            var arys2 = new Array();
+            if (checkStartDate != null && checkEndDate != null) {
+                arys1 = checkStartDate.split('-');
+                var sdate = new Date(arys1[0], parseInt(arys1[1] - 1), arys1[2]);
+                arys2 = checkEndDate.split('-');
+                var edate = new Date(arys2[0], parseInt(arys2[1] - 1), arys2[2]);
+                if (sdate > edate) {
                     alert("日期开始时间大于结束时间");
                     return false;
-                }  else {
+                } else {
                     alert("通过");
                     return true;
                 }
             }
         },
-
-        //搜索触发
-        tosearch(){
-            this.pageNum = 1;
+        tosearch() {
             this.imglist = [];
-            this.selectIndex = [];
-            this.selectImgUrl = [];
+            this.clearSelectData();
+            this.pageNum = 1;
             this.selectPhoto();
         },
-        imgInfo (e) {
+        imgInfo(e) {
             this.isimginfo = true;
             this.getBucketName(e.source);
-            if(e.username!=null){
-                this.upName =e.username;
-            }else{
+            if (e.username != null) {
+                this.upName = e.username;
+            } else {
                 this.upName = '游客';
             }
-            if(e.violation!=null && e.violation!=""){
+            if (e.violation != null && e.violation != "") {
                 this.isViolation.isControl = true;
-            }else{
+            } else {
                 this.isViolation.isControl = false;
             }
-            this.imgage = e;
         },
-
-        delSelectImg(){
-            if(this.selectIndex.length==0){
+        delSelectImg() {
+            if (this.select.selectIndex.length == 0) {
                 this.$Message.warning("请先选择要操作的数据");
                 return false;
             }
@@ -263,130 +300,174 @@ export default {
                 title: '确认删除',
                 content: '<p>确认删除所选图像吗</p>',
                 onOk: () => {
-                    this.deleteImages(null,null);
+                    this.deleteImages(null, null);
                 },
                 onCancel: () => {
                 }
             });
-
         },
-        delImg(id,index){
+        delImg(id, index) {
             this.$Modal.confirm({
                 title: '确认删除',
                 content: '<p>确认删除所选图像吗</p>',
                 onOk: () => {
-                    this.deleteImages(id,index);
+                    this.deleteImages(id, index);
                 },
                 onCancel: () => {
                 }
             });
 
         },
-        deleteImages(id,index){
-            var paramJson={};
-            if(id==null){
-                if(this.selectIndex.length==0){
+        deleteImages(id, index) {
+            var paramJson = {};
+            if (id == null) {
+                if (this.select.selectIndex.length == 0) {
                     this.$Message.warning("所选数据丢失，不可操作");
                     return false;
                 }
-            }else{
-                this.selectIndex=[];
-                this.selectIndex.push(id);
+            } else {
+                this.select.selectIndex = [];
+                this.select.selectIndex.push(id);
             }
-            // paramJson.images=this.selectIndex;
-            paramJson.images=this.selectIndex.toString()+"";
-            this.delImgCount = this.selectIndex.length;//删除图像的总个数。用作页面显示
-            this.TimeingDelImg();
+            paramJson.images = this.select.selectIndex.toString() + "";
+            paramJson.uuid = 'DEL-' + this.pageUUID;
+            this.delImgCount = this.select.selectIndex.length;
             request(
                 "/admin/deleImages",
                 paramJson).then(res => {
-                if(res.status==200){
-                    // if(index!=null){
-                    //     this.imglist.splice(index, 1);
-                    // }else{
-                    //     for (let i = 0; i < this.imglist.length; i++) {
-                    //         for (let j = 0; j < this.selectIndex.length; j++) {
-                    //             if(this.imglist[i].id==this.selectIndex[j]){
-                    //                 this.imglist.splice(i, 1);
-                    //             }
-                    //         }
-                    //     }
-                    // }
-
-                }else{
+                if (res.status != 200) {
                     this.$Message.error("请求时出现错误");
+                } else {
+                    this.TimeingDelImg();
                 }
-
             }).catch(err => {
                 console.log(err);
                 this.$Message.error('服务器请求错误');
             })
-        },
 
-        TimeingDelImg(){
+        },
+        TimeingDelImg() {
             var that = this;
-            var interval = setInterval(function(){
-                that.GetDelprogress();
-                if(that.delOver){
-                    clearInterval(interval);
-                    that.isDelfun = false;
-                    that.$Message.success("删除完成");
-                    this.selectIndex = [];
-                    this.selectImgUrl = [];
-                    this.selectImgUid = [];
-                    var oklist = that.delProgress.oklist;
-                    if(that.delProgress.errorlist!=null){
-                        if(that.delProgress.errorlist>0){
-                            this.isDelImgModal=true;
+            let temp = false;
+            that.isDelfun = true;
+            var paramJson = {}
+            paramJson.uuid = 'DEL-' + that.pageUUID;
+            var interval = setInterval(function () {
+                let res = that.GetDelprogress(paramJson);
+                res.then(function (data) {
+                    if (that.delOver) {
+                        clearInterval(interval);
+                        that.isDelfun = false;
+                        that.$Message.success("删除完成");
+                        that.clearSelectData();
+                        var oklist = data.oklist;
+                        if (data.errorlist != null) {
+                            if (data.errorlist > 0) {
+                                that.isDelImgModal = true;
+                            }
                         }
-                    }
-                    if(oklist.length>0){
-                        for (let i = 0; i < that.imglist.length; i++) {
-                            for (let j = 0; j < oklist.length; j++) {
-                                if(that.imglist[i].id==oklist[j]){
-                                    that.imglist.splice(i, 1);
+                        if (oklist.length > 0) {
+                            console.log('??：', that.imglist)
+                            for (let i = 0; i < that.imglist.length; i++) {
+                                for (let j = 0; j < oklist.length; j++) {
+                                    if (that.imglist[i].id == oklist[j]) {
+                                        that.imglist.splice(i, 1);
+                                        that.$refs[`imgLi_${oklist[j]}`][0].remove();
+                                    }
                                 }
                             }
                         }
                     }
+                }, function (info) {
+                    console.log(info)
+                });
 
-                }else{
-                    // that.$Message.warning("正在删除");
-                    that.isDelfun = true;
-                }
-            }, 500);
+                temp = true;
+            }, 800);
         },
-
         getBucketName(id) {
             this.bucketname = "";
             for (let i = 0; i < this.bucketlist.length; i++) {
-                if(id==this.bucketlist[i].id){
+                if (id == this.bucketlist[i].id) {
                     this.bucketname = this.bucketlist[i].keyname;
                 }
             }
         },
-        showCopyImgUrl(img){
-            this.copyImgUrl.imgLinkForUrl = img.imgurl;
-            this.copyImgUrl.imgLinkForHtml = '<img src="'+img.imgurl+'" alt="'+img.imgname+'" />';
-            this.copyImgUrl.imgLinkForMD = '!['+img.imgname+']('+img.imgurl+')';
-            this.copyImgUrl.IsImgLink=true;
+        showCopyImgUrl(img) {
+            // this.copyImgUrl.imgLinkForUrl = img.imgurl;
+            // this.copyImgUrl.imgLinkForHtml = '<img src="'+img.imgurl+'" alt="'+img.imgname+'" />';
+            // this.copyImgUrl.imgLinkForMD = '!['+img.imgname+']('+img.imgurl+')';
+            // this.copyImgUrl.IsImgLink=true;
+
+            //上边是以前的单项复制
+            this.copyAllImgUrl.urlTexts_url = '';
+            this.copyAllImgUrl.urlTexts_html = '';
+            this.copyAllImgUrl.urlTexts_md = '';
+            for (let i = 0; i < this.select.selectImgUrl.length; i++) {
+                this.copyAllImgUrl.urlTexts_url += this.select.selectImgUrl[i] + '\n'
+                this.copyAllImgUrl.urlTexts_html += '<img src="' + this.select.selectImgUrl[i] + '" alt="Image" />\n'
+                this.copyAllImgUrl.urlTexts_md += '![image](' + this.select.selectImgUrl[i] + ')\n';
+            }
+            this.copyAllImgUrl.isCopyMsg = true
+
         },
-        copy(){
-            var clipboard = new this.clipboard('.cobyOrderSn')
+        // copy(){
+        //     var clipboard = new this.clipboard('.cobyOrderSn')
+        //     clipboard.on('success', e => {
+        //         this.$Message.success('复制成功');
+        //         clipboard.destroy()
+        //     })
+        //     clipboard.on('error', e => {
+        //         this.$Message.error('该浏览器不支持自动复制');
+        //         clipboard.destroy()
+        //     })
+        // },
+        copyAll(type) {
+            let arr = this.select.selectImgUrl;
+            var clipboard = null;
+            switch (type) {
+                case 'url':
+                    clipboard = new this.clipboard('.cobyOrderSn_url');
+                    break;
+                case 'html':
+                    clipboard = new this.clipboard('.cobyOrderSn_html');
+                    break;
+                case 'md':
+                    clipboard = new this.clipboard('.cobyOrderSn_md');
+                    break;
+                default:
+                    clipboard = new this.clipboard('.cobyOrderSn_diy');
+                    if (this.copyAllImgUrl.myurl.search("@myurl@") == -1) {
+                        this.$Message.warning('链接格式中必须包含通配符：@myurl@');
+                        return;
+                    }
+                    if (arr.length > 0) {
+                        this.copyAllImgUrl.urlTexts_diy = '';
+                        let reg = new RegExp('@myurl@', 'g')//g代表全部
+                        for (let i = 0; i < arr.length; i++) {
+                            var temp = this.copyAllImgUrl.myurl.replace(reg, arr[i]);
+                            this.copyAllImgUrl.urlTexts_diy += temp + '\n'
+                        }
+                    }
+            }
             clipboard.on('success', e => {
                 this.$Message.success('复制成功');
+                // 释放内存
                 clipboard.destroy()
             })
             clipboard.on('error', e => {
+                console.log(e);
+                // 不支持复制
                 this.$Message.error('该浏览器不支持自动复制');
+                // 释放内存
                 clipboard.destroy()
             })
         },
-        getStorage(){
+        getStorage() {
             request(
                 "/admin/getStorageName",
                 {}).then(res => {
-                if(res.status==200){
+                if (res.status == 200) {
                     this.$Spin.hide();
                     this.bucketlist = res.data.data;
                     this.$Spin.hide();
@@ -397,73 +478,98 @@ export default {
                 this.$Message.error('服务器请求错误');
             })
         },
-        formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]},
-
-        //删除时的实时刷新
-        GetDelprogress(){
-            this.$http(
-                "/admin/GetDelprogress",
-                {}).then(res => {
-                if(res.status==200){
-                    var json = res.data;
-                    if(json!=null && json !=undefined && json!=""){
-                        this.delProgress = json.data;
-                        if(json.data.delover=='true' || json.data.delover==true){
-                            this.delOver = true;
-                            this.timesRun = 0;
-                        }
-                    }
-                }else{
-                    this.$Message.error("获取进度_请求时出现错误");
-                }
-            }).catch(err => {
-                console.log(err);
-                this.$Message.error('获取进度_服务器请求错误');
-            })
+        formatBytes(a, b) {
+            if (0 == a) return "0 Bytes";
+            var c = 1024, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+                f = Math.floor(Math.log(a) / Math.log(c));
+            return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
         },
 
-        updateFileName(){
-            var newStr = this.imgage.idname;
+        //删除时的实时刷新
+        async GetDelprogress(paramJson) {
+            let than = this;
+            return await new Promise((resolve, reject) => {
+                request(
+                    "/admin/GetDelprogress",
+                    paramJson).then(res => {
+                    if (res.status == 200) {
+                        var json = res.data;
+                        if (json != null && json != undefined && json != "") {
+                            than.delProgress = json.data;
+                            if (json.data.delover == 'true' || json.data.delover == true) {
+                                than.delOver = true;
+                            }
+                            resolve(json.data)
+                        } else {
+                            reject(false)
+                        }
+                    } else {
+                        than.$Message.error("获取进度_请求时出现错误");
+                        reject(false)
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    than.$Message.error('获取进度_服务器请求错误');
+                    reject(false)
+                })
+            })
+
+        },
+
+        updateFileName(serType) {
+            var msg = '请输入图像名称'
+            var title = ''
+            var newStr = ''
+            if (serType == 'img') {
+                newStr = this.rightClickData.idname;
+                title = '图像名称';
+                msg = '请输入图像名称';
+            }
             this.$Modal.confirm({
+                title: title,
                 render: (h) => {
                     return h('Input', {
                         props: {
-                            value: this.imgage.idname,
+                            value: newStr,
                             autofocus: true,
-                            placeholder: '请输入图像名称'
+                            placeholder: msg
                         },
                         on: {
                             input: (val) => {
-                                newStr = val.replace(/\s*/g,"");
+                                newStr = val.replace(/\s*/g, "");
                             }
                         }
                     })
                 },
                 onOk: () => {
-                    this.sendUpdateFileName(newStr)
+                    if (serType == 'img') {
+                        this.sendUpdateFileName(newStr)
+                    }
+                },
+                onCancel: () => {
                 }
             })
         },
 
-        sendUpdateFileName(newStr){
-            var paramJson={};
-            if(newStr.length<1 || newStr.length>50){
+        sendUpdateFileName(newStr) {
+            var paramJson = {};
+            if (newStr.length < 1 || newStr.length > 50) {
                 this.$Message.warning("请填写有效名称");
                 return false;
-            }else{
-                paramJson.name=newStr
-                paramJson.imgname = this.imgage.imgname
+            } else {
+                paramJson.name = newStr
+                paramJson.imgname = this.rightClickData.imgname
                 request(
                     "/admin/setImgFileName",
                     paramJson).then(res => {
-                    if(res.status==200){
-                        if(res.data.code=='200'){
+                    if (res.status == 200) {
+                        if (res.data.code == '200') {
                             this.$Message.success("名称修改成功");
-                            this.imgage.idname = newStr;
-                        }else{
+                            this.rightClickData.idname = newStr;
+                        } else {
                             this.$Message.warning("名称修改失败");
                         }
-                    }else{
+                    } else {
                         this.$Message.error("请求时出现错误");
                     }
                 }).catch(err => {
@@ -472,20 +578,51 @@ export default {
                 })
             }
         },
+        clearSelectData() {
+            this.select.selectIndex = [];
+            this.select.selectImgUid = [];
+            this.select.selectImgUrl = [];
+        },
+        //右键事件
+        contextmenuClick(e) {
+            let data = this.imglist[e.data.key]
+            this.rightClickData = data
+            if (this.select.selectIndex.length == 0) {
+                this.clearSelectData();
+                this.select.selectIndex.push(data.id)
+                this.select.selectImgUrl.push(data.imgurl)
+                this.select.selectImgUid.push(data.imguid)
+            } else {
+                if (this.select.selectIndex.indexOf(data.id) == -1) {
+                    this.clearSelectData();
+                    this.select.selectIndex.push(data.id)
+                    this.select.selectImgUrl.push(data.imgurl)
+                    this.select.selectImgUid.push(data.imguid)
+                }
+            }
+        },
+
+        async rightClickDelete() {
+            var than = this;
+            than.$Modal.confirm({
+                title: '提醒',
+                content: '<p>是否删除所选图像？</p>',
+                onOk: () => {
+                    if (than.select.selectIndex.length > 0) {
+                        this.deleteImages(null, null);
+                    }
+                },
+                onCancel: () => {
+                }
+            });
+        },
+        menuImgInfo() {
+            this.imgInfo(this.rightClickData)
+        },
+
 
     },
-    mounted(){
-        window.onresize = () => {
-            return (() => {
-                window.screenWidth = document.body.clientWidth
-                this.screenWidth = window.screenWidth
-            })()
-        }
-        this.$Spin.show();
-        this.getStorage();
-        this.selectPhoto();
-    },
-    components:{
+    components: {
         albumList,
         Treeselect,
         vueQr,

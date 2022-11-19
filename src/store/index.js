@@ -8,6 +8,7 @@ vue.use(vuex)
 const store = new vuex.Store({
     state:{
         version:20221027,
+        isMobile:'pc',
         serverHost:null,
         copyAllUrl:null,//一键复制存储内容
         userName:'' || localStorage.getItem('userName'),
@@ -46,7 +47,9 @@ const store = new vuex.Store({
         setCopyAllUrl(state, copyAllUrl) {
             state.copyAllUrl = copyAllUrl;
         },
-
+        setIsMobile(state, isMobile) {
+            state.isMobile = isMobile;
+        },
         cahngeMetaInfo(state, metaInfo) {
             if(metaInfo.websubtitle==null){
                 metaInfo.websubtitle="";

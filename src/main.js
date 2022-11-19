@@ -21,6 +21,8 @@ import "babel-polyfill";
 import locStorage from './assets/js/utils/locStorage.js'
 import img404 from './assets/img/img404.jpg'
 import imgloading from './assets/img/imgloading.gif'
+import contentmenu from 'v-contextmenu'
+import 'v-contextmenu/dist/index.css'
 
 Vue.config.productionTip = false
 
@@ -50,7 +52,6 @@ async function init() {
 }
 
 var options = {
-  // index: 0,
   escKey: false,
   showHideOpacity:false,
   bgOpacity:0.6,
@@ -67,9 +68,8 @@ Vue.use(Iview).use(preview,options).use(Viewer,{
   defaultOptions: {
     navbar:false
   }
-}).use(MetaInfo)
+}).use(MetaInfo).use(contentmenu)
 
-// 配置项
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: img404,
@@ -84,7 +84,7 @@ axios.defaults.headers = {
   'Content-Type': 'application/x-www-form-urlencoded',
   'usersOrigin':md5(window.location.protocol+'//'+window.location.host)
 }
-//注册拦截器
+
 axios.interceptors.request.use(config => {
   if(config.url.indexOf('user/login')!= -1){
     config.headers.verifyCode = localStorage.getItem('verifyCode');

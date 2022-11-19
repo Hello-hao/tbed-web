@@ -1,9 +1,31 @@
 <template>
 
   <Layout style="margin-top: 50px;margin-bottom: 50px;">
-    <Drawer title="图像类别" :closable="false"  v-model="treePopup"  :width="screenWidth<=368?screenWidth:368">
-      <Form  @submit.native.prevent style="margin-top: 30px;">
-        <FormItem  >
+    <v-contextmenu ref="contextmenu" :eventType="$store.state.isMobile=='pc'?'contextmenu':'noContextmenu'"
+                   @contextmenu="contextmenuClick">
+      <v-contextmenu-item @click="showCopyImgUrl">
+        <Icon type="ios-git-merge" size="16"/>&nbsp;复 制
+      </v-contextmenu-item>
+      <hr style=" border: 2px solid #ffffff; "/>
+      <v-contextmenu-item @click.native="rightClickDelete">
+        <Icon type="ios-trash-outline" size="16"/>&nbsp;删&nbsp;除
+      </v-contextmenu-item>
+      <hr style=" border: 2px solid #ffffff; "/>
+      <v-contextmenu-item @click="allSett">
+        <Icon type="ios-book-outline" size="16"/>&nbsp;分享画廊
+      </v-contextmenu-item>
+      <hr style=" border: 2px solid #ffffff; " v-if="select.selectIndex.length==1"/>
+      <v-contextmenu-item v-if="select.selectIndex.length==1" @click="updateFileName('img')">
+        <Icon type="ios-create-outline" size="16"/>&nbsp;图像名称
+      </v-contextmenu-item>
+      <hr style="background: #dadada; border: 2px solid #ffffff; " v-if="select.selectIndex.length>0"/>
+      <v-contextmenu-item v-if="select.selectIndex.length==1" @click="menuImgInfo">
+        <Icon type="ios-alert-outline" size="16"/>&nbsp;详&nbsp;情
+      </v-contextmenu-item>
+    </v-contextmenu>
+    <Drawer title="图像类别" :closable="false" v-model="treePopup" :width="screenWidth<=368?screenWidth:368">
+      <Form @submit.native.prevent style="margin-top: 30px;">
+        <FormItem>
           <RadioGroup v-model="selectUserType" type="button" style="width: 100%">
             <Radio label="me">我的图像</Radio>
             <Radio label="all">所有图像</Radio>
@@ -11,12 +33,14 @@
         </FormItem>
         <Divider plain>高级选项</Divider>
         <FormItem v-if="$store.state.RoleLevel=='admin'">
-              <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
-                <Option v-for="item in bucketlist" :value="item.storageType" :key="item.id">{{ item.keyname }}</Option>
-              </Select>
+          <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
+            <Option v-for="item in bucketlist" :disabled="item.storageType==8" :value="item.id" :key="item.id">
+              {{ item.storageType == 8 ? item.keyname + '（商家已跑路）' : item.keyname }}
+            </Option>
+          </Select>
         </FormItem>
         <FormItem v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
-          <Input style="width: 100%" size="default"  v-model="searchtext" placeholder="填写用户名"  >
+          <Input style="width: 100%" size="default" v-model="searchtext" placeholder="填写用户名">
             <Select v-model="searchtype" slot="prepend" style="width: 80px">
               <Option value="1">包含</Option>
               <Option value="0">排除</Option>
@@ -24,13 +48,15 @@
           </Input>
         </FormItem>
         <FormItem>
-          <DatePicker style="width: 100%;" @on-change="startDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="起始日期段(默认不限)"></DatePicker>
+          <DatePicker style="width: 100%;" @on-change="startDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"
+                      split-panels placeholder="起始日期段(默认不限)"></DatePicker>
         </FormItem>
-        <FormItem >
-          <DatePicker style="width: 100%;" @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"  split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
+        <FormItem>
+          <DatePicker style="width: 100%;" @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"
+                      split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
         </FormItem>
 
-        <FormItem >
+        <FormItem>
           <CheckboxGroup>
             <Checkbox label="违规图片" v-model="violation" border></Checkbox>
           </CheckboxGroup>
@@ -45,133 +71,182 @@
         </div>
       </div>
     </Drawer>
-<!--        minHeight: '500px'-->
-        <Content :style="{margin: '15px 5px 0', }">
-          <viewer :images="imglist">
-            <p style="position: fixed;right: 30px;z-index: 1;bottom: 68px;">
-<!--              @click="searchimg" -->
-              <Button type="primary" shape="circle" icon="ios-search" style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;" @click.native="treePopup = true">筛选</Button>
-              <Dropdown trigger="click" style="z-index: 1;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;border-radius: 50%;">
-                <Button type="primary" shape="circle">
-                   操作
-                  <Icon type="ios-arrow-down"></Icon>
-                </Button>
-                <DropdownMenu slot="list">
-                  <DropdownItem  @click.native="allSett"><Icon type="ios-book" size="16" /> 生成画廊</DropdownItem>
-                  <DropdownItem  @click.native="selectAll"><Icon type="md-checkmark-circle" size="16"  /> 全部选中</DropdownItem>
-                  <DropdownItem  @click.native="noselectAll"><Icon type="md-checkmark-circle-outline" size="16"  /> 取消选中</DropdownItem>
-                  <DropdownItem @click.native="delSelectImg"><Icon type="md-trash" size="16"  /> 删除选中</DropdownItem>
-<!--                  <DropdownItem divided @click.native="showViewType"><Icon type="md-eye" size="16"  /> {{viewType==1?'小图模式':'大图模式'}}</DropdownItem>-->
-                </DropdownMenu>
-              </Dropdown>
-            </p>
-           <Row class="animate__animated animate__fadeIn animate__delay-1.5s">
-            <Col flex="1" v-for="(item,index) in imglist" :key="index">
-              <div class="imgdivstyle divimgstyle-min">
-                <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>
-<!--                <img :class="[viewType==1?'imgstyle-max':'imgstyle-min']"  class="imgstyle" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >-->
-                <img   class="imgstyle imgstyle-min" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >
-                <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">
-                  <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>
-                  <Icon style="cursor:pointer;" type="md-link icostyle"   title="链接" @click.native="showCopyImgUrl(item)" />
-                  <Icon style="cursor:pointer;" type="md-trash icostyle" @click.native="delImg(item.id,index)"  title="删除" ></Icon>
-                  <Icon style="cursor:pointer;" :color="item.violation==null?'':'rgb(228 102 70)'" type="md-information-circle icostyle" @click.native="imgInfo(item)" title="信息"></Icon>
-                </div>
+    <!--        minHeight: '500px'-->
+    <Content :style="{margin: '15px 5px 0', }">
+      <viewer :images="imglist">
+        <p style="position: fixed;right: 30px;z-index: 1;bottom: 68px;">
+          <!--              @click="searchimg" -->
+          <Button type="primary" shape="circle" icon="ios-search"
+                  style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;"
+                  @click.native="treePopup = true">筛选
+          </Button>
+          <Dropdown trigger="click"
+                    style="z-index: 1;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;border-radius: 50%;">
+            <Button type="primary" shape="circle">
+              操作
+              <Icon type="ios-arrow-down"></Icon>
+            </Button>
+            <DropdownMenu slot="list">
+              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="allSett">
+                <Icon type="ios-book" size="16"/>
+                生成画廊
+              </DropdownItem>
+              <DropdownItem :disabled="select.selectIndex.length==0 || select.selectIndex.length>1"
+                            @click.native="menuImgInfo">
+                <Icon type="ios-information-circle" size="16"/>
+                图像详情
+              </DropdownItem>
+              <DropdownItem :disabled="select.selectIndex.length==0 || select.selectIndex.length>1"
+                            @click.native="updateFileName('img')">
+                <Icon type="ios-create" size="16"/>
+                修改名称
+              </DropdownItem>
+              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="showCopyImgUrl">
+                <Icon type="ios-copy" size="16"/>
+                复制分享
+              </DropdownItem>
+              <DropdownItem @click.native="selectAll">
+                <Icon type="md-checkmark-circle" size="16"/>
+                全部选中
+              </DropdownItem>
+              <DropdownItem @click.native="noselectAll">
+                <Icon type="md-checkmark-circle-outline" size="16"/>
+                取消选中
+              </DropdownItem>
+              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="delSelectImg">
+                <Icon type="md-trash" size="16"/>
+                删除选中
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </p>
+        <div class="" id="box" ref="dom">
+          <ul id="sortAble">
+            <li v-for="(item,index) in imglist" :ref="`imgLi_${item.id}`" :key="index" v-contextmenu:contextmenu>
+              <div>
+                <span class="formatTag">{{ item.imgname.substr(item.imgname.lastIndexOf("\.") + 1) }}</span>
+                <img :style="{width: imgWidth+'px', }" :id="'myimg_'+index" :alt="item.imgurl"
+                     v-lazy="(item.briefimgurl==null || item.briefimgurl=='')?item.imgurl:item.briefimgurl+''"
+                     :src="(item.briefimgurl==null || item.briefimgurl=='')?item.imgurl:item.briefimgurl+''"
+                     :key="item.imgurl"
+                     :ref="`myImages_${item.id}`"
+                />
+                <svg @click="selectImgs(item)" t="1664620013040" class="icon myselect"
+                     :style="{'background':select.selectIndex.indexOf(item.id)>-1?'#FFF':'#a5a5a5'}"
+                     viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6479" width="200"
+                     height="200">
+                  <path
+                      d="M771.607273 359.726545l-289.28 349.09091a34.839273 34.839273 0 0 1-50.594909 3.374545l-176.174546-162.909091a34.955636 34.955636 0 0 1-1.931636-49.361454 34.978909 34.978909 0 0 1 49.338182-1.931637l149.131636 137.890909 265.728-320.698182a34.932364 34.932364 0 0 1 53.783273 44.544M884.363636 46.545455H139.636364C88.436364 46.545455 46.545455 88.436364 46.545455 139.636364v744.727272c0 51.2 41.890909 93.090909 93.090909 93.090909h744.727272c51.2 0 93.090909-41.890909 93.090909-93.090909V139.636364c0-51.2-41.890909-93.090909-93.090909-93.090909"
+                      :fill="select.selectIndex.indexOf(item.id)>-1?'#1580ff':'#FFF'" p-id="6480"></path>
+                </svg>
+                <div class="topCeng" :style="{background: item.violation==null?'':'rgb(255,0,0, .36)'}"
+                     @click="lookImg(item)"></div>
               </div>
-            </Col>
-          </Row>
+            </li>
+          </ul>
+        </div>
 
-            <div style="width: 100%;text-align: center;color: #797b7f;" v-show="noImgMsg">
-              <Icon type="ios-filing" size="56" />
-              <p>当前未找到任何图像</p>
-            </div>
+        <!--           <Row class="animate__animated animate__fadeIn animate__delay-1.5s">-->
+        <!--            <Col flex="1" v-for="(item,index) in imglist" :key="index" v-contextmenu:contextmenu>-->
+        <!--              <div class="imgdivstyle divimgstyle-min">-->
+        <!--                <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>-->
+        <!--                <img   class="imgstyle imgstyle-min" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >-->
+        <!--                <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">-->
+        <!--                  <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>-->
+        <!--                  <Icon style="cursor:pointer;" type="md-link icostyle"   title="链接" @click.native="showCopyImgUrl(item)" />-->
+        <!--                  <Icon style="cursor:pointer;" type="md-trash icostyle" @click.native="delImg(item.id,index)"  title="删除" ></Icon>-->
+        <!--                  <Icon style="cursor:pointer;" :color="item.violation==null?'':'rgb(228 102 70)'" type="md-information-circle icostyle" @click.native="imgInfo(item)" title="信息"></Icon>-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--            </Col>-->
+        <!--          </Row>-->
 
-          </viewer>
-          <div class="example-code-more">
-            <Button type="dashed" :loading="nextButloading"  @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'" long>{{btntext}}</Button>
-          </div>
-        </Content>
-         <!--筛选窗-->
-        <Modal  v-model="issearchimg" :footer-hide="true">
-          <br />
-          <Form  @submit.native.prevent>
-            <FormItem>
-              <Row>
-                <Col span="11">
-                  <Select v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
-                    <Option v-for="item in bucketlist" :value="item.storageType" :key="item.id">{{ item.keyname }}</Option>
-                  </Select>
-                </Col>
-                <Col span="2" style="text-align: center"></Col>
-                <Col span="11">
-<!--                  <DatePicker type="daterange" @on-change="setsearchdate" split-panels placeholder="日期段(默认不限)"  separator="~"></DatePicker>-->
-                </Col>
-              </Row>
-            </FormItem>
-            <FormItem >
-              <Input v-model="searchtext" placeholder="填写用户名">
-                <Select v-model="searchtype" slot="prepend" style="width: 100px">
-                  <Option value="1">包含</Option>
-                  <Option value="0">排除</Option>
-                </Select>
-              </Input>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" icon="ios-search" long shape="circle" @click="tosearch">SEARCH</Button>
-            </FormItem>
-          </Form>
-        </Modal>
+        <div style="width: 100%;text-align: center;color: #797b7f;" v-show="noImgMsg">
+          <Icon type="ios-filing" size="56"/>
+          <p>当前未找到任何图像</p>
+        </div>
 
-        <!--详细信息-->
-    <Modal  v-model="isimginfo" :footer-hide="true">
+      </viewer>
+      <div class="example-code-more">
+        <Button type="dashed" :loading="nextButloading" @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'" long>
+          {{ btntext }}
+        </Button>
+      </div>
+    </Content>
+    <!--详细信息-->
+    <Modal v-model="isimginfo" :footer-hide="true">
 
-      <List :split="false" >
-        <ListItem><span style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;"><Icon style="font-size: 32px;" type="md-image" />&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;cursor: pointer;text-decoration:underline;" @click="updateFileName">{{imgage==null?'暂缺数据':imgage.idname}}</span></span></ListItem>
+      <List :split="false">
+        <!--    @click="updateFileName"    text-decoration:underline;  -->
+        <ListItem><span style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;"><Icon
+            style="font-size: 32px;" type="md-image"/>&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;cursor: pointer;">{{
+            rightClickData == null ? '暂缺数据' : rightClickData.idname
+          }}</span></span>
+        </ListItem>
       </List>
 
       <Tabs>
-        <TabPane label="图像信息" icon="ios-images" >
+        <TabPane label="图像信息" icon="ios-images">
 
           <div style="line-height: 32px;margin-bottom: 40px;">
-            <p><span class="infotitle"> 文件大小：</span><span style="font-size: 14px;">{{imgage==null?'暂缺数据':imgage.sizes>0?this.formatBytes(imgage.sizes,2):''}}</span></p>
-            <p><span class="infotitle"> 文件类型：</span><span style="font-size: 14px;">{{imgage==null?'未知':imgage.format}}</span></p>
-            <p><span class="infotitle"> 来源IP：</span><span style="font-size: 14px;">{{imgage==null?'暂缺数据':imgage.abnormal}}</span></p>
-            <p><span class="infotitle"> 上传日期：</span><span style="font-size: 14px;">{{imgage==null?'暂缺数据':imgage.updatetime?imgage.updatetime:''}}</span></p>
-            <p><span class="infotitle"> 上传者：</span><span style="font-size: 14px;">{{upName}}</span></p>
-            <p><span class="infotitle"> 所属存储源：</span><span style="font-size: 14px;">{{bucketname}}</span></p>
-            <p><span class="infotitle|"> 存储性质：</span><span style="font-size: 14px;">{{imgage==null?'暂缺数据':(imgage.imgtype==0?'持久':'暂存')}}</span></p>
+            <p><span class="infotitle"> 文件大小：</span><span
+                style="font-size: 14px;">{{
+                rightClickData == null ? '暂缺数据' : rightClickData.sizes > 0 ? this.formatBytes(rightClickData.sizes, 2) : ''
+              }}</span>
+            </p>
+            <p><span class="infotitle"> 文件类型：</span><span
+                style="font-size: 14px;">{{ rightClickData == null ? '未知' : rightClickData.format }}</span></p>
+            <p><span class="infotitle"> 来源IP：</span><span
+                style="font-size: 14px;">{{ rightClickData == null ? '暂缺数据' : rightClickData.abnormal }}</span></p>
+            <p><span class="infotitle"> 上传日期：</span><span
+                style="font-size: 14px;">{{
+                rightClickData == null ? '暂缺数据' : rightClickData.updatetime ? rightClickData.updatetime : ''
+              }}</span>
+            </p>
+            <p><span class="infotitle"> 上传者：</span><span style="font-size: 14px;">{{ upName }}</span></p>
+            <p><span class="infotitle"> 所属存储源：</span><span style="font-size: 14px;">{{ bucketname }}</span></p>
+            <p><span class="infotitle|"> 存储性质：</span><span
+                style="font-size: 14px;">{{
+                rightClickData == null ? '暂缺数据' : (rightClickData.imgtype == 0 ? '持久' : '暂存')
+              }}</span>
+            </p>
           </div>
-          <p style="color: rgb(228 102 70);font-size: 12px; font-weight: 200;position: absolute; bottom: 10px; display: block; left: 0; width: 100%;z-index: 1;" align="center" v-show="isViolation.isControl">{{isViolation.info}}</p>
+          <p style="color: rgb(228 102 70);font-size: 12px; font-weight: 200;position: absolute; bottom: 10px; display: block; left: 0; width: 100%;z-index: 1;"
+             align="center" v-show="isViolation.isControl">{{ isViolation.info }}</p>
           <div class="QRCodestyle">
-            <vue-qr  :text="imgage?imgage.imgurl?imgage.imgurl:'未获取到文件信息':'未获取到文件信息'" :size="160"></vue-qr>
+            <vue-qr :text="rightClickData?rightClickData.imgurl?rightClickData.imgurl:'未获取到文件信息':'未获取到文件信息'"
+                    :size="160"></vue-qr>
           </div>
-        </TabPane>
-      </Tabs>
-      </Modal>
-
-    <!-- 生成画廊 -->
-    <Modal  v-model="visible" :footer-hide="true"  width="620" >
-      <Tabs>
-        <TabPane label="画廊" icon="ios-images" >
-          <Spin size="large" fix v-if="spinShow"></Spin>
-          <album-list :albumlist="albumlist"  @return-data='returnData' />
         </TabPane>
       </Tabs>
     </Modal>
 
+    <!-- 生成画廊 -->
+    <Modal v-model="visible" :footer-hide="true" width="620">
+      <Tabs>
+        <TabPane label="画廊" icon="ios-images">
+          <Spin size="large" fix v-if="spinShow"></Spin>
+          <album-list :albumlist="albumlist" @return-data='returnData'/>
+        </TabPane>
+      </Tabs>
+    </Modal>
     <!--            画廊生成后显示详情界面-->
-    <Modal  v-model="isAlbum" :footer-hide="true" :title="albumData.title">
-      <Form  @submit.native.prevent :label-width="70" style="margin-top: 30px;height: 303px;" >
+    <Modal v-model="isAlbum" :footer-hide="true" :title="albumData.title">
+      <Form @submit.native.prevent :label-width="70" style="margin-top: 30px;height: 303px;">
         <FormItem label="链接">
-          <Input v-model="albumData.url" style="width: auto;width: 100%"  />
+          <Input v-model="albumData.url" style="width: auto;width: 100%"/>
         </FormItem>
         <FormItem label="密码">
-          <Input v-model="albumData.password" style="width: auto;width: 100px;"  />
-          <Button style="position: absolute;right: 30px;" size="small" type="primary" shape="circle" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="'画廊链接：'+albumData.url+'提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'" @click.native="copy">复 制</Button>
+          <Input v-model="albumData.password" style="width: auto;width: 100px;"/>
+          <Button style="position: absolute;right: 30px;" size="small" type="primary" shape="circle" class="cobyOrderSn"
+                  data-clipboard-action="copy"
+                  :data-clipboard-text="'画廊链接：'+albumData.url+'提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'"
+                  @click.native="copy">复 制
+          </Button>
         </FormItem>
       </Form>
-      <div class="QRCodestyle2"  style="text-align: center;">
-        <vue-qr  :text="albumData.url?albumData.url:'无法获取图像地址'" :size="200"></vue-qr>
+      <div class="QRCodestyle2" style="text-align: center;">
+        <vue-qr :text="albumData.url?albumData.url:'无法获取图像地址'" :size="200"></vue-qr>
       </div>
       <div style="text-align: center;">
         <p>对方通过扫码即可访问画廊</p>
@@ -180,36 +255,50 @@
 
     <!-- 删除失败的图像 -->
     <Modal v-model="isDelImgModal" :footer-hide="true" title="存在删除失败的图像，请检查">
-      <Form @submit.native.prevent :label-width="70" style="margin-top: 10px;height: 350px;min-height: 150px;overflow-y:auto; ">
-        <List header="Header" footer="Footer" border size="small" v-for="(item,index) in delProgress.errorlist?delProgress.errorlist:[]" :key="index">
-          <ListItem>{{item}}</ListItem>
+      <Form @submit.native.prevent :label-width="70"
+            style="margin-top: 10px;height: 350px;min-height: 150px;overflow-y:auto; ">
+        <List header="Header" footer="Footer" border size="small"
+              v-for="(item,index) in delProgress.errorlist?delProgress.errorlist:[]" :key="index">
+          <ListItem>{{ item }}</ListItem>
         </List>
       </Form>
     </Modal>
 
-    <!--复制直链弹窗-->
-    <Modal  v-model="copyImgUrl.IsImgLink" :footer-hide="true" >
-      <br />
-      <List :split="false">
-        <ListItem>
-          <Input v-model="copyImgUrl.imgLinkForUrl" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="copyImgUrl.imgLinkForUrl" @click.native="copy" ><span slot="prepend">U R L</span></Input>
-        </ListItem>
-        <ListItem >
-          <Input v-model="copyImgUrl.imgLinkForHtml" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="copyImgUrl.imgLinkForHtml" @click.native="copy" ><span slot="prepend">HTML</span></Input>
-        </ListItem>
-        <ListItem >
-          <Input v-model="copyImgUrl.imgLinkForMD" class="cobyOrderSn" data-clipboard-action="copy" :data-clipboard-text="copyImgUrl.imgLinkForMD" @click.native="copy" ><span slot="prepend">Markdown</span></Input>
-        </ListItem>
-      </List>
+    <Modal v-model="copyAllImgUrl.isCopyMsg" :footer-hide="true">
+      <br/>
+      <Card :dis-hover="true" :bordered="false" :shadow="false">
+        <Divider><span style=" color: #5a5a5a;">一键复制格式</span></Divider>
+        <Button type="success" class="cobyOrderSn_url" data-clipboard-action="copy"
+                :data-clipboard-text="copyAllImgUrl.urlTexts_url" @click="copyAll('url')" long>URL格式
+        </Button>
+        <br><br>
+        <Button type="primary" class="cobyOrderSn_html" data-clipboard-action="copy"
+                :data-clipboard-text="copyAllImgUrl.urlTexts_html" @click="copyAll('html')" long>HTML格式
+        </Button>
+        <br><br>
+        <Button type="warning" class="cobyOrderSn_md" data-clipboard-action="copy"
+                :data-clipboard-text="copyAllImgUrl.urlTexts_md" @click="copyAll('md')" long>Markdown格式
+        </Button>
+        <br><br>
+        <Button type="error" class="cobyOrderSn_diy" data-clipboard-action="copy"
+                :data-clipboard-text="copyAllImgUrl.urlTexts_diy" @click="copyAll('diy')" long>自定义格式
+        </Button>
+        <br><br>
+        <Input v-model="copyAllImgUrl.myurl" placeholder="请输入要复制的链接格式" :clearable="true"/>
+        <p style="color: #6b6b6b;font-size: 12px;">格式说明：<br/>在输入框填入你想生成并复制的链接格式，格式中的图片链接用<b style="color: #eb3e21;">
+          @myurl@ </b> 通配符填充</p>
+      </Card>
     </Modal>
 
-    <Spin v-if="isDelfun" fix style="color: #5F5F5FFF;">
+    <Spin class="loadSpin" v-if="isDelfun" fix style="color: #5F5F5FFF;">
       <svg viewBox="25 25 50 50">
         <circle cx="50" cy="50" r="20"></circle>
       </svg>
-      <div style="font-size: 16px;letter-spacing: 2px;">{{delProgress.succ?delProgress.succ:0}}/{{delImgCount}}</div>
+      <div style="font-size: 16px;letter-spacing: 2px;">
+        {{ delProgress.succ ? delProgress.succ : 0 }}/{{ delImgCount }}
+      </div>
     </Spin>
-    <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
+    <Footer class="layout-footer-center">{{ this.$store.state.metaInfo.webname }} &copy; Control Panel</Footer>
   </Layout>
 
 
@@ -218,9 +307,20 @@
 <script src="../../assets/js/photo.js">
 
 </script>
+<style lang="less">
+.chosen {
+  .countTag {
+    display: block;
+  }
+}
 
+</style>
 <style scoped>
-svg {
+.topCeng svg {
+  width: 8.75em;
+}
+
+.loadSpin svg {
   width: 3.75em;
   transform-origin: center;
   animation: rotate 2s linear infinite;
@@ -258,6 +358,102 @@ circle {
   }
 }
 
+/*图像列表样式开始*/
+#box {
+  margin-top: 28px;
+}
+
+#box ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /*position: absolute;*/
+  /*top: 220px;*/
+}
+
+#box li {
+  /*padding: 3px;*/
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  /*border: 1px solid #eee;*/
+}
+
+#box img {
+  cursor: pointer;
+  height: 145px;
+  /*height: 115px;*/
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
+  transform: translateZ(0);
+  transition: all 0.6s ease-in;
+  -webkit-transition: all 0.6s ease-in;
+}
+
+/*图像列表样式  结束*/
+/*.countTag{*/
+/*  display: none;*/
+/*  min-width: 30px;*/
+/*  height: 30px;*/
+/*  background: rgb(63 63 63);*/
+/*  position: absolute;*/
+/*  top: -10px;*/
+/*  right: -10px;*/
+/*  z-index: 1;*/
+/*  box-shadow: 0 1px 6px rgba(255, 255, 255 ,.2);*/
+/*  color: #e3e1e1;*/
+/*  border-radius: 15px;*/
+/*  padding: 0 10px;*/
+/*  line-height: 29px;*/
+/*  font-size: 12px;*/
+/*}*/
+.formatTag {
+  display: none;
+  width: fit-content;
+  height: 20px;
+  background: rgba(38, 38, 38, .72);
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 1;
+  box-shadow: 0 1px 6px rgba(255, 255, 255, .2);
+  color: #e3e1e1;
+  border-radius: 3px;
+  padding: 0 10px;
+  line-height: 17px;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 80%;
+  text-overflow: ellipsis;
+}
+
+.myselect {
+  width: 20px;
+  height: 20px;
+  box-shadow: 0 1px 6px rgba(58, 58, 58, .2);
+  border-radius: 4px;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  color: #e3e1e1;
+  line-height: 17px;
+  cursor: pointer;
+  background: #ababab;
+}
+
+.topCeng {
+  width: 100%;
+  height: 145px;
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0);
+  animation: fade 800ms infinite;
+}
+
 .example-code-more {
   text-align: center;
   cursor: pointer;
@@ -266,76 +462,40 @@ circle {
   line-height: 30px;
   font-weight: bold;
 }
-.imgdivstyle{
+
+.imgdivstyle {
   height: 160px;
   margin-top: 10px;
   text-align: center;
   margin-right: 2px;
 }
-.imgstyle-max{
+
+.imgstyle-max {
   width: 100%;
   height: 160px;
   object-fit: cover;
-  border-radius:5px;
-  border: 1px solid #eee;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
-  transform: translateZ(0);
-}
-.imgstyle-min{
-  /*width: 155px;*/
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius:5px;
-  border: 1px solid #eee;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
-  transform: translateZ(0);
-}
-.divimgstyle-max{
-  min-width: 300px;
-  height: 160px;
-  margin: 10px;
-}
-.divimgstyle-min{
-  min-width: 155px;
-  height: 150px;
-  margin: 10px;
-}
-.img-tool-cover{
-  display: block;
-  position: absolute;
-  /*bottom: 5px;*/
-  left: 0;
-  right: 0;
-  background: rgba(255,255,255,.87);
-  height: 30px;
-  width: 124px;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;
-  margin: 0 auto;
   border-radius: 5px;
-  text-align: center;
+  border: 1px solid #eee;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
+  transform: translateZ(0);
 }
 
-.icostyle{
-  margin:0 3px 0 3px;
+.icostyle {
+  margin: 0 3px 0 3px;
   font-size: 22px;
   line-height: 28px;
   transition: transform 0.2s;
 }
-.icostyle:hover{
-  transform: scale(1.1);
-}
-.icostylecolor{
-  color: #2d8cf0;
-}
-.img-search{
+
+.img-search {
   position: absolute;
   width: 100%;
   min-width: 512px;
   height: 15px;
   z-index: 1;
 }
-.img-search-div{
+
+.img-search-div {
   margin: auto;
   width: 70%;
   height: 70px;
@@ -344,16 +504,19 @@ circle {
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;
 }
+
 .ivu-btn-icon-only {
   width: 55px;
 }
-.infotitle{
+
+.infotitle {
   color: #464c5b;
   font-size: 14px;
   font-weight: 500;
   margin-right: 10px;
 }
-.QRCodestyle{
+
+.QRCodestyle {
   height: 160px;
   width: 160px;
   position: absolute;
@@ -361,7 +524,8 @@ circle {
   bottom: 20px;
   opacity: 0.7;
 }
-.QRCodestyle2{
+
+.QRCodestyle2 {
   height: 200px;
   width: 200px;
   position: absolute;
@@ -371,21 +535,8 @@ circle {
   margin: auto;
   bottom: 47px;
 }
-.formatTag{
-  display: block;
-  width: 50px;
-  height: 20px;
-  background: rgba(38, 38, 38 ,.72);
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 1;
-  box-shadow: 0 1px 6px rgba(255, 255, 255, .2);
-  color: #e3e1e1;
-  border-radius: 3px;
 
-}
-.ivu-radio-wrapper{
+.ivu-radio-wrapper {
   width: 50%;
   text-align: center;
 }

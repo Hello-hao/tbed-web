@@ -24,34 +24,19 @@ export default {
   },
   mounted(){
     if(this.$store.state.auth){
-      // var vConsole = new VConsole();
-      // console.log(vConsole);
-      // this.getWebInfo();
       this.checkLogin();
+    }
+    if (this._isMobile()) {
+      this.$store.commit("setIsMobile", 'phone');
+    }else {
+      this.$store.commit("setIsMobile", 'pc');
     }
   },
   methods:{
-/*    getWebInfo () {
-      return new Promise((resolve, reject) => {
-        this.$http('/webInfo'+'?'+new Date().getTime()+Math.random()+Math.ceil(Math.random()*(10000-99999)+99999)).then(data => {
-          // 是否成功读取需要的配置项
-          console.log(data);
-          var json = data.data.data;
-          if(json){
-            json.splitline="-";
-            this.$store.commit("cahngeMetaInfo", json);
-            // store.commit("setPreludeSwitch", true);
-            // this.getMetaInfo();
-          }
-          // this.$store.state.metaInfo = json;
-          resolve();
-        }).catch(error => {
-          console.log(error);
-          reject()
-        })
-      })
-    },*/
-
+    _isMobile(){
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return flag;
+    },
     checkLogin(){
       this.$http(
           '/checkStatus'+'?'+new Date().getTime()+Math.random()+Math.ceil(Math.random()*(10000-99999)+99999),
@@ -60,7 +45,6 @@ export default {
           var json = res.data;
           if(json.code=='200'){
             this.$store.state.loginStatus= true;
-            // this.$store.state.RoleLevel = json.data.RoleLevel;
             localStorage.setItem('RoleLevel', json.data.RoleLevel);
             localStorage.setItem('userName', json.data.userName);
             store.commit("setUserName", json.data.userName);
@@ -79,7 +63,6 @@ export default {
         }
       }).catch(err => {
         console.log(err);
-        // this.reloadCode();
         this.$Message.error('服务器请求错误');
       })
     },
