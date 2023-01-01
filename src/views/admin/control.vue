@@ -64,7 +64,7 @@
 
 <template>
 
-  <Layout style="margin-top: 50px;margin-bottom: 50px;">
+  <Layout style="margin-bottom: 50px;">
     <Spin size="large" fix v-if="spinShow"></Spin>
       <Content :style="{margin: '15px 20px 0', minHeight: '500px'}">
         <Row :gutter="16" v-if="this.$store.state.RoleLevel=='admin' " class="animate__animated animate__fadeIn animate__delay-0.6s">

@@ -52,8 +52,15 @@ export default {
               this.$router.replace("/");
             }
           }else{
+            if(json.code=='406'){
+              this.$Message.warning({
+                content: json.info,
+                duration: 10
+              });
+            }else{
+              this.$Message.warning(json.info);
+            }
             this.$store.state.loginStatus= false;
-            this.$Message.warning(json.info);
             localStorage.removeItem('Authorization');
             localStorage.removeItem('RoleLevel');
             this.$router.replace("");

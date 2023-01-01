@@ -70,6 +70,9 @@ export default {
 
         }
     },
+    created() {
+        this.pageUUID = uuidv4();
+    },
     mounted() {
         this.pageUUID = uuidv4();
         //滚轮监听
@@ -164,8 +167,6 @@ export default {
             } else {
                 this.select.selectIndex.splice(this.select.selectIndex.indexOf(item.id), 1);
             }
-            console.log(this.select.selectIndex);
-
             if (this.select.selectImgUrl.indexOf(item.imgurl) == -1) {
                 this.select.selectImgUrl.push(item.imgurl);
                 this.rightClickData = item
@@ -318,7 +319,7 @@ export default {
             });
 
         },
-        deleteImages(id, index) {
+        sendDeleteImages(id, index) {
             var paramJson = {};
             if (id == null) {
                 if (this.select.selectIndex.length == 0) {
@@ -346,37 +347,47 @@ export default {
             })
 
         },
+        deleteImages(id,index){
+            var than = this;
+            than.sendDeleteImages(id,index);
+            setTimeout(()=>{
+                than.TimeingDelImg();
+            },300)
+        },
         TimeingDelImg() {
             var that = this;
             let temp = false;
             that.isDelfun = true;
+            that.delOver = false;
             var paramJson = {}
             paramJson.uuid = 'DEL-' + that.pageUUID;
             var interval = setInterval(function () {
                 let res = that.GetDelprogress(paramJson);
                 res.then(function (data) {
+                    var oklist = data.oklist;
+                    if (oklist.length > 0) {
+                        for (let i = 0; i < that.imglist.length; i++) {
+                            for (let j = 0; j < oklist.length; j++) {
+                                if(that.imglist[i].id==oklist[j]){
+                                    // that.$refs[`imgLi_${oklist[j]}`][0].remove();
+                                    that.imglist.splice(i, 1);
+                                }
+                            }
+                        }
+                    }
                     if (that.delOver) {
                         clearInterval(interval);
                         that.isDelfun = false;
                         that.$Message.success("删除完成");
                         that.clearSelectData();
-                        var oklist = data.oklist;
                         if (data.errorlist != null) {
                             if (data.errorlist > 0) {
                                 that.isDelImgModal = true;
                             }
                         }
-                        if (oklist.length > 0) {
-                            console.log('??：', that.imglist)
-                            for (let i = 0; i < that.imglist.length; i++) {
-                                for (let j = 0; j < oklist.length; j++) {
-                                    if (that.imglist[i].id == oklist[j]) {
-                                        that.imglist.splice(i, 1);
-                                        that.$refs[`imgLi_${oklist[j]}`][0].remove();
-                                    }
-                                }
-                            }
-                        }
+                        that.pageUUID = uuidv4()
+                        that.clearSelectData()
+                        that.delProgress = {}
                     }
                 }, function (info) {
                     console.log(info)
@@ -394,12 +405,6 @@ export default {
             }
         },
         showCopyImgUrl(img) {
-            // this.copyImgUrl.imgLinkForUrl = img.imgurl;
-            // this.copyImgUrl.imgLinkForHtml = '<img src="'+img.imgurl+'" alt="'+img.imgname+'" />';
-            // this.copyImgUrl.imgLinkForMD = '!['+img.imgname+']('+img.imgurl+')';
-            // this.copyImgUrl.IsImgLink=true;
-
-            //上边是以前的单项复制
             this.copyAllImgUrl.urlTexts_url = '';
             this.copyAllImgUrl.urlTexts_html = '';
             this.copyAllImgUrl.urlTexts_md = '';
@@ -409,19 +414,7 @@ export default {
                 this.copyAllImgUrl.urlTexts_md += '![image](' + this.select.selectImgUrl[i] + ')\n';
             }
             this.copyAllImgUrl.isCopyMsg = true
-
         },
-        // copy(){
-        //     var clipboard = new this.clipboard('.cobyOrderSn')
-        //     clipboard.on('success', e => {
-        //         this.$Message.success('复制成功');
-        //         clipboard.destroy()
-        //     })
-        //     clipboard.on('error', e => {
-        //         this.$Message.error('该浏览器不支持自动复制');
-        //         clipboard.destroy()
-        //     })
-        // },
         copyAll(type) {
             let arr = this.select.selectImgUrl;
             var clipboard = null;
@@ -457,7 +450,6 @@ export default {
             })
             clipboard.on('error', e => {
                 console.log(e);
-                // 不支持复制
                 this.$Message.error('该浏览器不支持自动复制');
                 // 释放内存
                 clipboard.destroy()
@@ -498,6 +490,8 @@ export default {
                             than.delProgress = json.data;
                             if (json.data.delover == 'true' || json.data.delover == true) {
                                 than.delOver = true;
+                            }else{
+                                than.delOver = false;
                             }
                             resolve(json.data)
                         } else {

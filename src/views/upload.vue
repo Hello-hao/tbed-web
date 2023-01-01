@@ -11,7 +11,7 @@
           <div class="myupdiv" >
             <img :src="linkImg" referrerpolicy="no-referrer" style="width: 45px;" class="toolImg"  />
             <p style="font-size: 18px;margin-top: 5px;line-height: 32px; font-size: 1.0vh;color: #808794;text-align: right;">
-              URL上传
+              图片链接转存
             </p>
           </div>
         </Card>
@@ -25,8 +25,9 @@
           <div class="myupdiv">
             <img :src="timeImg" class="toolImg" />
             <p style="font-size: 18px;margin-top: 5px;line-height: 32px ;text-align: right;font-size: 1.0vh;color: #808794;">
+              存储期限:
               <span v-if="data.day==0">永久</span>
-              <span v-else>{{data.day}}天失效</span>
+              <span v-else>{{data.day}}天</span>
             </p>
           </div>
         </Card>
@@ -145,6 +146,7 @@
               <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
+          <p style="color: #9c9c9c;">设置期限后，上传的图像将在指定时间后被删除</p>
         </Form>
       </Modal>
 

@@ -1,6 +1,6 @@
 <template>
 
-  <Layout style="margin-top: 50px;margin-bottom: 50px;">
+  <Layout style="margin-bottom: 50px;">
     <v-contextmenu ref="contextmenu" :eventType="$store.state.isMobile=='pc'?'contextmenu':'noContextmenu'"
                    @contextmenu="contextmenuClick">
       <v-contextmenu-item @click="showCopyImgUrl">
@@ -28,14 +28,14 @@
         <FormItem>
           <RadioGroup v-model="selectUserType" type="button" style="width: 100%">
             <Radio label="me">我的图像</Radio>
-            <Radio label="all">所有图像</Radio>
+            <Radio label="all">用户图像</Radio>
           </RadioGroup>
         </FormItem>
-        <Divider plain>高级选项</Divider>
+        <Divider plain>高级选项（选填）</Divider>
         <FormItem v-if="$store.state.RoleLevel=='admin'">
           <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
             <Option v-for="item in bucketlist" :disabled="item.storageType==8" :value="item.id" :key="item.id">
-              {{ item.storageType == 8 ? item.keyname + '（商家已跑路）' : item.keyname }}
+              {{ item.storageType == 8 ? item.keyname + '（倒闭了）' : item.keyname }}
             </Option>
           </Select>
         </FormItem>
@@ -75,7 +75,6 @@
     <Content :style="{margin: '15px 5px 0', }">
       <viewer :images="imglist">
         <p style="position: fixed;right: 30px;z-index: 1;bottom: 68px;">
-          <!--              @click="searchimg" -->
           <Button type="primary" shape="circle" icon="ios-search"
                   style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;"
                   @click.native="treePopup = true">筛选
@@ -87,21 +86,21 @@
               <Icon type="ios-arrow-down"></Icon>
             </Button>
             <DropdownMenu slot="list">
-              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="allSett">
+              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="()=>{(select.selectIndex.length==0)?false:allSett()}">
                 <Icon type="ios-book" size="16"/>
                 生成画廊
               </DropdownItem>
               <DropdownItem :disabled="select.selectIndex.length==0 || select.selectIndex.length>1"
-                            @click.native="menuImgInfo">
+                            @click.native="()=>{(select.selectIndex.length==0 || select.selectIndex.length>1)?false:menuImgInfo()}">
                 <Icon type="ios-information-circle" size="16"/>
                 图像详情
               </DropdownItem>
               <DropdownItem :disabled="select.selectIndex.length==0 || select.selectIndex.length>1"
-                            @click.native="updateFileName('img')">
+                            @click.native="()=>{(select.selectIndex.length==0 || select.selectIndex.length>1)?false:updateFileName('img')}">
                 <Icon type="ios-create" size="16"/>
                 修改名称
               </DropdownItem>
-              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="showCopyImgUrl">
+              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="()=>{(select.selectIndex.length==0)?false:showCopyImgUrl()}">
                 <Icon type="ios-copy" size="16"/>
                 复制分享
               </DropdownItem>
@@ -113,7 +112,7 @@
                 <Icon type="md-checkmark-circle-outline" size="16"/>
                 取消选中
               </DropdownItem>
-              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="delSelectImg">
+              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="()=>{(select.selectIndex.length==0)?false:delSelectImg()}">
                 <Icon type="md-trash" size="16"/>
                 删除选中
               </DropdownItem>
@@ -269,7 +268,7 @@
       <Card :dis-hover="true" :bordered="false" :shadow="false">
         <Divider><span style=" color: #5a5a5a;">一键复制格式</span></Divider>
         <Button type="success" class="cobyOrderSn_url" data-clipboard-action="copy"
-                :data-clipboard-text="copyAllImgUrl.urlTexts_url" @click="copyAll('url')" long>URL格式
+                :data-clipboard-text="copyAllImgUrl.urlTexts_url" @click="copyAll('url')" long>图像链接格式
         </Button>
         <br><br>
         <Button type="primary" class="cobyOrderSn_html" data-clipboard-action="copy"

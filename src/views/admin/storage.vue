@@ -1,9 +1,9 @@
 <template>
-  <Layout style="margin-top: 50px;margin-bottom: 50px;">
+  <Layout style="margin-bottom: 50px;">
     <Content :style="{margin: '15px 20px 0'}">
       <Row :gutter="16">
         <Col flex="1" v-for="(sto,index) in storageList" :key="index">
-          <Card :bordered="true" :shadow="true" style="margin-top: 10px;min-width: 300px;">
+          <Card :bordered="true" :shadow="true" style="margin-top: 10px;width: 100%;">
             <!--              <p slot="title" style="display: inline-block;height: 25px;"><img style="max-width: 85px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')" /> <Tooltip :content="(takeEffect(sto.id) || sto.storageType==5)?'当前状态:可用':'当前状态:不可用'" theme="light" style="float: right;"> <Icon type="md-radio-button-off" size="20" color="#499c54" v-if="(takeEffect(sto.id) || sto.storageType==5)" /> <Icon type="md-power" size="20" color="#c75450" v-else /> </Tooltip></p>-->
             <div style="text-align: center;">
               <img style="width: 80px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')"/>
@@ -19,7 +19,7 @@
               <Tag color="success" v-if="(takeEffect(sto.id) || sto.storageType==5)">可用</Tag>
               <Tag color="error" v-else>停用</Tag>
               <p style="margin-top: 10px;">
-                <span v-if="sto.storageType==8">后期对接新存储源</span>
+                <span v-if="sto.storageType==8">暂时不可编辑</span>
                 <a @click="getStorageById(sto.id)" v-else>编辑</a>
               </p>
             </div>
@@ -32,7 +32,7 @@
     <!--筛选窗-->
     <Modal v-model="storageWindow" :footer-hide="true">
       <br/>
-      <Form @submit.native.prevent :label-width="80">
+      <Form @submit.native.prevent :label-width="88">
 
         <FormItem label="存储源">
           <Select :disabled="this.viewType=='edit'" v-model="bucketType" filterable placeholder="存储源" size="large"

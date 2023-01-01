@@ -112,7 +112,7 @@ axios.interceptors.response.use(config => {
   if (config.data.code == 406 || config.data.code == '406') {
     console.log("前端域名配置错误")
     store.state.authInfo='前端域名配置错误';
-    store.state.authInfo='';
+    // store.state.authInfo='';
     store.state.auth = false;
   } else if (config.data.code == 403) {
     location.replace("/login");
@@ -138,7 +138,8 @@ axios.get('/hellohao/config.json'+'?'+new Date().getTime()+Math.random()+Math.ce
 })
 
 if (window.console) {
-  console.log("\n %c Hellohao图像托管 Tbed开源版 %c https://github.com/Hello-hao/Tbed","color:#fff;font-size:14px;background:linear-gradient(90deg,#fda085,#f6d365);padding:5px 0;border-radius: 15px 0 0 15px;","color:#000;background:linear-gradient(90deg,#f6d365,#fda085);padding:5px 15px 5px 0px;border-radius:  0 15px 15px 0;font-size:14px;");
+  console.log("\n".concat(" %c Hellohao图像托管 ", "FREE", " ").concat("", " %c http://tbed.hellohao.cn ", "\n", "\n"), "color: #fadfa3; background: #030307; padding:5px 0;", "background: #fadfa3; padding:5px 0;");
+
 }
 
 

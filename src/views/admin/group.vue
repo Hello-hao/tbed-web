@@ -1,5 +1,5 @@
 <template>
-  <Layout style="margin-top: 50px;margin-bottom: 50px;">
+  <Layout style="margin-bottom: 50px;">
     <Content :style="{margin: '15px 20px 0'}">
       <p style="position: fixed;right: 58px;z-index: 1;bottom: 68px;">
         <Button type="primary" shape="circle" icon="md-add-circle"

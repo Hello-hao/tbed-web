@@ -93,7 +93,7 @@
         <br />
         <Card :dis-hover="true" :bordered="false" :shadow="false">
           <Divider><span style=" color: #5a5a5a;">一键复制格式</span></Divider>
-          <Button type="success"  class="cobyOrderSn_url" data-clipboard-action="copy" :data-clipboard-text="urlTexts_url"  @click="copyAll('url')"  long>URL格式</Button>
+          <Button type="success"  class="cobyOrderSn_url" data-clipboard-action="copy" :data-clipboard-text="urlTexts_url"  @click="copyAll('url')"  long>图像链接格式</Button>
           <br><br>
           <Button type="primary" class="cobyOrderSn_html" data-clipboard-action="copy" :data-clipboard-text="urlTexts_html" @click="copyAll('html')" long>HTML格式</Button>
           <br><br>

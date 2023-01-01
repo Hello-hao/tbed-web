@@ -1,6 +1,6 @@
 <template>
 
-  <Layout style="margin-top: 50px;margin-bottom: 50px;">
+  <Layout style="margin-bottom: 50px;">
       <Content :style="{margin: '15px 20px 0'}">
         <Tabs>
           <TabPane label="邮箱配置" icon="md-mail" >
