@@ -31,114 +31,135 @@ Vue.prototype.$store = store
 Vue.prototype.$http = axios;
 Vue.prototype.$locStorage = locStorage;
 
-function getWebInfo () {
-  return new Promise((resolve, reject) => {
-    axios.get('/webInfo'+'?'+new Date().getTime()+Math.random()+Math.ceil(Math.random()*(10000-99999)+99999)).then(data => {
-      var json = data.data.data;
-      if(json){
-        json.splitline="-";
-        store.commit("cahngeMetaInfo", json);
-      }
-      resolve();
-    }).catch(error => {
-      console.log(error);
-      reject()
+function getWebInfo() {
+    return new Promise((resolve, reject) => {
+        axios.get('/webInfo' + '?' + new Date().getTime() + Math.random() + Math.ceil(Math.random() * (10000 - 99999) + 99999)).then(data => {
+            var json = data.data.data;
+            if (json) {
+                json.splitline = "-";
+                console.log(json);
+                json.aboutinfo = json.aboutinfo.replace(/&(amp|gt|lt|quot|#39|nbsp);/g, (a) => {
+                    return {
+                        "&lt;": "<",
+                        "&amp;": "&",
+                        "&quot;": '"',
+                        "&gt;": ">",
+                        "&#39;": "'",
+                        "&nbsp;": " ",
+                    }[a];
+                })
+                json.links = json.links.replace(/&(amp|gt|lt|quot|#39|nbsp);/g, (a) => {
+                    return {
+                        "&lt;": "<",
+                        "&amp;": "&",
+                        "&quot;": '"',
+                        "&gt;": ">",
+                        "&#39;": "'",
+                        "&nbsp;": " ",
+                    }[a];
+                })
+                store.commit("cahngeMetaInfo", json);
+            }
+            resolve();
+        }).catch(error => {
+            console.log(error);
+            reject()
+        })
     })
-  })
 }
 
 async function init() {
-  await getWebInfo();
+    await getWebInfo();
 }
 
 var options = {
-  escKey: false,
-  showHideOpacity:false,
-  bgOpacity:0.6,
-  allowPanToNext:true,
-  closeOnScroll:false,
-  mouseUsed:true,
-  tapToClose: false,
-  tapToToggleControls: true,
-  clickToCloseNonZoomable: true,
-  timeToIdle: 4000
+    escKey: false,
+    showHideOpacity: false,
+    bgOpacity: 0.6,
+    allowPanToNext: true,
+    closeOnScroll: false,
+    mouseUsed: true,
+    tapToClose: false,
+    tapToToggleControls: true,
+    clickToCloseNonZoomable: true,
+    timeToIdle: 4000
 };
 
-Vue.use(Iview).use(preview,options).use(Viewer,{
-  defaultOptions: {
-    navbar:false
-  }
+Vue.use(Iview).use(preview, options).use(Viewer, {
+    defaultOptions: {
+        navbar: false
+    }
 }).use(MetaInfo).use(contentmenu)
 
 Vue.use(VueLazyload, {
-  preLoad: 1.3,
-  error: img404,
-  loading: imgloading,
-  attempt: 1
+    preLoad: 1.3,
+    error: img404,
+    loading: imgloading,
+    attempt: 1
 })
 
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 60000;
 axios.defaults.method = 'POST';
 axios.defaults.headers = {
-  'Content-Type': 'application/x-www-form-urlencoded',
-  'usersOrigin':md5(window.location.protocol+'//'+window.location.host)
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'usersOrigin': md5(window.location.protocol + '//' + window.location.host)
 }
 
 axios.interceptors.request.use(config => {
-  if(config.url.indexOf('user/login')!= -1){
-    config.headers.verifyCode = localStorage.getItem('verifyCode');
-  }
-  if(config.url.indexOf('user/retrievePass')!= -1){
-    config.headers.verifyCodeForRetrieve = localStorage.getItem('verifyCodeForRetrieve');
-  }
-  if(config.url.indexOf('user/register')!= -1){
-    config.headers.verifyCodeForRegister = localStorage.getItem('verifyCodeForRegister');
-  }
-  config.headers.usersOrigin = md5(window.location.protocol+'//'+window.location.host)
-  if (store.state.Authorization) {
-    config.headers.Authorization = localStorage.getItem('Authorization');
-  } else if (localStorage.getItem('Authorization')) {
-    config.headers.Authorization = localStorage.getItem('Authorization');
-  }
-  return config;
+    if (config.url.indexOf('user/login') != -1) {
+        config.headers.verifyCode = localStorage.getItem('verifyCode');
+    }
+    if (config.url.indexOf('user/retrievePass') != -1) {
+        config.headers.verifyCodeForRetrieve = localStorage.getItem('verifyCodeForRetrieve');
+    }
+    if (config.url.indexOf('user/register') != -1) {
+        config.headers.verifyCodeForRegister = localStorage.getItem('verifyCodeForRegister');
+    }
+    config.headers.usersOrigin = md5(window.location.protocol + '//' + window.location.host)
+    if (store.state.Authorization) {
+        config.headers.Authorization = localStorage.getItem('Authorization');
+    } else if (localStorage.getItem('Authorization')) {
+        config.headers.Authorization = localStorage.getItem('Authorization');
+    }
+    return config;
 }, error => {
-  console.log("拦截器-请求错误：" + error);
+    console.log("拦截器-请求错误：" + error);
 })
 
 axios.interceptors.response.use(config => {
-  store.state.auth = true;
-  store.state.authInfo='';
-  if (config.data.code == 406 || config.data.code == '406') {
-    console.log("前端域名配置错误")
-    store.state.authInfo='前端域名配置错误';
-    // store.state.authInfo='';
-    store.state.auth = false;
-  } else if (config.data.code == 403) {
-    location.replace("/login");
-  }
-  return config;
+    store.state.auth = true;
+    store.state.authInfo = '';
+    if (config.data.code == 406 || config.data.code == '406') {
+        console.log("前端域名配置错误")
+        store.state.authInfo = '前端域名配置错误';
+        // store.state.authInfo='';
+        store.state.auth = false;
+    } else if (config.data.code == 403) {
+        location.replace("/login");
+    }
+    return config;
 }, error => {
-  console.log("拦截器-相应错误：" + error);
+    console.log("拦截器-相应错误：" + error);
 })
-axios.get('/hellohao/config.json'+'?'+new Date().getTime()+Math.random()+Math.ceil(Math.random()*(10000-99999)+99999)).then(data => {
-  var json = data.data;
-  store.commit("setServerHost", json.serverHost);
-  axios.defaults.baseURL = json.serverHost;
+axios.get('/hellohao/config.json' + '?' + new Date().getTime() + Math.random() + Math.ceil(Math.random() * (10000 - 99999) + 99999)).then(data => {
+    var json = data.data;
+    store.commit("setServerHost", json.serverHost);
+    axios.defaults.baseURL = json.serverHost;
 
-  new Vue({
-    render: h => h(App),
-    router,
-    store,
-    beforeCreate(){
-      init();
-    },
-  }).$mount('#app')
+    new Vue({
+        render: h => h(App),
+        router,
+        store,
+        beforeCreate() {
+            init();
+        },
+    }).$mount('#app')
 
 })
 
 if (window.console) {
-  console.log("\n".concat(" %c Hellohao图像托管 ", "FREE", " ").concat("", " %c http://tbed.hellohao.cn ", "\n", "\n"), "color: #fadfa3; background: #030307; padding:5px 0;", "background: #fadfa3; padding:5px 0;");
+    console.log("\n".concat(" %c Hellohao图像托管 ", "FREE", " ").concat("", " %c http://tbed.hellohao.cn ", "\n", "\n"), "color: #fadfa3; background: #030307; padding:5px 0;", "background: #fadfa3; padding:5px 0;");
 
 }
 
