@@ -8,7 +8,7 @@ import countTo from 'vue-count-to';
 // WHEN storageType=5 THEN '本地'
 // WHEN storageType=6 THEN '腾讯云'
 // WHEN storageType=7 THEN 'FTP'
-// WHEN storageType=8 THEN 'UFile'
+// WHEN storageType=8 THEN 'S3'
 
 export default {
     name: "storage",
@@ -24,6 +24,8 @@ export default {
             addEndpoint:null,
             addBucketname:null,
             addRequestAddress:null,
+            addRegion:null,
+            addRootPath:'/',
             addkeyname:null,
             bucketType:null,
             storageWindow:false,
@@ -77,8 +79,8 @@ export default {
                 {
                     "id":8,
                     "storageType":8,
-                    "keyname":"UFile",
-                    "storageName":"UFile"
+                    "keyname":"S3通用协议",
+                    "storageName":"S3通用协议"
                 }
             ]
 
@@ -185,7 +187,7 @@ export default {
                 this.$Message.warning('请选择存储源');
                 return;
             }else{
-                if(this.bucketType==1 || this.bucketType==2 || this.bucketType==4 || this.bucketType==6 ){
+                if(this.bucketType==1 || this.bucketType==2 || this.bucketType==4 || this.bucketType==6 || this.bucketType==8){
                     if(!this.addAccessKey || !this.addAccessSecret || !this.addEndpoint || !this.addBucketname || !this.addRequestAddress){
                         this.$Message.warning('相关参数不能为空');
                         return;
@@ -212,10 +214,11 @@ export default {
             paramJson.AccessKey = this.addAccessKey;
             paramJson.AccessSecret = this.addAccessSecret;
             paramJson.Endpoint = this.addEndpoint;
+            paramJson.Region = this.addRegion;
             paramJson.Bucketname = this.addBucketname;
             paramJson.RequestAddress = this.addRequestAddress;
             paramJson.keyname = this.addkeyname;
-
+            paramJson.RootPath = this.addRootPath;
             request(
                 "/admin/root/updateStorage",
                 paramJson).then(res => {

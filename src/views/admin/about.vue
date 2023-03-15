@@ -177,7 +177,7 @@
 
         请您再次保证已经完全阅读并理解了上述注册协议并接受上述所有协议的约束。<br/><br/>
         <div slot="footer">
-          <Button type="error" size="large" long @click="() => {isAgreementMsg=false}">我同意</Button>
+          <Button type="error" style="position: fixed; bottom: 1px;" size="large" long @click="() => {isAgreementMsg=false}">我同意</Button>
         </div>
         <br/>
       </div>

@@ -23,6 +23,7 @@ import img404 from './assets/img/img404.jpg'
 import imgloading from './assets/img/imgloading.gif'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
+import '@/assets/css/hamburgers.min.css';
 
 Vue.config.productionTip = false
 
@@ -37,28 +38,32 @@ function getWebInfo() {
             var json = data.data.data;
             if (json) {
                 json.splitline = "-";
-                console.log(json);
-                json.aboutinfo = json.aboutinfo.replace(/&(amp|gt|lt|quot|#39|nbsp);/g, (a) => {
-                    return {
-                        "&lt;": "<",
-                        "&amp;": "&",
-                        "&quot;": '"',
-                        "&gt;": ">",
-                        "&#39;": "'",
-                        "&nbsp;": " ",
-                    }[a];
-                })
-                json.links = json.links.replace(/&(amp|gt|lt|quot|#39|nbsp);/g, (a) => {
-                    return {
-                        "&lt;": "<",
-                        "&amp;": "&",
-                        "&quot;": '"',
-                        "&gt;": ">",
-                        "&#39;": "'",
-                        "&nbsp;": " ",
-                    }[a];
-                })
+                // json.aboutinfo = json.aboutinfo.replace(/&(amp|gt|lt|quot|#39|nbsp);/g, (a) => {
+                //     return {
+                //         "&lt;": "<",
+                //         "&amp;": "&",
+                //         "&quot;": '"',
+                //         "&gt;": ">",
+                //         "&#39;": "'",
+                //         "&nbsp;": " ",
+                //     }[a];
+                // })
                 store.commit("cahngeMetaInfo", json);
+
+                //添加ico图标
+                var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = json.webfavicons?json.webfavicons:'';
+                document.getElementsByTagName('head')[0].appendChild(link);
+
+                //添加百度统计代码
+                const scriptInfo = document.createElement("script")
+                scriptInfo.type = "text/javascript"
+                scriptInfo.setAttribute("data-callType","callScript")
+                // scriptInfo.contains(`console.log(666666666666666666)`)
+                // scriptInfo.src = "需要引入的js路径"
+                document.head.appendChild(scriptInfo)
             }
             resolve();
         }).catch(error => {

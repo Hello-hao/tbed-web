@@ -5,6 +5,44 @@ body {
     font-weight: 400;
     overflow: hidden;
 }
+
+
+.move-style-index{
+    max-width: 95%;
+    width: 100%;
+    margin: auto;
+    padding: 15px;
+    z-index: 1;
+    background: rgb(255, 255, 255);
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 5px 30px rgb(0 0 0 / 16%);
+    box-shadow: 0px 5px 30px rgb(0 0 0 / 16%);
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 68px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.move-style{
+    max-width: 95%;
+    width: 100%;
+    margin: auto;
+    padding: 15px;
+    background: #FFF;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 5px 30px rgb(0 0 0 / 16%);
+    box-shadow: 0px 5px 30px rgb(0 0 0 / 16%);
+    position: absolute;
+    left: 0;
+    right: 0;
+    /*transform: translateX(-50%);*/
+    top: 65px;
+    z-index: 9;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 .upcard{
     min-height: 260px;
     background-size:  contain;

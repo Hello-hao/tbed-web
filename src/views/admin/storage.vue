@@ -7,11 +7,7 @@
             <!--              <p slot="title" style="display: inline-block;height: 25px;"><img style="max-width: 85px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')" /> <Tooltip :content="(takeEffect(sto.id) || sto.storageType==5)?'当前状态:可用':'当前状态:不可用'" theme="light" style="float: right;"> <Icon type="md-radio-button-off" size="20" color="#499c54" v-if="(takeEffect(sto.id) || sto.storageType==5)" /> <Icon type="md-power" size="20" color="#c75450" v-else /> </Tooltip></p>-->
             <div style="text-align: center;">
               <img style="width: 80px;" :src="require('../../assets/img/icons/'+(sto.storageType).toString()+'.png')"/>
-              <p v-if="sto.storageType==8"
-                 style="color: #545454;font-size: 14px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;max-width: 130px; margin: auto;">
-                商家已跑路</p>
-              <p v-else
-                 style="color: #545454;font-size: 14px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;max-width: 130px; margin: auto;">
+              <p style="color: #545454;font-size: 14px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;max-width: 130px; margin: auto;">
                 {{ sto.keyname }}</p>
             </div>
             <div class="stostyle">
@@ -19,8 +15,7 @@
               <Tag color="success" v-if="(takeEffect(sto.id) || sto.storageType==5)">可用</Tag>
               <Tag color="error" v-else>停用</Tag>
               <p style="margin-top: 10px;">
-                <span v-if="sto.storageType==8">暂时不可编辑</span>
-                <a @click="getStorageById(sto.id)" v-else>编辑</a>
+                <a @click="getStorageById(sto.id)">编辑</a>
               </p>
             </div>
           </Card>
@@ -128,6 +123,32 @@
                   <p>按格式填写如：127.0.0.1:21不需要添加ftp:// 推荐使用21默认端口</p>
                   <p>修改过得端口先用xftp等客户端工具测试一下能不能链接</p>
                 </div>
+              </Tooltip>
+            </FormItem>
+          </div>
+
+          <!-- 更多 S3-->
+          <div v-if="(bucketType==8)">
+            <FormItem label="AccessKey">
+              <Input v-model="addAccessKey" size="large" style="width: 100%" />
+            </FormItem>
+            <FormItem label="SecretKey">
+              <Input v-model="addAccessSecret" size="large" style="width: 100%" />
+            </FormItem>
+            <FormItem label="Endpoint">
+              <Input v-model="addEndpoint" size="large" style="width: 100%" />
+            </FormItem>
+            <FormItem label="地区">
+              <Tooltip content="地区 如不需要可留空,如：auto,us-east-1也可留空" theme="light" max-width="250" style="width: 100%">
+                <Input v-model="addRegion" size="large" style="width: 100%" />
+              </Tooltip>
+            </FormItem>
+            <FormItem label="桶名称">
+              <Input v-model="addBucketname" size="large" style="width: 100%" />
+            </FormItem>
+            <FormItem label="存储目录">
+              <Tooltip content="上传的总路径存储位置，默认为对象存储的根目录：/，可设置子目录如：/img" max-width="250" theme="light" style="width: 100%">
+                <Input v-model="addRootPath" size="large" style="width: 100%" />
               </Tooltip>
             </FormItem>
           </div>
