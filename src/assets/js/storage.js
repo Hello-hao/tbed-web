@@ -89,6 +89,7 @@ export default {
             this.addAccessKey = null;
             this.addAccessSecret = null;
             this.addEndpoint = null;
+            this.addRegion = null;
             this.addBucketname = null;
             this.addRequestAddress = null;
             this.addkeyname = null;
@@ -271,7 +272,8 @@ export default {
                         this.addRequestAddress = key.requestAddress;
                         this.addkeyname = key.keyname;
                         this.bucketType = key.storageType;
-                        // this.$Spin.hide();
+                        this.addRegion = key.region;
+                        this.addRootPath = key.rootPath// this.$Spin.hide();
                         this.storageWindow = true;
                     }
                 } else {

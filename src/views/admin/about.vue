@@ -19,21 +19,26 @@
           </div>
           <div style="text-align: center;">
             <p style="font-size: 14px;"><span>授权产品:</span>&nbsp;
-              <span style="line-height: 16px;padding: 8px;min-width: 100px;">Hellohao图像托管-Tbed开源版</span>
+              <span style="line-height: 16px;min-width: 100px;">Hellohao图像托管-Tbed开源版</span>
             </p>
             <p style="font-size: 14px;"><span>Github开源:</span>&nbsp;
-              <span style="line-height: 16px;padding: 8px;min-width: 100px;"><a style="color: #515a6e;"
-                                                                                href="https://github.com/Hello-hao/Tbed">https://github.com/Hello-hao/Tbed</a></span>
+              <span style="line-height: 16px;min-width: 100px;"><a
+                  href="https://github.com/Hello-hao/Tbed">github.com/Hello-hao/Tbed</a></span>
             </p>
-            <p style="font-size: 14px;"><span>作者:</span>&nbsp;
-              <span style="line-height: 16px;padding: 8px;min-width: 100px;"><a style="color: #515a6e;"
-                                                                                href="http://tbed.hellohao.cn">Hellohao</a></span>
+            <p style="font-size: 14px;"><span>程序官网:</span>&nbsp;
+              <a style="line-height: 16px;min-width: 100px;"
+                 href="http://hellohao.cn">hellohao.cn</a>
+            </p>
+            <p style="font-size: 14px;"><span>开发者论坛:</span>&nbsp;
+              <a style="line-height: 16px;min-width: 100px;"
+                 href="http://bbs.hellohao.cn">bbs.hellohao.cn</a>
             </p>
             <p style="font-size: 14px;"><span>开发者交流群:</span>&nbsp;
-              <span style="line-height: 16px;padding: 8px;min-width: 100px;">864800972</span>
+              <span style="line-height: 16px;min-width: 100px;">864800972</span>
             </p>
             <Divider/>
-            <p style="font-size: 16px;">Hellohao图像托管程序这是一个基于多家对象存储源 JAVA语言编写SpringBoot框架开发的开源图像托管程序。</p>
+            <p style="font-size: 16px;">Hellohao图像托管程序这是一个基于多家对象存储源
+              JAVA语言编写SpringBoot框架开发的开源图像托管程序。</p>
             <p style="font-size: 16px;">
               程序主要使用领域：个人照片存储，团队共享图像，博客/商城等网站图片托管，图像批量云分享等。具备优秀的多用户图像上传功能和完善的图像查询管理逻辑，同时支持对接多家对象存储。</p>
             <p style="font-size: 16px;">如您已使用本程序，请遵循您所在地区的相关法律政策。</p>
@@ -83,7 +88,8 @@
 
         （4）程序有新版本时，将在官网和程序后台页面上提示更新信息，hellohao将公布更新细节，您可以根据需要更新到新版本。您需要尽可能及时地更新到新版本，如果您长期不更新到新版本，导致使用造成的一切问题hellohao无需负责。<br/>
 
-        （5）如果您不再需要使用程序，可以自行卸载程序。如果您购买了授权，已经支付的费用将不予退还。 卸载之后不会再产生其他费用。如果您以后继续使用程序，可以重新安装。<br/>
+        （5）如果您不再需要使用程序，可以自行卸载程序。如果您购买了授权，已经支付的费用将不予退还。
+        卸载之后不会再产生其他费用。如果您以后继续使用程序，可以重新安装。<br/>
 
         拓展插件/应用<br/>
 
@@ -172,12 +178,15 @@
 
         <br/><b>六、商标、知识产权的保护</b><br/>
 
-        尊重知识产权是您应尽的义务，如有违反，您应承担损害赔偿责任。详情请查看<a href="https://choosealicense.com/licenses/agpl-3.0/#" target="_blank"
-                                              style="text-decoration: underline;">《Hellohao图像托管程序开源许可协议》</a><br/>
+        尊重知识产权是您应尽的义务，如有违反，您应承担损害赔偿责任。详情请查看<a
+          href="https://choosealicense.com/licenses/agpl-3.0/#" target="_blank"
+          style="text-decoration: underline;">《Hellohao图像托管程序开源许可协议》</a><br/>
 
         请您再次保证已经完全阅读并理解了上述注册协议并接受上述所有协议的约束。<br/><br/>
         <div slot="footer">
-          <Button type="error" style="position: fixed; bottom: 1px;" size="large" long @click="() => {isAgreementMsg=false}">我同意</Button>
+          <Button type="error" style="position: fixed; bottom: 1px;" size="large" long
+                  @click="() => {isAgreementMsg=false}">我同意
+          </Button>
         </div>
         <br/>
       </div>

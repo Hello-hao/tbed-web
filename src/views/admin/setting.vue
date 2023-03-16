@@ -250,6 +250,12 @@
                     <Input type="textarea" v-model="config.aboutinfo" :rows="4" maxlength="1000"
                            placeholder="请输入站内关于菜单的内容,支持html标签"/>
                   </FormItem>
+                  <FormItem label="百度统计ID" :label-width="90">
+                    <Input v-model="config.baidu" maxlength="500" placeholder="百度统计代码中的ID部分"/>
+                    <p style="font-size: 12px;">
+                      如：hm.baidu.com/hm.js?<span style="color:red;">07dbce86da2a2ec8f5bf771adf59f94e</span> (仅输入红字部分即可)
+                    </p>
+                  </FormItem>
                   <FormItem label="备案显示" :label-width="90">
                     <Input type="textarea" v-model="config.links" :rows="4" maxlength="5000"
                            placeholder="站点底部备案信息，不填写则不显示"/>

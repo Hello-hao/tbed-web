@@ -32,6 +32,8 @@ Vue.prototype.$store = store
 Vue.prototype.$http = axios;
 Vue.prototype.$locStorage = locStorage;
 
+var _hmt = _hmt || [];
+
 function getWebInfo() {
     return new Promise((resolve, reject) => {
         axios.get('/webInfo' + '?' + new Date().getTime() + Math.random() + Math.ceil(Math.random() * (10000 - 99999) + 99999)).then(data => {
@@ -50,20 +52,28 @@ function getWebInfo() {
                 // })
                 store.commit("cahngeMetaInfo", json);
 
-                //添加ico图标
                 var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
                 link.type = 'image/x-icon';
                 link.rel = 'shortcut icon';
-                link.href = json.webfavicons?json.webfavicons:'';
+                link.href = json.webfavicons ? json.webfavicons : '';
                 document.getElementsByTagName('head')[0].appendChild(link);
+                if (json.baidu != null || json.baidu != '') {
+                    // console.log('开始百度统计+', json.baidu)
+                    window._hmt = _hmt;
+                    (function () {
+                        var hm = document.createElement("script");
+                        hm.src = "https://hm.baidu.com/hm.js?" + json.baidu;
+                        var s = document.getElementsByTagName("script")[0];
+                        s.parentNode.insertBefore(hm, s);
+                    })();
+                }
 
-                //添加百度统计代码
-                const scriptInfo = document.createElement("script")
-                scriptInfo.type = "text/javascript"
-                scriptInfo.setAttribute("data-callType","callScript")
-                // scriptInfo.contains(`console.log(666666666666666666)`)
-                // scriptInfo.src = "需要引入的js路径"
-                document.head.appendChild(scriptInfo)
+                // const scriptInfo = document.createElement("script")
+                // scriptInfo.type = "text/javascript"
+                // scriptInfo.setAttribute("data-callType","callScript")
+                // // scriptInfo.contains(`console.log(666666666666666666)`)
+                // // scriptInfo.src = "需要引入的js路径"
+                // document.head.appendChild(scriptInfo)
             }
             resolve();
         }).catch(error => {
@@ -72,6 +82,15 @@ function getWebInfo() {
         })
     })
 }
+
+router.beforeEach((to, from, next) => {
+    if (_hmt) {
+        if (to.path) {
+            _hmt.push(['_trackPageview', to.fullPath]);
+        }
+    }
+    next();
+});
 
 async function init() {
     await getWebInfo();

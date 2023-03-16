@@ -38,8 +38,8 @@
         </FormItem>
         <FormItem label="存储源">
           <Select v-model="formItem.keyid" filterable placeholder="存储源" size="large">
-            <Option v-for="item in bucketlist" :disabled="item.storageType==8" :value="item.id" :key="item.id">
-              {{ item.storageType == 8 ? item.keyname + '（商家已跑路）' : item.keyname }}
+            <Option v-for="item in bucketlist" :value="item.id" :key="item.id">
+              {{ item.keyname }}
             </Option>
           </Select>
         </FormItem>
@@ -62,7 +62,8 @@
         <!--        </FormItem>-->
         <div style="color: rgb(228 102 70);font-size: 12px; font-weight: 200;">
           <p>分发群组优先级判定：</p>
-          <p>未指定用户组的分发群组且已经分配给指定用户使用的优先级最高，其次是设置有用户组的分发群组。若以上所属的分发群组都没有指定，则一律进默认群组。</p>
+          <p>
+            未指定用户组的分发群组且已经分配给指定用户使用的优先级最高，其次是设置有用户组的分发群组。若以上所属的分发群组都没有指定，则一律进默认群组。</p>
           <br/>
         </div>
 

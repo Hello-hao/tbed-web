@@ -34,8 +34,8 @@
         <Divider plain>高级选项（选填）</Divider>
         <FormItem v-if="$store.state.RoleLevel=='admin'">
           <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
-            <Option v-for="item in bucketlist" :disabled="item.storageType==8" :value="item.id" :key="item.id">
-              {{ item.storageType == 8 ? item.keyname + '（倒闭了）' : item.keyname }}
+            <Option v-for="item in bucketlist" :value="item.id" :key="item.id">
+              {{ item.keyname }}
             </Option>
           </Select>
         </FormItem>
@@ -86,7 +86,8 @@
               <Icon type="ios-arrow-down"></Icon>
             </Button>
             <DropdownMenu slot="list">
-              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="()=>{(select.selectIndex.length==0)?false:allSett()}">
+              <DropdownItem :disabled="select.selectIndex.length==0"
+                            @click.native="()=>{(select.selectIndex.length==0)?false:allSett()}">
                 <Icon type="ios-book" size="16"/>
                 生成画廊
               </DropdownItem>
@@ -100,7 +101,8 @@
                 <Icon type="ios-create" size="16"/>
                 修改名称
               </DropdownItem>
-              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="()=>{(select.selectIndex.length==0)?false:showCopyImgUrl()}">
+              <DropdownItem :disabled="select.selectIndex.length==0"
+                            @click.native="()=>{(select.selectIndex.length==0)?false:showCopyImgUrl()}">
                 <Icon type="ios-copy" size="16"/>
                 复制分享
               </DropdownItem>
@@ -112,7 +114,8 @@
                 <Icon type="md-checkmark-circle-outline" size="16"/>
                 取消选中
               </DropdownItem>
-              <DropdownItem :disabled="select.selectIndex.length==0" @click.native="()=>{(select.selectIndex.length==0)?false:delSelectImg()}">
+              <DropdownItem :disabled="select.selectIndex.length==0"
+                            @click.native="()=>{(select.selectIndex.length==0)?false:delSelectImg()}">
                 <Icon type="md-trash" size="16"/>
                 删除选中
               </DropdownItem>
@@ -167,7 +170,8 @@
 
       </viewer>
       <div class="example-code-more">
-        <Button type="dashed" :loading="nextButloading" @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'" long>
+        <Button type="dashed" :loading="nextButloading" @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'"
+                long>
           {{ btntext }}
         </Button>
       </div>
@@ -213,8 +217,9 @@
           <p style="color: rgb(228 102 70);font-size: 12px; font-weight: 200;position: absolute; bottom: 10px; display: block; left: 0; width: 100%;z-index: 1;"
              align="center" v-show="isViolation.isControl">{{ isViolation.info }}</p>
           <div class="QRCodestyle">
-            <vue-qr :text="rightClickData?rightClickData.imgurl?rightClickData.imgurl:'未获取到文件信息':'未获取到文件信息'"
-                    :size="160"></vue-qr>
+            <vue-qr
+                :text="rightClickData?rightClickData.imgurl?rightClickData.imgurl:'未获取到文件信息':'未获取到文件信息'"
+                :size="160"></vue-qr>
           </div>
         </TabPane>
       </Tabs>
@@ -284,7 +289,8 @@
         </Button>
         <br><br>
         <Input v-model="copyAllImgUrl.myurl" placeholder="请输入要复制的链接格式" :clearable="true"/>
-        <p style="color: #6b6b6b;font-size: 12px;">格式说明：<br/>在输入框填入你想生成并复制的链接格式，格式中的图片链接用<b style="color: #eb3e21;">
+        <p style="color: #6b6b6b;font-size: 12px;">格式说明：<br/>在输入框填入你想生成并复制的链接格式，格式中的图片链接用<b
+            style="color: #eb3e21;">
           @myurl@ </b> 通配符填充</p>
       </Card>
     </Modal>

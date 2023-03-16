@@ -6,40 +6,40 @@ import locStorage from '../assets/js/utils/locStorage.js'
 vue.use(vuex)
 
 const store = new vuex.Store({
-    state:{
-        version:20230101,
-        isMobile:'pc',
-        serverHost:null,
-        copyAllUrl:null,//一键复制存储内容
-        userName:'' || localStorage.getItem('userName'),
-        RoleLevel:'' || localStorage.getItem('RoleLevel'),
-        linkName:'name',
-        noticePopup:false,//资讯窗的展示
-        loginStatus:false,
-        Authorization:localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
-        auth:true,
-        authInfo:'验证失败页面',
+    state: {
+        version: 20230316,
+        isMobile: 'pc',
+        serverHost: null,
+        copyAllUrl: null,//一键复制存储内容
+        userName: '' || localStorage.getItem('userName'),
+        RoleLevel: '' || localStorage.getItem('RoleLevel'),
+        linkName: 'name',
+        noticePopup: false,//资讯窗的展示
+        loginStatus: false,
+        Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
+        auth: true,
+        authInfo: '验证失败页面',
         metaInfo: {
-            favicon:"",
+            favicon: "",
             webname: "" || window.location.host,
-            logo:null,
-            splitline:"",
-            websubtitle:"",
-            admintitle:"",
+            logo: null,
+            splitline: "",
+            websubtitle: "",
+            admintitle: "",
             keywords: "",
             description: "",
-            explain:"",
-            aboutinfo:"",
-            baidu:"",
-            links:"",
-            api:0,
-            watermark:0,
-            register:0,
-            guidepage:0
+            explain: "",
+            aboutinfo: "",
+            baidu: "",
+            links: "",
+            api: 0,
+            watermark: 0,
+            register: 0,
+            guidepage: 0
         },
 
     },
-    mutations:{
+    mutations: {
         handleUserName: (state, name) => {
             state.userName = name
             localStorage.setItem('userName', name)
@@ -51,17 +51,17 @@ const store = new vuex.Store({
             state.isMobile = isMobile;
         },
         cahngeMetaInfo(state, metaInfo) {
-            if(metaInfo.websubtitle==null){
-                metaInfo.websubtitle="";
+            if (metaInfo.websubtitle == null) {
+                metaInfo.websubtitle = "";
                 metaInfo.splitline = "";
             }
-            if(metaInfo.logo==null || metaInfo.logo.replace(/\s*/g,'')==""){
+            if (metaInfo.logo == null || metaInfo.logo.replace(/\s*/g, '') == "") {
                 metaInfo.logo = null;
             }
-            if(locStorage.get("ISINFORMATION")==null){
-                setTimeout(() =>{
+            if (locStorage.get("ISINFORMATION") == null) {
+                setTimeout(() => {
                     state.noticePopup = true;
-                },1300)
+                }, 1300)
             }
 
             state.metaInfo = metaInfo;
@@ -80,15 +80,9 @@ const store = new vuex.Store({
         }
 
     },
-    actions:{
-
-    },
-    getters:{
-
-    },
-    modules:{
-
-    }
+    actions: {},
+    getters: {},
+    modules: {}
 })
 
 export default store;
