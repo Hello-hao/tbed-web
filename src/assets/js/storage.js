@@ -131,6 +131,7 @@ export default {
                     "/admin/root/LoadInfo",
                     params).then(res => {
                     if (res.status == 200) {
+                        this.loadInfo = [];
                         this.loadInfo.push(res.data.data)
                     }
                 }).catch(err => {
