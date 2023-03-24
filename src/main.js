@@ -40,16 +40,6 @@ function getWebInfo() {
             var json = data.data.data;
             if (json) {
                 json.splitline = "-";
-                // json.aboutinfo = json.aboutinfo.replace(/&(amp|gt|lt|quot|#39|nbsp);/g, (a) => {
-                //     return {
-                //         "&lt;": "<",
-                //         "&amp;": "&",
-                //         "&quot;": '"',
-                //         "&gt;": ">",
-                //         "&#39;": "'",
-                //         "&nbsp;": " ",
-                //     }[a];
-                // })
                 store.commit("cahngeMetaInfo", json);
 
                 var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
@@ -57,7 +47,7 @@ function getWebInfo() {
                 link.rel = 'shortcut icon';
                 link.href = json.webfavicons ? json.webfavicons : '';
                 document.getElementsByTagName('head')[0].appendChild(link);
-                if (json.baidu != null || json.baidu != '') {
+                if (json.baidu != null && json.baidu != '') {
                     // console.log('开始百度统计+', json.baidu)
                     window._hmt = _hmt;
                     (function () {
