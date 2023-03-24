@@ -27,7 +27,7 @@ const store = new vuex.Store({
             websubtitle: "",
             admintitle: "",
             keywords: "",
-            description: "",
+            webms: "",
             explain: "",
             aboutinfo: "",
             baidu: "",

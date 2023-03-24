@@ -273,7 +273,7 @@ export default {
           content: this.$store.state.metaInfo.keywords
         }, {
           name: "description",
-          content: this.$store.state.metaInfo.description
+          content: this.$store.state.metaInfo.webms
         }
       ]
     }
