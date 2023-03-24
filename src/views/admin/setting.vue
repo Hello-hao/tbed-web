@@ -233,7 +233,7 @@
                     <Input v-model="config.logo" maxlength="500" placeholder="请输入LOGO链接"/>
                   </FormItem>
                   <FormItem label="favicon图标" :label-width="90">
-                    <Input v-model="config.webfavicons" maxlength="500" placeholder="请输入服务端的favicon图标URL地址"/>
+                    <Input v-model="config.webfavicons" maxlength="500" placeholder="请输入站点favicon图标URL地址"/>
                   </FormItem>
                   <FormItem label="站点关键词" :label-width="90">
                     <Input v-model="config.webkeywords" maxlength="500" placeholder="多个关键词用(英文)“ , ”隔开"/>
