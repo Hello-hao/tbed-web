@@ -226,7 +226,7 @@
     </Modal>
 
     <!-- 生成画廊 -->
-    <Modal v-model="visible" :footer-hide="true" width="620">
+    <Modal v-model="visible" :footer-hide="true" width="620" :styles="{top: '20px'}">
       <Tabs>
         <TabPane label="画廊" icon="ios-images">
           <Spin size="large" fix v-if="spinShow"></Spin>

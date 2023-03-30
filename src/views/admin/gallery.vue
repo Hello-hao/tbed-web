@@ -1,66 +1,70 @@
 <template>
   <Layout style="margin-bottom: 50px;">
-      <Content :style="{margin: '15px 20px 0'}">
-        <p style="position: fixed;right: 58px;z-index: 1;bottom: 68px;">
-          <Button type="primary" shape="circle" icon="md-trash" style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;" @click="deleSelectGallery" >删除选中</Button>
-        </p>
-        <Card class="cardShadow" style="margin-top: 10px;padding-left: 8px; padding-right: 8px;">
-            <Table  :loading="loading" ref="selection" :columns="columns" :data="GalleryList"  @on-selection-change="selectGallery">
-              <template slot-scope="{ row }" slot="action">
-                <strong>{{ row.name }}</strong>
-              </template>
-              <template slot-scope="{row,index}" slot="action" >
-                <Icon title="编辑" type="md-reverse-camera tablebut"  @click="upGallery(row.albumkey)" />
-                <Icon title="删除" type="md-trash tablebut" :value="index" @click="deleGallery(row.albumkey)" />
-                <!--        <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>-->
-                <!--        <Button type="error" size="small" @click="remove(index)">Delete</Button>-->
-              </template>
-              <Switch v-model="loading"></Switch>
-            </Table>
-            <div style="margin-top: 20px; ">
-              <Page :total="total"
-                    :page-size="pageSize"
-                    @on-change="toPageIndex"
-                    @on-page-size-change="toPageSize" />
-            </div>
+    <Content :style="{margin: '15px 20px 0'}">
+      <p style="position: fixed;right: 58px;z-index: 1;bottom: 68px;">
+        <Button type="primary" shape="circle" icon="md-trash"
+                style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;"
+                @click="deleSelectGallery">删除选中
+        </Button>
+      </p>
+      <Card class="cardShadow" style="margin-top: 10px;padding-left: 8px; padding-right: 8px;">
+        <Table :loading="loading" ref="selection" :columns="columns" :data="GalleryList"
+               @on-selection-change="selectGallery">
+          <template slot-scope="{ row }" slot="action">
+            <strong>{{ row.name }}</strong>
+          </template>
+          <template slot-scope="{row,index}" slot="action">
+            <Icon title="编辑" type="md-reverse-camera tablebut" @click="upGallery(row.albumkey)"/>
+            <Icon title="删除" type="md-trash tablebut" :value="index" @click="deleGallery(row.albumkey)"/>
+            <!--        <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>-->
+            <!--        <Button type="error" size="small" @click="remove(index)">Delete</Button>-->
+          </template>
+          <Switch v-model="loading"></Switch>
+        </Table>
+        <div style="margin-top: 20px; ">
+          <Page :total="total"
+                :page-size="pageSize"
+                @on-change="toPageIndex"
+                @on-page-size-change="toPageSize"/>
+        </div>
 
-        </Card>
+      </Card>
 
-      </Content>
-    <Footer class="layout-footer-center" >{{this.$store.state.metaInfo.webname}} &copy; Control Panel</Footer>
+    </Content>
+    <Footer class="layout-footer-center">{{ this.$store.state.metaInfo.webname }} &copy; Control Panel</Footer>
 
     <!-- 生成画廊 -->
-    <Modal  v-model="visible" :footer-hide="true"  width="620" >
+    <Modal v-model="visible" :footer-hide="true" width="620" :styles="{top: '20px'}">
       <div style="padding: 30px 5px;">
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <album-list :albumlist="albumlist"  ref="album" :ischange="true"  @return-data='returnData' />
+        <album-list :albumlist="albumlist" ref="album" :ischange="true" @return-data='returnData'/>
       </div>
 
     </Modal>
 
-    </Layout>
-
+  </Layout>
 
 
 </template>
 <script>
 import {request} from "@/network/request";
 import albumList from '../../components/comp/album-list.vue'
+
 export default {
   name: "gallery",
-  components:{
+  components: {
     albumList
   },
-  data () {
+  data() {
     return {
-      loading:true,
-      pageNum:1,
-      pageSize:10,
-      total:0,
-      GalleryList:[],
-      albumkeyList:[],
-      albumlist:[],
-      spinShow:true,
+      loading: true,
+      pageNum: 1,
+      pageSize: 10,
+      total: 0,
+      GalleryList: [],
+      albumkeyList: [],
+      albumlist: [],
+      spinShow: true,
       visible: false,
       columns: [
         {
@@ -81,15 +85,15 @@ export default {
             return h('a', {
               attrs: {
                 name: params.row.albumkey,
-                target:'_blank',
-                href: window.location.protocol+'//'+window.location.host+'/h/'+params.row.albumkey
+                target: '_blank',
+                href: window.location.protocol + '//' + window.location.host + '/h/' + params.row.albumkey
               }
-            }, window.location.protocol+'//'+window.location.host+'/h/'+params.row.albumkey);
+            }, window.location.protocol + '//' + window.location.host + '/h/' + params.row.albumkey);
           }
         },
         {
           title: '创建日期',
-          tooltip:true,
+          tooltip: true,
           minWidth: 130,
           align: 'center',
           key: 'createdate'
@@ -100,29 +104,29 @@ export default {
           align: 'center',
           // key: 'userid'
           render: (h, params) => {
-            if(params.row.userid==0){
+            if (params.row.userid == 0) {
               return h('span', {}, '访客');
-            }else{
+            } else {
               return h('span', {}, params.row.username);
             }
           }
         },
         {
           title: '访问密码',
-          align:'center',
-          width:100,
+          align: 'center',
+          width: 100,
           // key: 'memory'
           render: (h, params) => {
-            if(params.row.password){
+            if (params.row.password) {
               return h('span', {}, params.row.password);
-            }else{
+            } else {
               return h('span', {}, '无');
             }
           }
         },
         {
           title: '操作',
-          width:120,
+          width: 120,
           key: 'action',
           slot: 'action',
         }
@@ -137,42 +141,42 @@ export default {
     this.$Spin.hide();
   },
   methods: {
-    toPageIndex(pageNum){
+    toPageIndex(pageNum) {
       this.pageNum = pageNum;
       this.getGalleryList();
 
     },
-    toPageSize(pageSize){
+    toPageSize(pageSize) {
     },
 
-    getGalleryList(){
-      var paramJson={};
-      paramJson.pageNum=this.pageNum;
-      paramJson.pageSize=this.pageSize;
+    getGalleryList() {
+      var paramJson = {};
+      paramJson.pageNum = this.pageNum;
+      paramJson.pageSize = this.pageSize;
       request(
           "/admin/getGalleryList",
           paramJson).then(res => {
-            if(res.status==200){
-              this.loading = false;
-              this.GalleryList = res.data.data.list;
-              this.total = res.data.count;
-            }
+        if (res.status == 200) {
+          this.loading = false;
+          this.GalleryList = res.data.data.list;
+          this.total = res.data.count;
+        }
       }).catch(err => {
         console.log(err);
         this.$Message.error('服务器请求错误');
       })
     },
-    selectGallery(selection){
-      if(selection.length>0){
+    selectGallery(selection) {
+      if (selection.length > 0) {
         for (let i = 0; i < selection.length; i++) {
           this.albumkeyList.push(selection[i].albumkey);
         }
-      }else{
+      } else {
         this.albumkeyList = [];
       }
     },
-    deleSelectGallery(){
-      if(this.albumkeyList.length==0){
+    deleSelectGallery() {
+      if (this.albumkeyList.length == 0) {
         this.$Message.warning("请先选择要操作的数据");
         return;
       }
@@ -182,27 +186,28 @@ export default {
         onOk: () => {
           this.sendDeleGallery();
         },
-        onCancel: () => { }
+        onCancel: () => {
+        }
       });
     },
-    upGallery(id){
+    upGallery(id) {
       this.albumlist = [];
       this.getAlbumListForKey(id);
       this.visible = true;
     },
     //获取选中的画廊图片信息
-    getAlbumListForKey(id){
-      var param={
-        key:id//JSON.stringify(this.selectIndex),
+    getAlbumListForKey(id) {
+      var param = {
+        key: id//JSON.stringify(this.selectIndex),
       }
       request(
           "/admin/getAlbumListForKey",
           param).then(res => {
         this.$Spin.hide();
-        if(res.status==200){
+        if (res.status == 200) {
           var json = res.data.data;
           this.albumlist = json.imagesList;
-          this.$refs.album.getTilePass(json.album.albumtitle,json.album.password,id,this.albumlist);
+          this.$refs.album.getTilePass(json.album.albumtitle, json.album.password, id, this.albumlist);
 
           //
           // this.selectIndex = [];
@@ -210,7 +215,7 @@ export default {
           // this.selectImgUid = [];
 
           this.spinShow = false;
-        }else{
+        } else {
           this.$Message.error("请求时出现错误");
         }
       }).catch(err => {
@@ -219,43 +224,44 @@ export default {
         this.$Message.error('服务器请求错误');
       })
     },
-    deleGallery(id){
+    deleGallery(id) {
       this.$Modal.confirm({
         title: '确认删除',
         content: '<p>您确认删除所选画廊吗</p>',
         onOk: () => {
           this.sendDeleGallery(id);
         },
-        onCancel: () => { }
+        onCancel: () => {
+        }
       });
     },
-    sendDeleGallery(albumkey){
+    sendDeleGallery(albumkey) {
       this.loading = true;
-      var paramJson={};
-      if(albumkey!=null && albumkey != ''){
+      var paramJson = {};
+      if (albumkey != null && albumkey != '') {
         let arr = [];
         arr.push(albumkey);
         paramJson.albumkeyList = arr;
-      }else{
-        if(this.albumkeyList.length==0){
+      } else {
+        if (this.albumkeyList.length == 0) {
           this.loading = false;
           this.$Message.warning("请先选择要操作的数据");
           return false;
         }
-        paramJson.albumkeyList=this.albumkeyList;
+        paramJson.albumkeyList = this.albumkeyList;
       }
       request(
           "/admin/deleGallery",
           paramJson).then(res => {
         console.log(res);
-        if(res.status==200){
-          if(res.data.code=='200'){
+        if (res.status == 200) {
+          if (res.data.code == '200') {
             this.$Message.success(res.data.info);
-          }else{
+          } else {
             this.$Message.warning(res.data.info);
           }
           this.getGalleryList();
-        }else{
+        } else {
           this.$Message.error("请求时出现错误");
         }
         this.loading = false;
@@ -265,7 +271,7 @@ export default {
         this.$Message.error('服务器请求错误');
       })
     },
-    returnData(data){
+    returnData(data) {
       this.visible = false;
       // this.albumData = data;
       // if(this.albumData.password==null || this.albumData==''){
@@ -280,7 +286,7 @@ export default {
 }
 </script>
 <style>
-.tablebut{
+.tablebut {
   font-size: 19px;
   margin-left: 6px;
   cursor: pointer;
