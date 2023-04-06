@@ -1,7 +1,8 @@
 <template>
   <Layout
       style="width: 100%;height: 100%;background: #fff;background-repeat: no-repeat; background-size: 100% 100%; -moz-background-size: 100% 100%; ">
-    <div style="width: 100%;height: 100%;background-color: rgba(51,51,51,0.36);position: fixed;z-index: 1;" @click="showMenu" v-show="isCollapsed"></div>
+    <div style="width: 100%;height: 100%;background-color: rgba(51,51,51,0.36);position: fixed;z-index: 1;"
+         @click="showMenu" v-show="isCollapsed"></div>
     <Drawer title="资讯" placement="top" height="363" :closable="false" v-model="$store.state.noticePopup"
             v-if="(this.$store.state.metaInfo.explain!='' && this.$store.state.metaInfo.explain!=null)">
       <div
@@ -16,97 +17,101 @@
       </div>
     </Drawer>
 
-<!--    <Header-->
-<!--        :style="{position: 'fixed', width: '100%',zIndex:'1',padding:'0 10px',height: '64px',background: '#fff',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}"-->
-<!--        class="animate__animated animate__fadeInDownBig">-->
-<!--      <Menu mode="horizontal" style="height: 64px;" theme="light" :active-name="$route.params.activeName">-->
-<!--        <div class="layout-logo" style="height: 100%;">-->
-<!--          <img :src="($store.state.metaInfo.logo==null || $store.state.metaInfo.logo=='')?hellohaologo:$store.state.metaInfo.logo"-->
-<!--               style="width: 135px;height: 100%;margin-left: 35px;"/>-->
-<!--        </div>-->
-<!--        <div class="layout-nav">-->
-<!--          <template v-if="screenWidth<=568">-->
-<!--            <MenuItem name="ishome" @click.native="homeClick">-->
-<!--              <Icon type="md-home" style="font-size: 30px; line-height: 2;color: #515a6e;"/>-->
-<!--            </MenuItem>-->
-<!--            <Dropdown trigger="click" name="iscontrol" style="margin-right: 26px;">-->
-<!--              <a href="javascript:void(0)" style="color: #515a6e;text-decoration: none;">-->
-<!--                <Icon type="md-speedometer" style="font-size: 30px; line-height: 2;"/>&nbsp;-->
-<!--                <Icon type="ios-arrow-down"></Icon>-->
-<!--              </a>-->
-<!--              <DropdownMenu slot="list">-->
-<!--                <template @click.native="controlClick" v-if="this.$store.state.loginStatus">-->
-<!--                  <DropdownItem name="isadmin" @click.native="adminClick">控制台</DropdownItem>-->
-<!--                  <DropdownItem name="exit" @click.native="exit">退出</DropdownItem>-->
-<!--                </template>-->
-<!--                <template @click.native="loginClick" v-else>-->
-<!--                  <DropdownItem name="login" @click.native="loginClick">登录</DropdownItem>-->
-<!--                </template>-->
-<!--                <DropdownItem name="about" @click.native="about">关于</DropdownItem>-->
-<!--              </DropdownMenu>-->
-<!--            </Dropdown>-->
-<!--          </template>-->
-<!--          <template v-else>-->
-<!--            <MenuItem name="ishome" @click.native="homeClick">-->
-<!--              <Icon type="md-home" style="color: rgb(81, 90, 110);"/>-->
-<!--              <span style="color: rgb(81, 90, 110);">首页</span>-->
-<!--            </MenuItem>-->
-<!--            <Dropdown trigger="click" name="iscontrol" style="margin-right: 26px;">-->
-<!--              <a href="javascript:void(0)" style="color: #FFF;text-decoration: none;">-->
-<!--                <Icon type="md-speedometer" style="color: rgb(81, 90, 110);"/>&nbsp;-->
-<!--                <span style="color: rgb(81, 90, 110);">管理</span>-->
-<!--                <Icon type="ios-arrow-down" style="color: rgb(81, 90, 110);"></Icon>-->
-<!--              </a>-->
-<!--              <DropdownMenu slot="list">-->
-<!--                <template @click.native="controlClick" v-if="this.$store.state.loginStatus">-->
-<!--                  <DropdownItem name="isadmin" @click.native="adminClick">控制台</DropdownItem>-->
-<!--                  <DropdownItem name="exit" @click.native="exit">退出</DropdownItem>-->
-<!--                </template>-->
-<!--                <template @click.native="loginClick" v-else>-->
-<!--                  <DropdownItem name="login" @click.native="loginClick">登录</DropdownItem>-->
-<!--                  <DropdownItem name="login" @click.native="registerClick">注册</DropdownItem>-->
-<!--                </template>-->
-<!--                <DropdownItem name="about" @click.native="about">关于</DropdownItem>-->
-<!--              </DropdownMenu>-->
-<!--            </Dropdown>-->
-<!--          </template>-->
-<!--          <Badge :status="$store.state.loginStatus?'success':'warning'"/>-->
-<!--        </div>-->
-<!--      </Menu>-->
-<!--    </Header>-->
+    <!--    <Header-->
+    <!--        :style="{position: 'fixed', width: '100%',zIndex:'1',padding:'0 10px',height: '64px',background: '#fff',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}"-->
+    <!--        class="animate__animated animate__fadeInDownBig">-->
+    <!--      <Menu mode="horizontal" style="height: 64px;" theme="light" :active-name="$route.params.activeName">-->
+    <!--        <div class="layout-logo" style="height: 100%;">-->
+    <!--          <img :src="($store.state.metaInfo.logo==null || $store.state.metaInfo.logo=='')?hellohaologo:$store.state.metaInfo.logo"-->
+    <!--               style="width: 135px;height: 100%;margin-left: 35px;"/>-->
+    <!--        </div>-->
+    <!--        <div class="layout-nav">-->
+    <!--          <template v-if="screenWidth<=568">-->
+    <!--            <MenuItem name="ishome" @click.native="homeClick">-->
+    <!--              <Icon type="md-home" style="font-size: 30px; line-height: 2;color: #515a6e;"/>-->
+    <!--            </MenuItem>-->
+    <!--            <Dropdown trigger="click" name="iscontrol" style="margin-right: 26px;">-->
+    <!--              <a href="javascript:void(0)" style="color: #515a6e;text-decoration: none;">-->
+    <!--                <Icon type="md-speedometer" style="font-size: 30px; line-height: 2;"/>&nbsp;-->
+    <!--                <Icon type="ios-arrow-down"></Icon>-->
+    <!--              </a>-->
+    <!--              <DropdownMenu slot="list">-->
+    <!--                <template @click.native="controlClick" v-if="this.$store.state.loginStatus">-->
+    <!--                  <DropdownItem name="isadmin" @click.native="adminClick">控制台</DropdownItem>-->
+    <!--                  <DropdownItem name="exit" @click.native="exit">退出</DropdownItem>-->
+    <!--                </template>-->
+    <!--                <template @click.native="loginClick" v-else>-->
+    <!--                  <DropdownItem name="login" @click.native="loginClick">登录</DropdownItem>-->
+    <!--                </template>-->
+    <!--                <DropdownItem name="about" @click.native="about">关于</DropdownItem>-->
+    <!--              </DropdownMenu>-->
+    <!--            </Dropdown>-->
+    <!--          </template>-->
+    <!--          <template v-else>-->
+    <!--            <MenuItem name="ishome" @click.native="homeClick">-->
+    <!--              <Icon type="md-home" style="color: rgb(81, 90, 110);"/>-->
+    <!--              <span style="color: rgb(81, 90, 110);">首页</span>-->
+    <!--            </MenuItem>-->
+    <!--            <Dropdown trigger="click" name="iscontrol" style="margin-right: 26px;">-->
+    <!--              <a href="javascript:void(0)" style="color: #FFF;text-decoration: none;">-->
+    <!--                <Icon type="md-speedometer" style="color: rgb(81, 90, 110);"/>&nbsp;-->
+    <!--                <span style="color: rgb(81, 90, 110);">管理</span>-->
+    <!--                <Icon type="ios-arrow-down" style="color: rgb(81, 90, 110);"></Icon>-->
+    <!--              </a>-->
+    <!--              <DropdownMenu slot="list">-->
+    <!--                <template @click.native="controlClick" v-if="this.$store.state.loginStatus">-->
+    <!--                  <DropdownItem name="isadmin" @click.native="adminClick">控制台</DropdownItem>-->
+    <!--                  <DropdownItem name="exit" @click.native="exit">退出</DropdownItem>-->
+    <!--                </template>-->
+    <!--                <template @click.native="loginClick" v-else>-->
+    <!--                  <DropdownItem name="login" @click.native="loginClick">登录</DropdownItem>-->
+    <!--                  <DropdownItem name="login" @click.native="registerClick">注册</DropdownItem>-->
+    <!--                </template>-->
+    <!--                <DropdownItem name="about" @click.native="about">关于</DropdownItem>-->
+    <!--              </DropdownMenu>-->
+    <!--            </Dropdown>-->
+    <!--          </template>-->
+    <!--          <Badge :status="$store.state.loginStatus?'success':'warning'"/>-->
+    <!--        </div>-->
+    <!--      </Menu>-->
+    <!--    </Header>-->
 
 
-    <Header :style="{position: 'fixed', width: '100%',zIndex:'2',padding:'0 10px',height: '64px',background: 'rgba(255, 255, 255, .55)',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}" class="animate__animated animate__fadeInDownBig" >
-      <Menu mode="horizontal" style="height: 64px;background: #FFF0 "  :active-name="$route.params.activeName">
+    <Header
+        :style="{position: 'fixed', width: '100%',zIndex:'2',padding:'0 10px',height: '64px',background: 'rgba(255, 255, 255, .55)',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}"
+        class="animate__animated animate__fadeInDownBig">
+      <Menu mode="horizontal" style="height: 64px;background: #FFF0 " :active-name="$route.params.activeName">
         <div class="layout-logo" style="height: 100%;">
-<!--          <img :src="(metaInfo.logo==null || metaInfo.logo=='')?hellohaologo:metaInfo.logo" style="width: 135px;margin-left: 10px;vertical-align: middle;" />-->
-          <img :src="($store.state.metaInfo.logo==null || $store.state.metaInfo.logo=='')?hellohaologo:$store.state.metaInfo.logo"
-               style="width: 135px;margin-left: 10px;vertical-align: middle;"/>
+          <!--          <img :src="(metaInfo.logo==null || metaInfo.logo=='')?hellohaologo:metaInfo.logo" style="width: 135px;margin-left: 10px;vertical-align: middle;" />-->
+          <img
+              :src="($store.state.metaInfo.logo==null || $store.state.metaInfo.logo=='')?hellohaologo:$store.state.metaInfo.logo"
+              style="width: 135px;margin-left: 10px;vertical-align: middle;"/>
         </div>
         <div class="layout-nav">
           <template v-if="screenWidth<=1024">
             <Badge :status="$store.state.loginStatus?'success':'warning'" style="    top: -23px;
-    right: -64px;" />
-            <div @click="showMenu" :class="{'is-active':isMenu=='show'}" class="hamburger hamburger--collapse" style="z-index: 2">
+    right: -64px;"/>
+            <div @click="showMenu" :class="{'is-active':isMenu=='show'}" class="hamburger hamburger--collapse"
+                 style="z-index: 2">
               <div class="hamburger-box">
                 <div class="hamburger-inner"></div>
               </div>
             </div>
           </template>
           <template v-else>
-            <MenuItem name="ishome" @click.native="homeClick" >
-              <Icon type="md-home" style="color: rgb(81, 90, 110);" />
+            <MenuItem name="ishome" @click.native="homeClick">
+              <Icon type="md-home" style="color: rgb(81, 90, 110);"/>
               <span style="color: rgb(81, 90, 110);">首 页</span>
             </MenuItem>
             <Dropdown trigger="click" name="iscontrol" style="margin-right: 18px;">
               <a href="javascript:void(0)" style="color: #FFF;text-decoration: none;">
-                <Icon type="md-person" style="color: rgb(81, 90, 110);" />&nbsp;
+                <Icon type="md-person" style="color: rgb(81, 90, 110);"/>&nbsp;
                 <span style="color: rgb(81, 90, 110);">我 的</span>
                 <Icon type="ios-arrow-down" style="color: rgb(81, 90, 110);"></Icon>
               </a>
               <DropdownMenu slot="list">
                 <template @click.native="controlClick" v-if="this.$store.state.loginStatus">
-                  <DropdownItem name="isadmin"  @click.native="adminClick">个人中心</DropdownItem>
+                  <DropdownItem name="isadmin" @click.native="adminClick">个人中心</DropdownItem>
                   <DropdownItem name="exit" @click.native="exit">退 出</DropdownItem>
                 </template>
                 <template @click.native="loginClick" v-else>
@@ -116,7 +121,7 @@
                 <DropdownItem name="about" @click.native="about">关 于</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <Badge :status="$store.state.loginStatus?'success':'warning'" />
+            <Badge :status="$store.state.loginStatus?'success':'warning'"/>
           </template>
 
         </div>
@@ -177,18 +182,40 @@
     </Modal>
 
     <!--    移动端状态栏   -->
-    <div v-show="isMenu!='none'" class="move-style-index animate__animated" :class="{'animate__fadeInDown' :isMenu=='show','animate__fadeOutUp' :isMenu=='hide'}">
+    <div v-show="isMenu!='none'" class="move-style-index animate__animated"
+         :class="{'animate__fadeInDown' :isMenu=='show','animate__fadeOutUp' :isMenu=='hide'}">
       <List size="small" slot="content" :split="false">
-        <ListItem @click.native="homeClick" style="text-indent: 26px;"><Icon type="md-home" size="16" /> 首 页</ListItem>
+        <ListItem @click.native="homeClick" style="text-indent: 26px;">
+          <Icon type="md-home" size="16"/>
+          首 页
+        </ListItem>
         <template v-if="this.$store.state.loginStatus">
-          <ListItem @click.native="adminClick" style="text-indent: 26px;"><Icon type="md-contact" size="16" /> 个人中心</ListItem>
-          <ListItem @click.native="about" style="text-indent: 26px;"><Icon type="md-information-circle" size="16" /> 关 于</ListItem>
-          <ListItem style="text-indent: 26px;" @click="exit"><Icon type="md-exit" size="16" /> 退 出</ListItem>
+          <ListItem @click.native="adminClick" style="text-indent: 26px;">
+            <Icon type="md-contact" size="16"/>
+            个人中心
+          </ListItem>
+          <ListItem @click.native="about" style="text-indent: 26px;">
+            <Icon type="md-information-circle" size="16"/>
+            关 于
+          </ListItem>
+          <ListItem style="text-indent: 26px;" @click="exit">
+            <Icon type="md-exit" size="16"/>
+            退 出
+          </ListItem>
         </template>
         <template v-else>
-          <ListItem @click.native="loginClick" style="text-indent: 26px;"><Icon type="ios-navigate" size="16" /> 登 录</ListItem>
-          <ListItem @click.native="registerClick" style="text-indent: 26px;"><Icon type="md-person-add" size="16" /> 注 册</ListItem>
-          <ListItem @click.native="about" style="text-indent: 26px;"><Icon type="md-information-circle" size="16" /> 关 于</ListItem>
+          <ListItem @click.native="loginClick" style="text-indent: 26px;">
+            <Icon type="ios-navigate" size="16"/>
+            登 录
+          </ListItem>
+          <ListItem @click.native="registerClick" style="text-indent: 26px;">
+            <Icon type="md-person-add" size="16"/>
+            注 册
+          </ListItem>
+          <ListItem @click.native="about" style="text-indent: 26px;">
+            <Icon type="md-information-circle" size="16"/>
+            关 于
+          </ListItem>
         </template>
 
       </List>
@@ -205,7 +232,7 @@ export default {
 
   data() {
     return {
-      isMenu:'none',
+      isMenu: 'none',
       isCollapsed: false,
       noticeSwitch: false,
       urlTexts: '',
@@ -240,12 +267,35 @@ export default {
       return (() => {
         window.screenWidth = document.body.clientWidth
         this.screenWidth = window.screenWidth
-        if( window.screenWidth>1024){
+        if (window.screenWidth > 1024) {
           this.isMenu = 'none'
         }
         //console.log("屏幕宽度=="+this.screenWidth);
       })()
     }
+
+
+    document.addEventListener('paste', (event) => {
+      const items = (event.clipboardData || window.clipboardData).items
+      let file = null
+      if (!items || items.length === 0) {
+        this.$Message.error('当前浏览器不支持本地或请打开图片再复制')
+        return
+      }
+      // 搜索剪切板items
+      for (let i = 0; i < items.length; i++) {
+        // console.log('==>'+items[i].type);
+        if (items[i].type.indexOf('image') !== -1) {
+          file = items[i].getAsFile()
+          break
+        }
+      }
+      if (file == null) {
+        return
+      }
+      this.$refs.indexTarget.sendImgData(file)
+
+    })
 
   },
   methods: {
@@ -403,16 +453,16 @@ export default {
         this.$Message.error('服务器请求错误');
       })
     },
-    showMenu(){
-      if(this.isMenu=='none'){
-        this.isMenu='show'
+    showMenu() {
+      if (this.isMenu == 'none') {
+        this.isMenu = 'show'
         this.isCollapsed = true
-      }else{
-        if(this.isMenu=='show'){
-          this.isMenu='hide'
+      } else {
+        if (this.isMenu == 'show') {
+          this.isMenu = 'hide'
           this.isCollapsed = false
-        }else{
-          this.isMenu='show'
+        } else {
+          this.isMenu = 'show'
           this.isCollapsed = true
         }
       }
@@ -431,6 +481,7 @@ export default {
 .animate__fadeInDown {
   --animate-duration: .5s;
 }
+
 .animate__fadeOutUp {
   --animate-duration: .5s;
 }
@@ -562,6 +613,7 @@ body {
   border-radius: 4px;
   background-color: #515a6d;
 }
+
 .hamburger.is-active .hamburger-inner, .hamburger.is-active .hamburger-inner:after, .hamburger.is-active .hamburger-inner:before {
   background-color: #515a6d;
 }

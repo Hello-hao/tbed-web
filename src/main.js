@@ -18,6 +18,7 @@ import '@/assets/css/font.less';
 import './assets/css/style.css'
 import md5 from "js-md5";
 import "babel-polyfill";
+import uploader from 'vue-simple-uploader'
 import locStorage from './assets/js/utils/locStorage.js'
 import img404 from './assets/img/img404.jpg'
 import imgloading from './assets/img/imgloading.gif'
@@ -99,7 +100,7 @@ var options = {
     timeToIdle: 4000
 };
 
-Vue.use(Iview).use(preview, options).use(Viewer, {
+Vue.use(Iview).use(preview, options).use(uploader).use(Viewer, {
     defaultOptions: {
         navbar: false
     }

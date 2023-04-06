@@ -82,8 +82,7 @@ html, body, .app {
 }
 
 .app {
-  font-family: Noto Sans SC, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-  font-style: normal;
+  font-family: var(--vt-font-family-base);
   font-weight: 400;
 }
 </style>

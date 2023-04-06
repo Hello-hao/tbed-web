@@ -1,11 +1,15 @@
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 body {
-    font-family: Noto Sans SC, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-    font-style: normal;
-    font-weight: 400;
+    font-family: var(--vt-font-family-base);
+    /*font-family: CustomFont,Noto Sans SC,"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
     overflow: hidden;
+
 }
 
+:root {
+    --vt-font-family-base: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --vt-font-family-mono: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
 
 .move-style-index {
     max-width: 95%;
