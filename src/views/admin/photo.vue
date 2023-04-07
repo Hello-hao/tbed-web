@@ -25,11 +25,17 @@
     </v-contextmenu>
     <Drawer title="图像类别" :closable="false" v-model="treePopup" :width="screenWidth<=368?screenWidth:368">
       <Form @submit.native.prevent style="margin-top: 30px;">
+        <Divider plain>图像分类</Divider>
         <FormItem>
           <RadioGroup v-model="selectUserType" type="button" style="width: 100%">
             <Radio label="me">我的图像</Radio>
             <Radio label="all">用户图像</Radio>
           </RadioGroup>
+        </FormItem>
+        <Divider plain>名称搜索</Divider>
+        <FormItem>
+          <Input style="width: 100%" size="default" v-model="searchname" placeholder="图像名称/url名称(可模糊搜索)">
+          </Input>
         </FormItem>
         <Divider plain>高级选项（选填）</Divider>
         <FormItem v-if="$store.state.RoleLevel=='admin'">
@@ -62,7 +68,7 @@
           </CheckboxGroup>
         </FormItem>
       </Form>
-      <div style="width: 100%; height: 55px; position: absolute; bottom: 0; left: 0;text-align: right; padding: 10px;">
+      <div style="width: 100%; height: 55px; position: fixed; bottom: 0; left: 0;text-align: right; padding: 10px;">
         <div style="width: 75px; display: inline-block;">
           <Button shape="circle" @click="treePopup = false">取消</Button>
         </div>

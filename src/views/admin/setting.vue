@@ -162,7 +162,8 @@
 
                 <Form style="padding: 16px;">
                   <FormItem label="图像格式" :label-width="90">
-                    <Input v-model="uploadConfig.suffix" placeholder="请输入图像格式后缀用,隔开(英文逗号)"/>
+                    <Input v-model="uploadConfig.suffix"
+                           placeholder="请输入图像格式后缀用,隔开(英文逗号),仅限图像格式"/>
                   </FormItem>
                   <FormItem label="IP黑名单" :label-width="90">
                     <Input v-model="uploadConfig.blacklist" type="textarea" :rows="4"

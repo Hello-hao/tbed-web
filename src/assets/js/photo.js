@@ -37,6 +37,7 @@ export default {
             selectUserType: 'me',
             searchtype: '1',//查询的文本类型
             searchtext: null,//查询的文本
+            searchname: null,//图像名称
             searchbucket: '',
             searchStartDate: null,
             searchStopDate: null,
@@ -115,6 +116,7 @@ export default {
             paramJson.pageNum = this.pageNum;
             paramJson.pageSize = this.pageSize;
             paramJson.selectUserType = this.selectUserType;
+            paramJson.searchname = this.searchname;
             if (this.selectUserType == 'me') {
                 paramJson.selecttype = null;
                 paramJson.username = null;
@@ -347,12 +349,12 @@ export default {
             })
 
         },
-        deleteImages(id,index){
+        deleteImages(id, index) {
             var than = this;
-            than.sendDeleteImages(id,index);
-            setTimeout(()=>{
+            than.sendDeleteImages(id, index);
+            setTimeout(() => {
                 than.TimeingDelImg();
-            },300)
+            }, 300)
         },
         TimeingDelImg() {
             var that = this;
@@ -368,7 +370,7 @@ export default {
                     if (oklist.length > 0) {
                         for (let i = 0; i < that.imglist.length; i++) {
                             for (let j = 0; j < oklist.length; j++) {
-                                if(that.imglist[i].id==oklist[j]){
+                                if (that.imglist[i].id == oklist[j]) {
                                     // that.$refs[`imgLi_${oklist[j]}`][0].remove();
                                     that.imglist.splice(i, 1);
                                 }
@@ -490,7 +492,7 @@ export default {
                             than.delProgress = json.data;
                             if (json.data.delover == 'true' || json.data.delover == true) {
                                 than.delOver = true;
-                            }else{
+                            } else {
                                 than.delOver = false;
                             }
                             resolve(json.data)
