@@ -134,8 +134,8 @@
               <div>
                 <span class="formatTag">{{ item.imgname.substr(item.imgname.lastIndexOf("\.") + 1) }}</span>
                 <img :style="{width: imgWidth+'px', }" :id="'myimg_'+index" :alt="item.imgurl"
-                     v-lazy="(item.briefimgurl==null || item.briefimgurl=='')?item.imgurl:item.briefimgurl+''"
-                     :src="(item.briefimgurl==null || item.briefimgurl=='')?item.imgurl:item.briefimgurl+''"
+                     :v-lazy="item.imgurl"
+                     :src="item.imgurl"
                      :key="item.imgurl"
                      :ref="`myImages_${item.id}`"
                 />

@@ -71,7 +71,7 @@ export default {
         target: this.$http.defaults.baseURL + '/uploadChunkFile',
         testChunks: false, // 是否分片-不分片
         allowDuplicateUploads: true,//上传过的文件可以再上传
-        simultaneousUploads: 2,//默认是3
+        simultaneousUploads: 3,//默认是3
         chunkSize: 20 * 1024 * 1024,//分块的大小，默认就是1m = 1*1024*1024
         // 额外的自定义查询参数
         query: (file, chunk) => {
@@ -95,7 +95,8 @@ export default {
                 ret.then(function (data) {
                   return cb(null, response)
                 }, function (info) {
-                  console.log('fileComplete Error')
+                  console.log('fileComplete Error', info)
+                  return cb(true, response)
                 });
               }, 100)
 
@@ -273,11 +274,19 @@ export default {
           this.$Spin.hide();
           this.statusRemove(file.id)
           if (res.status == 200) {
-            var json = res.data.data;
-            if (json != null) {
-              this.$emit('returnImgData', json);
+            if (res.data.code == '200' || res.data.code == '000') {
+              var json = res.data.data;
+              if (json != null) {
+                this.$emit('returnImgData', json);
+                resolve(true);
+              } else {
+                this.$Message.error("响应参数为空，请稍后再试");
+                reject(false)
+              }
+            } else {
+              this.$Message.warning({content: res.data.info, duration: 6});
+              reject(false)
             }
-            resolve(true);
           } else {
             this.$Message.error("请求时出现错误");
             reject(false)

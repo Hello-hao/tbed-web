@@ -27,12 +27,12 @@
             </p>
             <p style="font-size: 14px;"><span>程序官网:</span>&nbsp;
               <a style="line-height: 16px;min-width: 100px;"
-                 href="http://hellohao.cn">hellohao.cn</a>
+                 href="http://hellohao.cn">www.hellohao.cn</a>
             </p>
-            <p style="font-size: 14px;"><span>开发者论坛:</span>&nbsp;
-              <a style="line-height: 16px;min-width: 100px;"
-                 href="http://bbs.hellohao.cn">bbs.hellohao.cn</a>
-            </p>
+            <!--            <p style="font-size: 14px;"><span>开发者论坛:</span>&nbsp;-->
+            <!--              <a style="line-height: 16px;min-width: 100px;"-->
+            <!--                 href="http://bbs.hellohao.cn">bbs.hellohao.cn</a>-->
+            <!--            </p>-->
             <p style="font-size: 14px;"><span>开发者交流群:</span>&nbsp;
               <span style="line-height: 16px;min-width: 100px;">864800972</span>
             </p>
@@ -195,25 +195,60 @@
   </Layout>
 </template>
 <script>
+import {request} from "@/network/request";
 
 export default {
   name: "about",
   data() {
     return {
       isshow: 0,
-      isAgreementMsg: false
+      isAgreementMsg: false,
+      versionData: null,
     }
   },
   mounted() {
-
+    this.checkVersion();
   },
   methods: {
+    checkVersion() {
+      if (this.$store.state.RoleLevel != 'admin') {
+        return false;
+      }
+      request(
+          "/admin/root/sysVersion",
+          {dates: this.$store.state.version.toFixed(2)}).then(res => {
+        if (res.status == 200) {
+          var json = res.data;
+          if (json.code == '110200' || json.code == '110300') {
+            if (json.code == '110200') {
+              this.versionData = json.data;
+              this.isshow = 1;
+            } else {
+              this.isshow = 0;
+            }
+            this.$store.commit("setSysVersion", json.data);
+          } else {
+            this.isshow = 0;
+          }
+
+        } else {
+          this.$Message.error("请求时出现错误");
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$Message.error('服务器请求错误');
+      })
+    },
     checkUpdate() {
+      if (this.versionData == null || this.$store.state.RoleLevel != 'admin') {
+        this.$Message.info('暂无新版本可以更新');
+        return;
+      }
       this.$Modal.info({
-        title: 'Github获取最新版',
-        content: '进入Github获取最新开源版',
+        title: '新版本提示',
+        content: this.versionData.versionMsg,
         onOk: () => {
-          window.open('https://github.com/Hello-hao/Tbed', '_blank');
+          window.open('https://github.com/Hello-hao/Tbed/releases', '_blank');
         },
         onCancel: () => {
         }

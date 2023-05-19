@@ -240,7 +240,32 @@ export default {
         this.$Message.error('服务器请求错误');
       })
     },
+    checkVersion() {
+      if (this.$store.state.RoleLevel != 'admin') {
+        return false;
+      }
+      request(
+          "/admin/root/sysVersion",
+          {dates: this.$store.state.version.toFixed(2)}).then(res => {
+        if (res.status == 200) {
+          var json = res.data;
+          if (json.code == '110200' || json.code == '110300') {
+            if (json.code == '110200') {
+              this.isshow = 1;
+            } else {
+              this.isshow = 0;
+            }
+            this.$store.commit("setSysVersion", json.data);
+          } else {
+            this.isshow = 0;
+          }
 
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$Message.error('服务器请求错误');
+      })
+    },
   },
   mounted() {
     this.$Spin.hide();
@@ -254,7 +279,7 @@ export default {
         // console.log("屏幕宽度=="+this.screenWidth);
       })()
     }
-
+    this.checkVersion();
   },
   computed: {
     menuitemClasses: function () {

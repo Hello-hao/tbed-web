@@ -42,14 +42,12 @@ function getWebInfo() {
             if (json) {
                 json.splitline = "-";
                 store.commit("cahngeMetaInfo", json);
-
                 var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
                 link.type = 'image/x-icon';
                 link.rel = 'shortcut icon';
                 link.href = json.webfavicons ? json.webfavicons : '';
                 document.getElementsByTagName('head')[0].appendChild(link);
                 if (json.baidu != null && json.baidu != '') {
-                    // console.log('开始百度统计+', json.baidu)
                     window._hmt = _hmt;
                     (function () {
                         var hm = document.createElement("script");
@@ -58,13 +56,6 @@ function getWebInfo() {
                         s.parentNode.insertBefore(hm, s);
                     })();
                 }
-
-                // const scriptInfo = document.createElement("script")
-                // scriptInfo.type = "text/javascript"
-                // scriptInfo.setAttribute("data-callType","callScript")
-                // // scriptInfo.contains(`console.log(666666666666666666)`)
-                // // scriptInfo.src = "需要引入的js路径"
-                // document.head.appendChild(scriptInfo)
             }
             resolve();
         }).catch(error => {
@@ -107,10 +98,12 @@ Vue.use(Iview).use(preview, options).use(uploader).use(Viewer, {
 }).use(MetaInfo).use(contentmenu)
 
 Vue.use(VueLazyload, {
+    lazyComponent: true,
     preLoad: 1.3,
     error: img404,
     loading: imgloading,
-    attempt: 1
+    attempt: 1,
+    throttleWait: 500,//节流等待时间(通过调节此值可以查看loading的效果，根据实际情况调节)
 })
 
 axios.defaults.withCredentials = true;
