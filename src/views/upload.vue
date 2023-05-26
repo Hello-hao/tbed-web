@@ -83,7 +83,7 @@
         </div>
         <div v-else class="demo-upload-list" v-for="(item,index) in uploadList" v-bind:key="item.imguid">
           <template>
-            <img style="cursor:pointer;" preview="2" :data-pswp-uid="index" :preview-text="item.name"
+            <img style="cursor:pointer;object-fit: cover;" preview="2" :data-pswp-uid="index" :preview-text="item.name"
                  :srcset="item.briefimgurl?item.briefimgurl:item.url" :src="item.url"/>
             <div class="demo-upload-list-cover">
               <Icon type="md-checkmark-circle" style="margin: 0 5px;"

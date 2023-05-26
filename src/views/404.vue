@@ -9,11 +9,8 @@
         <br/>
         <Button type="primary" shape="circle" @click.native="goHome">返回首页</Button>
       </div>
-
     </Content>
-
     <!--      <Footer class="layout-footer-center">2020-2021 &copy; Hellohao</Footer>-->
-
   </Layout>
   <!--  </div>-->
 </template>

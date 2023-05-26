@@ -86,7 +86,6 @@ export default {
         },
         // 处理请求结果
         processResponse(response, cb, file, chunk) {
-
           const json = JSON.parse(response)
           if (json.data.totalChunks == json.data.chunkNumber) {
             if (json.code == '200') {
@@ -98,7 +97,7 @@ export default {
                   console.log('fileComplete Error', info)
                   return cb(true, response)
                 });
-              }, 100)
+              }, 300)
 
             } else {
               return cb(true, response)
@@ -107,9 +106,6 @@ export default {
             //说明不是最后一个分块，正常返回值
             return cb(null, response)
           }
-
-          // self.tests('12332322')
-
         },
         processParams: function (params, File) {
           // var datas = File.params;
@@ -359,7 +355,6 @@ export default {
         statusTag.style.backgroundColor = statusMap[status].bgc
         // document.querySelector(`.file_${id} .uploader-file-status span`).style.display = 'none'
         let spanList = document.querySelectorAll(`.file_${id} .uploader-file-status>span`)
-        // console.log(spanList);
         if (spanList.length > 0) {
           for (let i = 0; i < spanList.length; i++) {
             spanList[i].style.display = 'none'
@@ -374,6 +369,12 @@ export default {
       this.$nextTick(() => {
         const statusTag = document.querySelector(`.custom-status-${id}`)
         statusTag.remove()
+        let spanList = document.querySelectorAll(`.file_${id} .uploader-file-status>span`)
+        if (spanList.length > 0) {
+          for (let i = 0; i < spanList.length; i++) {
+            spanList[i].style.display = 'block'
+          }
+        }
       })
     },
 
