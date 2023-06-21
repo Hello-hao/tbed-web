@@ -9,7 +9,7 @@
         <div class="layout-nav" v-show="true">
           <Menu mode="horizontal" theme="light" active-name="1">
             <MenuItem name="men01">
-              <img @click="goHome" :src="$store.state.metaInfo.logo==null?hellohaologo:$store.state.metaInfo.logo"
+              <img @click="goHome" :src="$store.state.metaInfo.logo=='hellohao'?hellohaologo:$store.state.metaInfo.logo"
                    style="width: 135px;vertical-align: middle;"/>
             </MenuItem>
             <!--              <MenuItem   @click.native="goHome">-->

@@ -12,7 +12,7 @@
             <Form ref="formInline" :model="formInline" :rules="ruleInline" inline @submit.native.prevent>
               <FormItem prop="email" style="display: inline-block;width: 80%;">
                 <Input prefix="md-mail" :maxlength="100" size="large" v-model="formInline.email"
-                       placeholder="User Email" style="width: 100%;height: 40px;"/>
+                       placeholder="Email Or UserName" style="width: 100%;height: 40px;"/>
               </FormItem>
               <FormItem prop="password" style="display: inline-block;width: 80%;">
                 <Input prefix="md-lock" :maxlength="200" @keyup.enter.native="handleSubmit('formInline')" size="large"
@@ -189,7 +189,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.formInline.email == '' || this.formInline.email == null) {
-            this.$Message.info('请输入邮箱');
+            this.$Message.info('请输入账号');
             return false;
           }
           if (this.formInline.password == '' || this.formInline.password == null) {

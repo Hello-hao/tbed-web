@@ -231,7 +231,7 @@
                            style="max-width: 500px;"/>
                   </FormItem>
                   <FormItem label="站点LOGO" :label-width="90">
-                    <Input v-model="config.logo" maxlength="500" placeholder="请输入LOGO链接"/>
+                    <Input v-model="config.logo" maxlength="500" placeholder="请输入LOGO链接(输入‘hellohao’使用默认)"/>
                   </FormItem>
                   <FormItem label="favicon图标" :label-width="90">
                     <Input v-model="config.webfavicons" maxlength="500" placeholder="请输入站点favicon图标URL地址"/>

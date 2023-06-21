@@ -17,66 +17,6 @@
       </div>
     </Drawer>
 
-    <!--    <Header-->
-    <!--        :style="{position: 'fixed', width: '100%',zIndex:'1',padding:'0 10px',height: '64px',background: '#fff',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}"-->
-    <!--        class="animate__animated animate__fadeInDownBig">-->
-    <!--      <Menu mode="horizontal" style="height: 64px;" theme="light" :active-name="$route.params.activeName">-->
-    <!--        <div class="layout-logo" style="height: 100%;">-->
-    <!--          <img :src="($store.state.metaInfo.logo==null || $store.state.metaInfo.logo=='')?hellohaologo:$store.state.metaInfo.logo"-->
-    <!--               style="width: 135px;height: 100%;margin-left: 35px;"/>-->
-    <!--        </div>-->
-    <!--        <div class="layout-nav">-->
-    <!--          <template v-if="screenWidth<=568">-->
-    <!--            <MenuItem name="ishome" @click.native="homeClick">-->
-    <!--              <Icon type="md-home" style="font-size: 30px; line-height: 2;color: #515a6e;"/>-->
-    <!--            </MenuItem>-->
-    <!--            <Dropdown trigger="click" name="iscontrol" style="margin-right: 26px;">-->
-    <!--              <a href="javascript:void(0)" style="color: #515a6e;text-decoration: none;">-->
-    <!--                <Icon type="md-speedometer" style="font-size: 30px; line-height: 2;"/>&nbsp;-->
-    <!--                <Icon type="ios-arrow-down"></Icon>-->
-    <!--              </a>-->
-    <!--              <DropdownMenu slot="list">-->
-    <!--                <template @click.native="controlClick" v-if="this.$store.state.loginStatus">-->
-    <!--                  <DropdownItem name="isadmin" @click.native="adminClick">控制台</DropdownItem>-->
-    <!--                  <DropdownItem name="exit" @click.native="exit">退出</DropdownItem>-->
-    <!--                </template>-->
-    <!--                <template @click.native="loginClick" v-else>-->
-    <!--                  <DropdownItem name="login" @click.native="loginClick">登录</DropdownItem>-->
-    <!--                </template>-->
-    <!--                <DropdownItem name="about" @click.native="about">关于</DropdownItem>-->
-    <!--              </DropdownMenu>-->
-    <!--            </Dropdown>-->
-    <!--          </template>-->
-    <!--          <template v-else>-->
-    <!--            <MenuItem name="ishome" @click.native="homeClick">-->
-    <!--              <Icon type="md-home" style="color: rgb(81, 90, 110);"/>-->
-    <!--              <span style="color: rgb(81, 90, 110);">首页</span>-->
-    <!--            </MenuItem>-->
-    <!--            <Dropdown trigger="click" name="iscontrol" style="margin-right: 26px;">-->
-    <!--              <a href="javascript:void(0)" style="color: #FFF;text-decoration: none;">-->
-    <!--                <Icon type="md-speedometer" style="color: rgb(81, 90, 110);"/>&nbsp;-->
-    <!--                <span style="color: rgb(81, 90, 110);">管理</span>-->
-    <!--                <Icon type="ios-arrow-down" style="color: rgb(81, 90, 110);"></Icon>-->
-    <!--              </a>-->
-    <!--              <DropdownMenu slot="list">-->
-    <!--                <template @click.native="controlClick" v-if="this.$store.state.loginStatus">-->
-    <!--                  <DropdownItem name="isadmin" @click.native="adminClick">控制台</DropdownItem>-->
-    <!--                  <DropdownItem name="exit" @click.native="exit">退出</DropdownItem>-->
-    <!--                </template>-->
-    <!--                <template @click.native="loginClick" v-else>-->
-    <!--                  <DropdownItem name="login" @click.native="loginClick">登录</DropdownItem>-->
-    <!--                  <DropdownItem name="login" @click.native="registerClick">注册</DropdownItem>-->
-    <!--                </template>-->
-    <!--                <DropdownItem name="about" @click.native="about">关于</DropdownItem>-->
-    <!--              </DropdownMenu>-->
-    <!--            </Dropdown>-->
-    <!--          </template>-->
-    <!--          <Badge :status="$store.state.loginStatus?'success':'warning'"/>-->
-    <!--        </div>-->
-    <!--      </Menu>-->
-    <!--    </Header>-->
-
-
     <Header
         :style="{position: 'fixed', width: '100%',zIndex:'2',padding:'0 10px',height: '64px',background: 'rgba(255, 255, 255, .55)',boxShadow:'0 1px 6px 0 rgba(32, 33, 36, 0.28)'}"
         class="animate__animated animate__fadeInDownBig">
@@ -84,7 +24,7 @@
         <div class="layout-logo" style="height: 100%;">
           <!--          <img :src="(metaInfo.logo==null || metaInfo.logo=='')?hellohaologo:metaInfo.logo" style="width: 135px;margin-left: 10px;vertical-align: middle;" />-->
           <img
-              :src="($store.state.metaInfo.logo==null || $store.state.metaInfo.logo=='')?hellohaologo:$store.state.metaInfo.logo"
+              :src="$store.state.metaInfo.logo=='hellohao'?hellohaologo:$store.state.metaInfo.logo"
               style="width: 135px;margin-left: 10px;vertical-align: middle;"/>
         </div>
         <div class="layout-nav">
@@ -138,6 +78,7 @@
             <Button size="large" icon="md-color-palette" style="font-size: 19px;" title="更多功能"
                     @click="getTools"></Button>
             <Button size="large" icon="ios-copy" style="font-size: 19px;" title="复制全部" @click="getCopyMsg"></Button>
+            <!--            <Button size="large" icon="md-checkmark-circle-outline" title="全选" @click="allSelect"></Button>-->
           </ButtonGroup>
         </Tooltip>
       </div>
@@ -198,7 +139,7 @@
             <Icon type="md-information-circle" size="16"/>
             关 于
           </ListItem>
-          <ListItem style="text-indent: 26px;" @click="exit">
+          <ListItem style="text-indent: 26px;" @click.native="exit">
             <Icon type="md-exit" size="16"/>
             退 出
           </ListItem>
@@ -333,11 +274,11 @@ export default {
         this.urlTexts_html = '';
         this.urlTexts_md = '';
         for (let i = 0; i < arr.length; i++) {
-          if (arr[i].response.code == '200') {
-            this.urlTexts_url += arr[i].response.data.url + '\n'
-            this.urlTexts_html += '<img src="' + arr[i].response.data.url + '" alt="' + arr[i].response.data.name + '" />\n'
-            this.urlTexts_md += '![' + arr[i].response.data.name + '](' + arr[i].response.data.url + ')\n';
-          }
+          // if (arr[i].response.code == '200') {
+          this.urlTexts_url += arr[i].url + '\n'
+          this.urlTexts_html += '<img src="' + arr[i].url + '" alt="' + arr[i].name + '" />\n'
+          this.urlTexts_md += '![' + arr[i].name + '](' + arr[i].url + ')\n';
+          // }
         }
       }
     },
@@ -364,10 +305,8 @@ export default {
             this.urlTexts_diy = '';
             let reg = new RegExp('@myurl@', 'g')//g代表全部
             for (let i = 0; i < arr.length; i++) {
-              if (arr[i].response.code == '200') {
-                var temp = this.myurl.replace(reg, arr[i].response.data.url);
-                this.urlTexts_diy += temp + '\n'
-              }
+              var temp = this.myurl.replace(reg, arr[i].url);
+              this.urlTexts_diy += temp + '\n'
             }
           }
       }

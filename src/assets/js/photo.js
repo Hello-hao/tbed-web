@@ -34,19 +34,22 @@ export default {
             type: 'picture',
             bucketname: null,
             bucketlist: [],
-            selectUserType: 'me',
-            searchtype: '1',//查询的文本类型
-            searchtext: null,//查询的文本
-            searchname: null,//图像名称
-            searchbucket: '',
-            searchStartDate: null,
-            searchStopDate: null,
+            searchData: {
+                selectUserType: 'me',
+                order: 'desc',
+                searchname: null,//图像名称
+                searchbucket: '',
+                searchtext: null,//查询的文本
+                searchtype: '1',//查询的文本类型
+                searchStartDate: null,
+                searchStopDate: null,
+                violation: false,
+            },
             submitData: [],
             toolBottom: 10,
             nextButloading: false,
             btntext: '加载更多',
             treePopup: false,
-            violation: false,
             moveImgLoading: false,
             noImgMsg: false,//没有图像的时候提示
             //画廊
@@ -109,25 +112,29 @@ export default {
         lookImg(img) {
             this.$refs[`myImages_${img.id}`][0].click()
         },
-        selectPhoto() {
+        selectPhoto(t) {
             // this.$Spin.show();
             this.nextButloading = true;
             var paramJson = {};
             paramJson.pageNum = this.pageNum;
             paramJson.pageSize = this.pageSize;
-            paramJson.selectUserType = this.selectUserType;
-            paramJson.searchname = this.searchname;
-            if (this.selectUserType == 'me') {
+            paramJson.selectUserType = this.searchData.selectUserType;
+            paramJson.searchname = this.searchData.searchname;
+            if (this.searchData.selectUserType == 'me') {
                 paramJson.selecttype = null;
                 paramJson.username = null;
             } else {
-                paramJson.selecttype = this.searchtype;
-                paramJson.username = this.searchtext;
+                paramJson.selecttype = this.searchData.searchtype;
+                paramJson.username = this.searchData.searchtext;
             }
-            paramJson.source = this.searchbucket;
-            paramJson.starttime = this.searchStartDate == '' ? null : this.searchStartDate;
-            paramJson.stoptime = this.searchStopDate == '' ? null : this.searchStopDate;
-            paramJson.violation = this.violation;
+            paramJson.source = this.searchData.searchbucket;
+            paramJson.starttime = this.searchData.searchStartDate == '' ? null : this.searchData.searchStartDate;
+            paramJson.stoptime = this.searchData.searchStopDate == '' ? null : this.searchData.searchStopDate;
+            paramJson.violation = this.searchData.violation;
+            paramJson.order = this.searchData.order;
+            if (t == 'search') {
+                this.closeDrawer();
+            }
             this.treePopup = false;
             request(
                 "/admin/selectPhoto",
@@ -251,11 +258,11 @@ export default {
         },
         startDateChange(e) {
             console.log(e)
-            this.searchStartDate = e;
+            this.searchData.searchStartDate = e;
         },
         stopDateChange(e) {
             console.log(e)
-            this.searchStopDate = e;
+            this.searchData.searchStopDate = e;
         },
         compareDate(checkStartDate, checkEndDate) {
             var arys1 = new Array();
@@ -278,7 +285,7 @@ export default {
             this.imglist = [];
             this.clearSelectData();
             this.pageNum = 1;
-            this.selectPhoto();
+            this.selectPhoto('search');
         },
         imgInfo(e) {
             this.isimginfo = true;
@@ -340,9 +347,10 @@ export default {
                 paramJson).then(res => {
                 if (res.status != 200) {
                     this.$Message.error("请求时出现错误");
-                } else {
-                    this.TimeingDelImg();
                 }
+                // else {
+                //     this.TimeingDelImg();
+                // }
             }).catch(err => {
                 console.log(err);
                 this.$Message.error('服务器请求错误');
@@ -363,6 +371,7 @@ export default {
             that.delOver = false;
             var paramJson = {}
             paramJson.uuid = 'DEL-' + that.pageUUID;
+            console.log('定时器')
             var interval = setInterval(function () {
                 let res = that.GetDelprogress(paramJson);
                 res.then(function (data) {
@@ -379,9 +388,9 @@ export default {
                     }
                     if (that.delOver) {
                         clearInterval(interval);
+                        debugger;
                         that.isDelfun = false;
                         that.$Message.success("删除完成");
-                        that.clearSelectData();
                         if (data.errorlist != null) {
                             if (data.errorlist > 0) {
                                 that.isDelImgModal = true;
@@ -396,7 +405,7 @@ export default {
                 });
 
                 temp = true;
-            }, 800);
+            }, 600);
         },
         getBucketName(id) {
             this.bucketname = "";
@@ -615,7 +624,24 @@ export default {
         menuImgInfo() {
             this.imgInfo(this.rightClickData)
         },
-
+        hideDrawer() {
+            this.treePopup = false;
+            this.closeDrawer();
+        },
+        closeDrawer() {
+            console.log('清空')
+            this.searchData = {
+                selectUserType: 'me',
+                order: 'desc',
+                searchname: null,//图像名称
+                searchbucket: '',
+                searchtext: null,//查询的文本
+                searchtype: '1',//查询的文本类型
+                searchStartDate: null,
+                searchStopDate: null,
+                violation: false,
+            }
+        },
 
     },
     components: {

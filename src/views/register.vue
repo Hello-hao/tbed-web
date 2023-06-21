@@ -11,7 +11,7 @@
           <Content>
             <Form ref="formInline" :model="formInline" :rules="ruleInline" inline @submit.native.prevent>
               <FormItem prop="username" style="display: inline-block;width: 80%;">
-                <Input prefix="md-contact" size="large" :maxlength="20" show-word-limit v-model="formInline.username"
+                <Input prefix="md-contact" size="large" :maxlength="30" show-word-limit v-model="formInline.username"
                        autocomplete="new-password" placeholder="用户名 可数字字母下划线"
                        style="width: 100%;height: 40px;"/>
               </FormItem>
@@ -89,7 +89,7 @@ export default {
       ruleInline: {
         username: [
           {required: true, message: ' ', trigger: 'blur'},
-          {type: 'string', min: 5, max: 20, message: '用户名长度为5-20位数字或字母', trigger: 'blur'}
+          {type: 'string', min: 5, max: 30, message: '用户名长度为5-30位数字或字母', trigger: 'blur'}
         ],
         email: [
           {required: true, min: 5, max: 200, message: ' ', trigger: 'blur'}

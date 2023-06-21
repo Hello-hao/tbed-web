@@ -127,7 +127,7 @@
               <Input v-model="albumData.password" style="width: auto;width: 100px;"/>
               <Button style="position: absolute;right: 30px;" size="small" type="primary" shape="circle"
                       class="cobyOrderSn" data-clipboard-action="copy"
-                      :data-clipboard-text="'画廊链接：'+albumData.url+'提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'"
+                      :data-clipboard-text="'画廊链接： '+albumData.url+' 提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'"
                       @click.native="copy">复 制
               </Button>
             </FormItem>

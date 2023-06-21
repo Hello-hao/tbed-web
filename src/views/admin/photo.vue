@@ -23,31 +23,42 @@
         <Icon type="ios-alert-outline" size="16"/>&nbsp;详&nbsp;情
       </v-contextmenu-item>
     </v-contextmenu>
-    <Drawer title="图像类别" :closable="false" v-model="treePopup" :width="screenWidth<=368?screenWidth:368">
+    <Drawer title="图像筛选" :closable="false" v-model="treePopup" @on-close="closeDrawer"
+            :width="screenWidth<=368?screenWidth:368">
       <Form @submit.native.prevent style="margin-top: 30px;">
         <Divider plain>图像分类</Divider>
-        <FormItem>
-          <RadioGroup v-model="selectUserType" type="button" style="width: 100%">
+        <FormItem style="width: 100%;text-align: center;">
+          <RadioGroup v-model="searchData.selectUserType" type="button" style="width: 100%">
             <Radio label="me">我的图像</Radio>
             <Radio label="all">用户图像</Radio>
           </RadioGroup>
         </FormItem>
+        <FormItem>
+          <Select v-model="searchData.order" style="width:100%" placeholder="筛选排序方式">
+            <Option value="desc" key="desc">时间倒序</Option>
+            <Option value="asc" key="asc">时间顺序</Option>
+            <Option value="sizeDesc" key="sizeDesc">大小倒序</Option>
+            <Option value="sizeAsc" key="sizeAsc">大小顺序</Option>
+          </Select>
+        </FormItem>
         <Divider plain>名称搜索</Divider>
         <FormItem>
-          <Input style="width: 100%" size="default" v-model="searchname" placeholder="图像名称/url名称(可模糊搜索)">
+          <Input style="width: 100%" size="default" v-model="searchData.searchname"
+                 placeholder="图像名称/地址后缀(可模糊搜索)">
           </Input>
         </FormItem>
         <Divider plain>高级选项（选填）</Divider>
         <FormItem v-if="$store.state.RoleLevel=='admin'">
-          <Select style="width: 100%;" v-model="searchbucket" filterable clearable placeholder="存储源(默认全部)">
+          <Select style="width: 100%;" v-model="searchData.searchbucket" filterable clearable
+                  placeholder="存储源(默认全部)">
             <Option v-for="item in bucketlist" :value="item.id" :key="item.id">
               {{ item.keyname }}
             </Option>
           </Select>
         </FormItem>
-        <FormItem v-if="$store.state.RoleLevel=='admin' && selectUserType=='all'">
-          <Input style="width: 100%" size="default" v-model="searchtext" placeholder="填写用户名">
-            <Select v-model="searchtype" slot="prepend" style="width: 80px">
+        <FormItem v-if="$store.state.RoleLevel=='admin' && searchData.selectUserType=='all'">
+          <Input style="width: 100%" size="default" v-model="searchData.searchtext" placeholder="填写用户名">
+            <Select v-model="searchData.searchtype" slot="prepend" style="width: 80px">
               <Option value="1">包含</Option>
               <Option value="0">排除</Option>
             </Select>
@@ -61,16 +72,16 @@
           <DatePicker style="width: 100%;" @on-change="stopDateChange" format="yyyy-MM-dd HH:mm:ss" type="datetime"
                       split-panels placeholder="结束日期段(默认当前日期)"></DatePicker>
         </FormItem>
-
         <FormItem>
           <CheckboxGroup>
-            <Checkbox label="违规图片" v-model="violation" border></Checkbox>
+            <Checkbox label="违规图片" v-model="searchData.violation" border></Checkbox>
           </CheckboxGroup>
         </FormItem>
+
       </Form>
       <div style="width: 100%; height: 55px; position: fixed; bottom: 0; left: 0;text-align: right; padding: 10px;">
         <div style="width: 75px; display: inline-block;">
-          <Button shape="circle" @click="treePopup = false">取消</Button>
+          <Button shape="circle" @click="hideDrawer">取消</Button>
         </div>
         <div style="width: 75px; display: inline-block;">
           <Button type="primary" shape="circle" @click="tosearch">检索</Button>
@@ -131,9 +142,9 @@
         <div class="" id="box" ref="dom">
           <ul id="sortAble">
             <li v-for="(item,index) in imglist" :ref="`imgLi_${item.id}`" :key="index" v-contextmenu:contextmenu>
-              <div>
+              <div :style="{width: imgWidth+'px', height:imgWidth+'px'}">
                 <span class="formatTag">{{ item.imgname.substr(item.imgname.lastIndexOf("\.") + 1) }}</span>
-                <img :style="{width: imgWidth+'px', }" :id="'myimg_'+index" :alt="item.imgurl"
+                <img :style="{width: imgWidth+'px', }" :id="'myimg_'+index"
                      :v-lazy="item.imgurl"
                      :src="item.imgurl"
                      :key="item.imgurl"
@@ -250,7 +261,7 @@
           <Input v-model="albumData.password" style="width: auto;width: 100px;"/>
           <Button style="position: absolute;right: 30px;" size="small" type="primary" shape="circle" class="cobyOrderSn"
                   data-clipboard-action="copy"
-                  :data-clipboard-text="'画廊链接：'+albumData.url+'提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'"
+                  :data-clipboard-text="'画廊链接： '+albumData.url+' 提取码：'+albumData.password+' 复制这段内容后用浏览器打开，即可查看画廊哦'"
                   @click.native="copy">复 制
           </Button>
         </FormItem>
@@ -440,8 +451,8 @@ circle {
 }
 
 .myselect {
-  width: 20px;
-  height: 20px;
+  width: 1.8em;
+  height: 1.8em;
   box-shadow: 0 1px 6px rgba(58, 58, 58, .2);
   border-radius: 4px;
   position: absolute;
