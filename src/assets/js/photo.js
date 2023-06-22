@@ -388,7 +388,6 @@ export default {
                     }
                     if (that.delOver) {
                         clearInterval(interval);
-                        debugger;
                         that.isDelfun = false;
                         that.$Message.success("删除完成");
                         if (data.errorlist != null) {

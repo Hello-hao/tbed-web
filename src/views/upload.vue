@@ -157,18 +157,31 @@
     <!--URL上传窗-->
     <Modal v-model="urlUploadMsg" :footer-hide="true">
       <br/>
-      <Form @submit.native.prevent>
-        <FormItem>
-          <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"
-                 placeholder="图像链接请按照每行一条填写(部分非直链图像或防盗链图像可能会转存失败)"/>
+<!--      <Form @submit.native.prevent>-->
+<!--        <FormItem>-->
+<!--          <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"-->
+<!--                 placeholder="图像链接请按照每行一条填写(部分非直链图像或防盗链图像可能会转存失败)"/>-->
+<!--        </FormItem>-->
+<!--        <p style="text-align: center;color: #d55757;" v-show="tempURLErr">您所输入的行数已经超过单次可上传的数量</p>-->
+<!--        <p style="text-align: center;color: #5f5f5f;"-->
+<!--           v-text="'单次批量上传 '+tempLink+'/'+this.uploadInfo.imgcount"></p>-->
+<!--        <FormItem>-->
+<!--          <Button :disabled="tempURLErr" type="primary" :loading="loading" icon="md-cloud-upload" long shape="circle"-->
+<!--                  @click="uploadForUrl">开始转存-->
+<!--          </Button>-->
+<!--        </FormItem>-->
+<!--      </Form>-->
+      <Form  @submit.native.prevent>
+        <FormItem >
+          <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"   placeholder="图像链接请按照每行一条填写(部分非直链图像可能会转存失败)" />
         </FormItem>
-        <p style="text-align: center;color: #d55757;" v-show="tempURLErr">您所输入的行数已经超过单次可上传的数量</p>
-        <p style="text-align: center;color: #5f5f5f;"
-           v-text="'单次批量上传 '+tempLink+'/'+this.uploadInfo.imgcount"></p>
+        <Input v-model="referer" placeholder="选填：图片链接所在的网站网址(可解决防盗链)">
+          <Button slot="append" icon="md-help-circle" @click.native="urlUploadHelp"></Button>
+        </Input>
+        <p style="text-align: center;color: #d98282;" v-show="tempURLErr" >所输入行数已超过单次最大限制</p>
+        <p style="text-align: center;color: #5f5f5f;" v-text="'单次批量上传 '+tempLink+'/'+this.uploadInfo.imgcount"></p>
         <FormItem>
-          <Button :disabled="tempURLErr" type="primary" :loading="loading" icon="md-cloud-upload" long shape="circle"
-                  @click="uploadForUrl">开始转存
-          </Button>
+          <Button :disabled="tempURLErr" type="primary" :loading="loading" icon="md-cloud-upload" long shape="circle" @click="uploadForUrl" >开始转存</Button>
         </FormItem>
       </Form>
     </Modal>
