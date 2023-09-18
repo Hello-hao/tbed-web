@@ -12,11 +12,11 @@
             <Form ref="formInline" :model="formInline" :rules="ruleInline" inline @submit.native.prevent>
               <FormItem prop="email" style="display: inline-block;width: 80%;">
                 <Input prefix="md-mail" :maxlength="100" size="large" v-model="formInline.email"
-                       placeholder="Email Or UserName" style="width: 100%;height: 40px;"/>
+                       placeholder="邮箱或用户名" style="width: 100%;height: 40px;"/>
               </FormItem>
               <FormItem prop="password" style="display: inline-block;width: 80%;">
                 <Input prefix="md-lock" :maxlength="200" @keyup.enter.native="handleSubmit('formInline')" size="large"
-                       type="password" password v-model="formInline.password" placeholder="User Password"
+                       type="password" password v-model="formInline.password" placeholder="密码"
                        style="width: 100%;height: 40px;"/>
               </FormItem>
               <FormItem style="display: inline-block;width: 80%;">

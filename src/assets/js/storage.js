@@ -114,6 +114,7 @@ export default {
                 if (res.status == 200) {
                     this.storageList = res.data.data;
                     // this.$Message.error("请求时出现错误");
+                    this.loadInfo = [];
                     this.getLoadInfo()
                 }
             }).catch(err => {
@@ -131,7 +132,6 @@ export default {
                     "/admin/root/LoadInfo",
                     params).then(res => {
                     if (res.status == 200) {
-                        this.loadInfo = [];
                         this.loadInfo.push(res.data.data)
                     }
                 }).catch(err => {
