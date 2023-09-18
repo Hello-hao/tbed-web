@@ -97,6 +97,44 @@
       </Card>
     </Modal>
 
+    <!--再次发送邮箱验证-->
+    <Modal v-model="IsTowSendEmail" :footer-hide="true">
+      <br/>
+      <Card :dis-hover="true" :bordered="false" :shadow="false">
+        <div style="text-align:center">
+          <p style="color: #656565;font-size: 24px;font-weight: bold;">验证邮箱</p>
+          <br/>
+          <br/>
+          <Form ref="formInline" inline @submit.native.prevent>
+            <FormItem prop="email" style="display: inline-block;width: 80%;">
+              <Input prefix="md-mail" :maxlength="100" size="large" disabled :value="towSendEmail.notActiveEmail"
+                     placeholder="User Email" style="width: 100%;height: 40px;"/>
+            </FormItem>
+            <FormItem style="display: inline-block;width: 80%;">
+              <Row>
+                <Col span="16">
+                  <Input prefix="md-barcode" :maxlength="10" v-model="towSendEmail.towSendEmailCode" size="large"
+                         style="width: 100%;height: 40px;"/>
+                </Col>
+                <Col span="4" offset="1">
+                  <img @click="reloadCode('verifyCodeFortowSendEmail')" :src="towSendEmailCodeURL"/>
+                </Col>
+              </Row>
+            </FormItem>
+            <FormItem style="display: inline-block;width: 80%;">
+              <Row>
+                <Button type="primary" shape="circle" style="width: 100%;" :loading="sendLoading"
+                        @click.native="sendEmail">发送验证
+                </Button>
+              </Row>
+            </FormItem>
+          </Form>
+          <br/>
+          <p style="color: #656565;">{{ this.$store.state.metaInfo.webname }} &copy; All Rights Reserved</p>
+        </div>
+      </Card>
+    </Modal>
+
   </Card>
 
 
@@ -125,10 +163,12 @@ export default {
 
   data() {
     return {
+      IsTowSendEmail: false,
       reloadLoading: false,
       IsRetrieveMSG: false,
       verifyCodeURL: null,
       retrieveCodeURL: null,
+      towSendEmailCodeURL: null,
       userToken: null,
       formInline: {
         email: '',
@@ -138,6 +178,10 @@ export default {
       retrieveData: {
         email: null,
         retrieveCode: null,
+      },
+      towSendEmail: {
+        notActiveEmail: null,//未激活的邮箱，只有在登录时 提示账号未激活才会赋值
+        towSendEmailCode: null,
       },
       ruleInline: {
         email: [
@@ -149,8 +193,9 @@ export default {
         ],
         verifyCode: [
           {required: true, message: ' ', trigger: 'blur'}
-        ]
-      }
+        ],
+      },
+      sendLoading: false,
     }
   },
   mounted() {
@@ -175,6 +220,8 @@ export default {
             this.verifyCodeURL = 'data:image/gif;base64,' + json.data.codeImg
           } else if (type == 'verifyCodeForRetrieve') {
             this.retrieveCodeURL = 'data:image/gif;base64,' + json.data.codeImg
+          } else if (type == 'verifyCodeFortowSendEmail') {
+            this.towSendEmailCodeURL = 'data:image/gif;base64,' + json.data.codeImg
           }
         } else {
           this.$Message.error("请求时出现错误");
@@ -212,6 +259,7 @@ export default {
             this.$Spin.hide();
             if (res.status == 200) {
               var json = res.data;
+              console.log(json)
               if (json.code == '200') {
                 this.userToken = json.data.token;
                 var RoleLevel = json.data.RoleLevel;
@@ -226,10 +274,24 @@ export default {
                 // console.log('vuex-token===='+this.$store.state.Authorization);
                 this.$Message.success(json.info);
                 this.$router.replace("/");//index
+              } else if (json.code == '110402') {
+                var than = this
+                than.towSendEmail.notActiveEmail = json.data;
+                than.$Modal.confirm({
+                  title: '账号暂未激活',
+                  content: '<p>没收到激活邮件？需要再次给您下发激活邮件吗？</p>',
+                  onOk: () => {
+                    than.IsTowSendEmail = true
+                    than.getVerifyCode("verifyCodeFortowSendEmail");
+                  },
+                  onCancel: () => {
+                    than.reloadCode('verifyCode');
+                  }
+                });
               } else {
                 this.reloadCode('verifyCode');
                 this.formInline.verifyCode = '';
-                this.$Message.error(json.info);
+                this.$Message.warning(json.info);
               }
             } else {
               this.$Message.error("请求时出现错误");
@@ -300,6 +362,46 @@ export default {
       });
 
     },
+
+    sendEmail() {
+      var that = this
+      if (that.towSendEmail.towSendEmailCode == null || that.towSendEmail.towSendEmailCode == '') {
+        that.$Message.warning('请输入验证码');
+        return;
+      }
+      if (that.towSendEmail.notActiveEmail == null || that.towSendEmail.notActiveEmail == '') {
+        that.$Message.warning('未获取到有效用户信息');
+        return;
+      }
+      that.sendLoading = true;
+      request(
+          "/user/validateEmail",
+          {email: that.towSendEmail.notActiveEmail, towSendEmailCode: that.towSendEmail.towSendEmailCode}).then(res => {
+        that.reloadCode('verifyCodeFortowSendEmail');
+        that.sendLoading = false;//释放按钮
+        if (res.status == 200) {
+          var json = res.data;
+          if (json.code == '200') {
+            that.IsTowSendEmail = false;//关闭弹窗
+            that.towSendEmail.notActiveEmail = null
+            that.$Message.success({
+              content: json.info,
+              duration: 5
+            });
+          } else {
+            that.$Message.warning({
+              content: json.info,
+              duration: 5
+            });
+          }
+        } else {
+          that.$Message.error("请求时出现错误");
+        }
+      }).catch(err => {
+        console.log(err);
+        that.sendLoading = true;//释放按钮
+      })
+    }
 
   },
 

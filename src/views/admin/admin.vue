@@ -26,7 +26,7 @@
                   <Icon type="md-contact"/>
                   <span>个人中心</span>
                 </template>
-                <MenuItem name="photo" @click.native="adminmenuItem('/photo','个人中心')">我的相册</MenuItem>
+                <MenuItem name="photo" @click.native="adminmenuItem('/photo','个人中心')">相册空间</MenuItem>
                 <MenuItem name="gallery" @click.native="adminmenuItem('/gallery','个人中心')">画廊管理</MenuItem>
               </Submenu>
               <Submenu name="men5">
@@ -98,7 +98,7 @@
             <Panel name="1">
               <span style="font-weight: bold">个人中心</span>
               <List size="small" slot="content" :split="false">
-                <ListItem style="text-indent: 34px;" @click.native="adminmenuItem('/photo','个人中心')">我的相册
+                <ListItem style="text-indent: 34px;" @click.native="adminmenuItem('/photo','个人中心')">相册空间
                 </ListItem>
                 <ListItem style="text-indent: 34px;" @click.native="adminmenuItem('/gallery','个人中心')">画廊管理
                 </ListItem>

@@ -124,6 +124,9 @@ axios.interceptors.request.use(config => {
     if (config.url.indexOf('user/register') != -1) {
         config.headers.verifyCodeForRegister = localStorage.getItem('verifyCodeForRegister');
     }
+    if (config.url.indexOf('user/validateEmail') != -1) {
+        config.headers.verifyCodeFortowSendEmail = localStorage.getItem('verifyCodeFortowSendEmail');
+    }
     config.headers.usersOrigin = md5(window.location.protocol + '//' + window.location.host)
     if (store.state.Authorization) {
         config.headers.Authorization = localStorage.getItem('Authorization');
@@ -146,6 +149,7 @@ axios.interceptors.response.use(config => {
     } else if (config.data.code == 403) {
         location.replace("/login");
     }
+    console.log("==" + JSON.stringify(config))
     return config;
 }, error => {
     console.log("拦截器-相应错误：" + error);

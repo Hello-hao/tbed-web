@@ -50,6 +50,7 @@ export default {
             loading: false,
             urlUploadMsg: false,
             termMsg: false,//上传期限的弹窗
+            referer:null,
             imgUrl: null,
             uploadInfo: {
                 // - 图片支持格式
@@ -239,6 +240,14 @@ export default {
                 this.selectIndex.splice(this.selectIndex.indexOf(key), 1);
             }
         },
+        urlUploadHelp(){
+            this.$Modal.info({
+                title: "什么是防盗链域名？",
+                content: "<div style='width: 100%word-break: break-all;word-wrap: break-word;'>此选择为选填内容，目的是解决部分网址的防盗链功能。<br />" +
+                    "如：你想转存微博的图片地址：<br /><b>https://wx2.sinaimg.cn/mw690/s542fSdgwegsd.jpg</b><br />" +
+                    "但是微博图片的链接有防盗链，你就需要在此网址框输入上图片链接所在的网站域名：<br /><b>https://weibo.com/</b></div>"
+            });
+        },
         uploadForUrl() {
             if (this.imgUrl == null || this.imgUrl == '') {
                 this.$Message.warning("请先输入图像链接");
@@ -247,7 +256,7 @@ export default {
             if (this.imgUrl != null && this.imgUrl != '') {
                 if (this.imgUrl.indexOf("http") != -1 && this.imgUrl.indexOf("://") != -1 && this.imgUrl.indexOf(".") != -1) {
                     this.loading = true;
-                    this.sendUploadForUrl(this.imgUrl);
+                    this.sendUploadForUrl(this.imgUrl,this.referer);
                     this.loading = false;
                     this.urlUploadMsg = false;
                     this.spinShow = true;
@@ -258,9 +267,10 @@ export default {
                 this.$Message.warning("请先输入图像链接");
             }
         },
-        sendUploadForUrl(urlText) {
+        sendUploadForUrl(urlText,referer) {
             var param = {
                 day: this.img_day,
+                referer:referer,
                 imgUrl: urlText,
             }
             request(
@@ -281,6 +291,7 @@ export default {
                             }
                         }
                         this.imgUrl = null;
+                        this.referer = null;
                         var text = "";
                         if (jsonData.excess > 0) {
                             text = "欲上传总数为: <font color='#6495ed' style='font-size: 16px;'>" + jsonData.counts +
@@ -296,6 +307,7 @@ export default {
                             content: text
                         });
                         this.imgUrl = null;
+                        this.referer = null;
                     } else {
                         this.$Message.warning(res.data.info);
                     }
