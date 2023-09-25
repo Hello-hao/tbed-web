@@ -628,7 +628,6 @@ export default {
             this.closeDrawer();
         },
         closeDrawer() {
-            console.log('清空')
             this.searchData = {
                 selectUserType: 'me',
                 order: 'desc',

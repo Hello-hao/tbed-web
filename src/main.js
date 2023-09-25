@@ -149,7 +149,6 @@ axios.interceptors.response.use(config => {
     } else if (config.data.code == 403) {
         location.replace("/login");
     }
-    console.log("==" + JSON.stringify(config))
     return config;
 }, error => {
     console.log("拦截器-相应错误：" + error);
