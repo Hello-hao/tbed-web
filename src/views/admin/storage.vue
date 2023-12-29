@@ -165,7 +165,7 @@
         </div>
         <div v-else style="min-height: 130px;text-align: center;color: #9ea7b4;line-height: 35px;">
           <p> Hellohao图像托管</p>
-          <p>为获取到正确存储源</p>
+          <p>未获取到正确存储源</p>
         </div>
         <FormItem>
           <Button type="primary" icon="md-done-all" long shape="circle" @click="save">保 存</Button>

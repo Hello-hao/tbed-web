@@ -9,6 +9,7 @@ export default {
     name: "photo",
     data() {
         return {
+            bigImg:require("../img/bigImg.jpg"),
             pageUUID: null,
             imgWidth: 160,
             rightClickData: {},
@@ -71,7 +72,10 @@ export default {
                 selectImgUrl: [],
                 selectImgUid: [],
             },
-
+            delPrompt:false,//删除提示框控制
+            forceDel:false,//是否强制删除
+            delLoading:false,
+            imgIndex:null,//当前大图浏览的图片下标
         }
     },
     created() {
@@ -81,11 +85,11 @@ export default {
         this.pageUUID = uuidv4();
         //滚轮监听
         window.addEventListener("scroll", this.handleScroll, true);
-        if (this.$refs.dom.clientWidth <= 356) {
-            this.imgWidth = 130;
-        } else {
-            this.imgWidth = 160;
-        }
+        // if (this.$refs.dom.clientWidth <= 356) {
+        //     this.imgWidth = 130;
+        // } else {
+        //     this.imgWidth = 160;
+        // }
         const that = this
         window.onresize = () => {
             return (() => {
@@ -109,9 +113,22 @@ export default {
         this.selectPhoto();
     },
     methods: {
-        lookImg(img) {
-            this.$refs[`myImages_${img.id}`][0].click()
+        // lookImg(img) {
+        //     this.$refs[`myImages_${img.id}`][0].click()
+        // },
+        setImgIndex(index) {
+            try{
+                if(Number(this.imglist[index].sizes)>52428800){
+                    this.$Message.warning("该图片过大，网站查看可能存在卡顿，请下载后在本机查看。");
+                } else {
+                    this.imgIndex = index
+                }
+            }catch (e) {
+                console.error(e)
+                this.imgIndex = index
+            }
         },
+
         selectPhoto(t) {
             // this.$Spin.show();
             this.nextButloading = true;
@@ -144,6 +161,9 @@ export default {
                         var arr = res.data.data.rows;
                         this.nextButloading = false;
                         if (arr.length > 0) {
+                            arr = arr.map(({ imgurl, ...rest }) => {
+                                return { src: imgurl, ...rest };
+                            });
                             this.imglist = this.imglist.concat(arr);
                             this.pageNum++;
                             if (this.imglist.length < this.pageSize) {
@@ -176,11 +196,11 @@ export default {
             } else {
                 this.select.selectIndex.splice(this.select.selectIndex.indexOf(item.id), 1);
             }
-            if (this.select.selectImgUrl.indexOf(item.imgurl) == -1) {
-                this.select.selectImgUrl.push(item.imgurl);
+            if (this.select.selectImgUrl.indexOf(item.src) == -1) {
+                this.select.selectImgUrl.push(item.src);
                 this.rightClickData = item
             } else {
-                this.select.selectImgUrl.splice(this.select.selectImgUrl.indexOf(item.imgurl), 1);
+                this.select.selectImgUrl.splice(this.select.selectImgUrl.indexOf(item.src), 1);
             }
 
             if (this.select.selectImgUid.indexOf(item.imguid) == -1) {
@@ -243,7 +263,7 @@ export default {
             this.clearSelectData();
             for (let i = 0; i < this.imglist.length; i++) {
                 this.select.selectIndex.push(this.imglist[i].id);
-                this.select.selectImgUrl.push(this.imglist[i].imgurl);
+                this.select.selectImgUrl.push(this.imglist[i].src);
                 this.select.selectImgUid.push(this.imglist[i].imguid);
             }
             this.$Message.success("已选中" + this.select.selectIndex.length + "张图像");
@@ -329,19 +349,20 @@ export default {
 
         },
         sendDeleteImages(id, index) {
-            var paramJson = {};
+            var paramJson = {}
             if (id == null) {
                 if (this.select.selectIndex.length == 0) {
                     this.$Message.warning("所选数据丢失，不可操作");
-                    return false;
+                    return false
                 }
             } else {
-                this.select.selectIndex = [];
-                this.select.selectIndex.push(id);
+                this.select.selectIndex = []
+                this.select.selectIndex.push(id)
             }
-            paramJson.images = this.select.selectIndex.toString() + "";
-            paramJson.uuid = 'DEL-' + this.pageUUID;
-            this.delImgCount = this.select.selectIndex.length;
+            paramJson.images = this.select.selectIndex.toString() + ""
+            paramJson.uuid = 'DEL-' + this.pageUUID
+            paramJson.forceDel = this.forceDel
+            this.delImgCount = this.select.selectIndex.length
             request(
                 "/admin/deleImages",
                 paramJson).then(res => {
@@ -594,32 +615,37 @@ export default {
             if (this.select.selectIndex.length == 0) {
                 this.clearSelectData();
                 this.select.selectIndex.push(data.id)
-                this.select.selectImgUrl.push(data.imgurl)
+                this.select.selectImgUrl.push(data.src)
                 this.select.selectImgUid.push(data.imguid)
             } else {
                 if (this.select.selectIndex.indexOf(data.id) == -1) {
                     this.clearSelectData();
                     this.select.selectIndex.push(data.id)
-                    this.select.selectImgUrl.push(data.imgurl)
+                    this.select.selectImgUrl.push(data.src)
                     this.select.selectImgUid.push(data.imguid)
                 }
             }
         },
 
-        async rightClickDelete() {
-            var than = this;
-            than.$Modal.confirm({
-                title: '提醒',
-                content: '<p>是否删除所选图像？</p>',
-                onOk: () => {
-                    if (than.select.selectIndex.length > 0) {
-                        this.deleteImages(null, null);
-                    }
-                },
-                onCancel: () => {
-                }
-            });
+        rightClickDelete(){
+            this.forceDel = false //强制删除 恢复默认false
+            this.delPrompt = true
         },
+
+        // async rightClickDelete() {
+        //     var than = this;
+        //     than.$Modal.confirm({
+        //         title: '提醒',
+        //         content: '<p>是否删除所选图像？</p>',
+        //         onOk: () => {
+        //             if (than.select.selectIndex.length > 0) {
+        //                 this.deleteImages(null, null);
+        //             }
+        //         },
+        //         onCancel: () => {
+        //         }
+        //     });
+        // },
         menuImgInfo() {
             this.imgInfo(this.rightClickData)
         },
@@ -639,6 +665,17 @@ export default {
                 searchStopDate: null,
                 violation: false,
             }
+        },
+        //删除提示框
+        async asyncOK(){
+            this.delPrompt = false
+            this.delLoading = true
+            var than = this
+            if(than.select.selectIndex.length>0){
+                this.deleteImages(null,null);
+            }
+            than.delLoading = false
+
         },
 
     },

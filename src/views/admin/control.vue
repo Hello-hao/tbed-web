@@ -238,7 +238,7 @@
                       <div style="height: 290px;width: 100%;padding: 8px;overflow: auto">
                         <List>
                           <ListItem v-for="(img,index) in Recently.RecentlyUploaded" :key="index">
-                            <ListItemMeta :avatar="img.imgurl" :title="img.updatetime"/>
+                            <ListItemMeta :avatar="img.sizes>52428800?bigImg:img.imgurl" :title="img.updatetime"/>
                           </ListItem>
                         </List>
                       </div>
@@ -319,6 +319,7 @@ export default {
       top2: require("../../assets/img/NO.2.png"),
       top3: require("../../assets/img/NO.3.png"),
       usertop: require("../../assets/img/usertop.png"),
+      bigImg:require("../../assets/img/bigImg.jpg"),
       ok: 'false',
       imgTotal: 0,
       userTotal: 0,

@@ -139,46 +139,47 @@
             </DropdownMenu>
           </Dropdown>
         </p>
-        <div class="" id="box" ref="dom">
-          <ul id="sortAble">
-            <li v-for="(item,index) in imglist" :ref="`imgLi_${item.id}`" :key="index" v-contextmenu:contextmenu>
-              <div :style="{width: imgWidth+'px', height:imgWidth+'px'}">
-                <span class="formatTag">{{ item.imgname.substr(item.imgname.lastIndexOf("\.") + 1) }}</span>
-                <img :style="{width: imgWidth+'px', }" :id="'myimg_'+index"
-                     :v-lazy="item.imgurl"
-                     :src="item.imgurl"
-                     :key="item.imgurl"
-                     :ref="`myImages_${item.id}`"
-                />
-                <svg @click="selectImgs(item)" t="1664620013040" class="icon myselect"
-                     :style="{'background':select.selectIndex.indexOf(item.id)>-1?'#FFF':'#a5a5a5'}"
-                     viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6479" width="200"
-                     height="200">
-                  <path
-                      d="M771.607273 359.726545l-289.28 349.09091a34.839273 34.839273 0 0 1-50.594909 3.374545l-176.174546-162.909091a34.955636 34.955636 0 0 1-1.931636-49.361454 34.978909 34.978909 0 0 1 49.338182-1.931637l149.131636 137.890909 265.728-320.698182a34.932364 34.932364 0 0 1 53.783273 44.544M884.363636 46.545455H139.636364C88.436364 46.545455 46.545455 88.436364 46.545455 139.636364v744.727272c0 51.2 41.890909 93.090909 93.090909 93.090909h744.727272c51.2 0 93.090909-41.890909 93.090909-93.090909V139.636364c0-51.2-41.890909-93.090909-93.090909-93.090909"
-                      :fill="select.selectIndex.indexOf(item.id)>-1?'#1580ff':'#FFF'" p-id="6480"></path>
-                </svg>
-                <div class="topCeng" :style="{background: item.violation==null?'':'rgb(255,0,0, .36)'}"
-                     @click="lookImg(item)"></div>
-              </div>
-            </li>
-          </ul>
-        </div>
+<!--        <div class="" id="box" ref="dom">-->
+<!--          <ul id="sortAble">-->
+<!--            <li v-for="(item,index) in imglist" :ref="`imgLi_${item.id}`" :key="index" v-contextmenu:contextmenu>-->
+<!--              <div :style="{width: imgWidth+'px', height:imgWidth+'px'}">-->
+<!--                <span class="formatTag">{{ item.imgname.substr(item.imgname.lastIndexOf("\.") + 1) }}</span>-->
+<!--                <img :style="{width: imgWidth+'px', }" :id="'myimg_'+index"-->
+<!--                     :v-lazy="item.imgurl"-->
+<!--                     :src="item.imgurl"-->
+<!--                     :key="item.imgurl"-->
+<!--                     :ref="`myImages_${item.id}`"-->
+<!--                />-->
+<!--                <svg @click="selectImgs(item)" t="1664620013040" class="icon myselect"-->
+<!--                     :style="{'background':select.selectIndex.indexOf(item.id)>-1?'#FFF':'#a5a5a5'}"-->
+<!--                     viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6479" width="200"-->
+<!--                     height="200">-->
+<!--                  <path-->
+<!--                      d="M771.607273 359.726545l-289.28 349.09091a34.839273 34.839273 0 0 1-50.594909 3.374545l-176.174546-162.909091a34.955636 34.955636 0 0 1-1.931636-49.361454 34.978909 34.978909 0 0 1 49.338182-1.931637l149.131636 137.890909 265.728-320.698182a34.932364 34.932364 0 0 1 53.783273 44.544M884.363636 46.545455H139.636364C88.436364 46.545455 46.545455 88.436364 46.545455 139.636364v744.727272c0 51.2 41.890909 93.090909 93.090909 93.090909h744.727272c51.2 0 93.090909-41.890909 93.090909-93.090909V139.636364c0-51.2-41.890909-93.090909-93.090909-93.090909"-->
+<!--                      :fill="select.selectIndex.indexOf(item.id)>-1?'#1580ff':'#FFF'" p-id="6480"></path>-->
+<!--                </svg>-->
+<!--                <div class="topCeng" :style="{background: item.violation==null?'':'rgb(255,0,0, .36)'}"-->
+<!--                     @click="lookImg(item)"></div>-->
+<!--              </div>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </div>-->
+        <div class="image-grid"  id="box" ref="dragElement">
+          <div v-for="(item,index) in imglist" :ref="`imgLi_${item.id}`" :key="index" attrtype="image" :itemid="item.id" v-contextmenu:contextmenu class="image-item">
+            <img class="image"
+                 :id="'myimg_'+index" :alt="item.src"
+                 v-lazy="Number(item.sizes)>52428800?bigImg:item.src+''"
+                 loading="lazy"
+                 :src="Number(item.sizes)>52428800?bigImg:item.src+''"
+                 :key="item.src"
+                 :ref="`myImages_${item.id}`"
+                 @click="setImgIndex(index)"
+            />
+            <div v-if="item.violation!=null" class="imgMask" @click="setImgIndex(index)"></div>
+            <svg  @click="selectImgs(item)" t="1664620013040" class="icon myselect" :style="{'background':select.selectIndex.indexOf(item.id)>-1?'#FFF':'#a5a5a5'}" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6479" width="200" height="200"><path d="M771.607273 359.726545l-289.28 349.09091a34.839273 34.839273 0 0 1-50.594909 3.374545l-176.174546-162.909091a34.955636 34.955636 0 0 1-1.931636-49.361454 34.978909 34.978909 0 0 1 49.338182-1.931637l149.131636 137.890909 265.728-320.698182a34.932364 34.932364 0 0 1 53.783273 44.544M884.363636 46.545455H139.636364C88.436364 46.545455 46.545455 88.436364 46.545455 139.636364v744.727272c0 51.2 41.890909 93.090909 93.090909 93.090909h744.727272c51.2 0 93.090909-41.890909 93.090909-93.090909V139.636364c0-51.2-41.890909-93.090909-93.090909-93.090909" :fill="select.selectIndex.indexOf(item.id)>-1?'#1580ff':'#FFF'" p-id="6480"></path></svg>
 
-        <!--           <Row class="animate__animated animate__fadeIn animate__delay-1.5s">-->
-        <!--            <Col flex="1" v-for="(item,index) in imglist" :key="index" v-contextmenu:contextmenu>-->
-        <!--              <div class="imgdivstyle divimgstyle-min">-->
-        <!--                <span class="formatTag">{{item.imgurl.substr(item.imgurl.lastIndexOf("\.")+1)}}</span>-->
-        <!--                <img   class="imgstyle imgstyle-min" style="cursor:pointer;" v-lazy="item.imgurl+''" :src="item.imgurl+''"  :key="item.imgurl"   >-->
-        <!--                <div class="img-tool-cover" :style="{bottom:toolBottom+ 'px'}">-->
-        <!--                  <Icon style="cursor:pointer;" @click.native="selectImgs(item)" :type="selectIndex.indexOf(item.id)>-1?'ios-checkmark-circle':'ios-checkmark-circle-outline'" :class="{'icostylecolor' : selectIndex.indexOf(item.id)>-1}"  class="icostyle"  title="选择" ></Icon>-->
-        <!--                  <Icon style="cursor:pointer;" type="md-link icostyle"   title="链接" @click.native="showCopyImgUrl(item)" />-->
-        <!--                  <Icon style="cursor:pointer;" type="md-trash icostyle" @click.native="delImg(item.id,index)"  title="删除" ></Icon>-->
-        <!--                  <Icon style="cursor:pointer;" :color="item.violation==null?'':'rgb(228 102 70)'" type="md-information-circle icostyle" @click.native="imgInfo(item)" title="信息"></Icon>-->
-        <!--                </div>-->
-        <!--              </div>-->
-        <!--            </Col>-->
-        <!--          </Row>-->
+          </div>
+        </div>
 
         <div style="width: 100%;text-align: center;color: #797b7f;" v-show="noImgMsg">
           <Icon type="ios-filing" size="56"/>
@@ -273,7 +274,20 @@
         <p>对方通过扫码即可访问画廊</p>
       </div>
     </Modal>
-
+    <Modal
+        v-model="delPrompt"
+        @on-ok="asyncOK"
+        :loading="delLoading"
+        width="400">
+      <p>确定删除所选图像吗？</p>
+      <br />
+      <p>
+        <Checkbox v-model="forceDel"><span style="color: indianred">强制删除</span></Checkbox>
+        <Tooltip max-width="200" content="图片源无论是否删除成功，也要删除该图像的记录（适用于存储源失效等意外情况导致记录删不掉）">
+          <Icon type="md-help-circle" style="cursor: pointer;" size="18" color="#6e6e6e" />
+        </Tooltip>
+      </p>
+    </Modal>
     <!-- 删除失败的图像 -->
     <Modal v-model="isDelImgModal" :footer-hide="true" title="存在删除失败的图像，请检查">
       <Form @submit.native.prevent :label-width="70"
@@ -381,7 +395,34 @@ circle {
 }
 
 /*图像列表样式开始*/
-#box {
+
+.image-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-gap: 10px; /* 设置图片之间的间距 */
+}
+.folder-grid{
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-gap: 15px; /* 设置图片之间的间距 */
+}
+.image-item {
+  position: relative;
+  height: 200px;
+  overflow: hidden; /* 确保图片不会溢出其容器 */
+  border-radius: 4px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 确保图片不会拉伸，并且填充整个容器 */
+  cursor: pointer;
+}
+
+/*#box {
   margin-top: 28px;
 }
 
@@ -389,29 +430,29 @@ circle {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  /*position: absolute;*/
-  /*top: 220px;*/
-}
+  !*position: absolute;*!
+  !*top: 220px;*!
+}*/
 
-#box li {
-  /*padding: 3px;*/
+/*#box li {
+  !*padding: 3px;*!
   list-style: none;
   margin: 10px;
   position: relative;
-  /*border: 1px solid #eee;*/
-}
+  !*border: 1px solid #eee;*!
+}*/
 
-#box img {
+/*#box img {
   cursor: pointer;
   height: 145px;
-  /*height: 115px;*/
+  !*height: 115px;*!
   object-fit: cover;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
   transform: translateZ(0);
   transition: all 0.6s ease-in;
   -webkit-transition: all 0.6s ease-in;
-}
+}*/
 
 /*图像列表样式  结束*/
 /*.countTag{*/

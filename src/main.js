@@ -7,9 +7,9 @@ import Iview from 'view-design'
 import clipboard from 'clipboard'
 import preview from 'vue-photo-preview'
 import VueLazyload from 'vue-lazyload'
-import Viewer from 'v-viewer';
+// import Viewer from 'v-viewer';
 import MetaInfo from 'vue-meta-info';
-import 'viewerjs/dist/viewer.css'
+// import 'viewerjs/dist/viewer.css'
 import 'vue-photo-preview/dist/skin.css'
 import "animate.css"
 import 'view-design/dist/styles/iview.css'
@@ -91,11 +91,7 @@ var options = {
     timeToIdle: 4000
 };
 
-Vue.use(Iview).use(preview, options).use(uploader).use(Viewer, {
-    defaultOptions: {
-        navbar: false
-    }
-}).use(MetaInfo).use(contentmenu)
+Vue.use(Iview).use(preview, options).use(uploader).use(MetaInfo).use(contentmenu)
 
 Vue.use(VueLazyload, {
     lazyComponent: true,
