@@ -83,8 +83,9 @@
         </div>
         <div v-else class="demo-upload-list" v-for="(item,index) in uploadList" v-bind:key="item.imguid">
           <template>
-            <img style="cursor:pointer;object-fit: cover;" preview="2" :data-pswp-uid="index" :preview-text="item.name"
-                 :srcset="item.briefimgurl?item.briefimgurl:item.url" :src="item.url"/>
+<!--            <img style="cursor:pointer;object-fit: cover;" preview="2" :data-pswp-uid="index" :preview-text="item.name"-->
+<!--                 :srcset="item.briefimgurl?item.briefimgurl:item.url" :src="item.url"/>-->
+            <img style="cursor:pointer;object-fit: cover;" @click="setImgIndex(index)" :src="item.sizes>52428800?bigImg:item.src?item.src:''" />
             <div class="demo-upload-list-cover">
               <Icon type="md-checkmark-circle" style="margin: 0 5px;"
                     :style="{color:(selectIndex.indexOf(item.imguid)>=0?'#43b984':'#c7c7c7')}"

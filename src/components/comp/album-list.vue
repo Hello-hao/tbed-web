@@ -75,7 +75,7 @@
         </div>
       </Drawer>
       <Content :style="{margin: '15px 5px 0', }" style="overflow-y: auto;height: 500px;">
-        <viewer>
+<!--        <viewer>-->
           <Row class="animate__animated animate__fadeIn animate__delay-1.5s">
             <Col flex="1" v-for="(item,index) in imglist" :key="index">
               <div class="imgdivstyle_exp divimgstyle-min_exp">
@@ -91,7 +91,7 @@
             <Icon type="ios-filing" size="56"/>
             <p>当前未找到任何图像</p>
           </div>
-        </viewer>
+<!--        </viewer>-->
         <div class="example-code-more">
           <Button type="dashed" :loading="nextButloading" @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'"
                   long>{{ btntext }}

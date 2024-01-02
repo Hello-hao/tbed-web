@@ -90,7 +90,6 @@
     </Drawer>
     <!--        minHeight: '500px'-->
     <Content :style="{margin: '15px 5px 0', }">
-      <viewer :images="imglist">
         <p style="position: fixed;right: 30px;z-index: 1;bottom: 68px;">
           <Button type="primary" shape="circle" icon="ios-search"
                   style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;"
@@ -186,7 +185,6 @@
           <p>当前未找到任何图像</p>
         </div>
 
-      </viewer>
       <div class="example-code-more">
         <Button type="dashed" :loading="nextButloading" @click="selectPhoto" :disabled="btntext=='所有数据加载完毕'"
                 long>
@@ -194,6 +192,14 @@
         </Button>
       </div>
     </Content>
+
+    <CoolLightBox
+        :items="imglist"
+        :index="imgIndex"
+        loop
+        @close="imgIndex = null">
+    </CoolLightBox>
+
     <!--详细信息-->
     <Modal v-model="isimginfo" :footer-hide="true">
 
@@ -363,7 +369,21 @@
 }
 </style>
 <style>
-
+/*违规图像遮罩*/
+.imgMask{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  border-radius: 5px;
+  backdrop-filter: blur(6px);
+  background-image: url("../../assets/img/notlook.png");
+  background-repeat: no-repeat;
+  background-size: 28%;
+  background-position: center;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
 circle {
   fill: none;
   stroke: #2f72fc;
@@ -395,7 +415,6 @@ circle {
 }
 
 /*图像列表样式开始*/
-
 .image-grid {
   margin-top: 20px;
   display: grid;

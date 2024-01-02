@@ -21,6 +21,7 @@
     "moment": "^2.29.1",
     "prerender-spa-plugin": "^3.4.0",
     "puppeteer": "^10.4.0",
+    "qs": "^6.11.2",
     "spark-md5": "^3.0.2",
     "uuid": "^9.0.0",
     "v-contextmenu": "^2.9.0",

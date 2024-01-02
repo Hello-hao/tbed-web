@@ -25,7 +25,8 @@ import imgloading from './assets/img/imgloading.gif'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
 import '@/assets/css/hamburgers.min.css';
-
+import CoolLightBox from 'vue-cool-lightbox'
+import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 Vue.config.productionTip = false
 
 Vue.prototype.clipboard = clipboard
@@ -91,7 +92,7 @@ var options = {
     timeToIdle: 4000
 };
 
-Vue.use(Iview).use(preview, options).use(uploader).use(MetaInfo).use(contentmenu)
+Vue.use(Iview).use(preview, options).use(uploader).use(MetaInfo).use(contentmenu).use(CoolLightBox)
 
 Vue.use(VueLazyload, {
     lazyComponent: true,

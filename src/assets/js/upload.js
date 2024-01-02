@@ -50,7 +50,6 @@ export default {
             loading: false,
             urlUploadMsg: false,
             termMsg: false,//上传期限的弹窗
-            referer:null,
             imgUrl: null,
             referer:null,
             uploadInfo: {
@@ -129,6 +128,9 @@ export default {
         returnImgData(data) {
             // console.log('上传页面接到的返回值',data)
             this.uploadList.push(data)
+            this.uploadList = this.uploadList.map(({ url, ...rest }) => {
+                return { src: url, ...rest };
+            });
             this.$store.commit("setCopyAllUrl", this.uploadList);
             this.$emit('showBtn', this.uploadList);
         },
@@ -156,6 +158,9 @@ export default {
             }).then(res => {
                 if (res.data.code == '200') {
                     this.uploadList.push(res.data.data)
+                    this.uploadList = this.uploadList.map(({ url, ...rest }) => {
+                        return { src: url, ...rest };
+                    });
                     this.$store.commit("setCopyAllUrl", this.uploadList);
                     this.$emit('showBtn', this.uploadList);
                 } else {
@@ -234,6 +239,9 @@ export default {
                 this.$Message.info('请选择要操作的图片');
             }
         },
+        setImgIndex(index) {
+            this.imgIndex = index
+        },
         clickImg(key) {
             if (this.selectIndex.indexOf(key) == -1) {
                 this.selectIndex.push(key);
@@ -271,7 +279,6 @@ export default {
         sendUploadForUrl(urlText,referer) {
             var param = {
                 day: this.img_day,
-                referer:referer,
                 imgUrl: urlText,
                 referer:referer,
             }
@@ -288,6 +295,9 @@ export default {
                                 this.uploadList.push(jsonData.urls[i].data)
                             }
                             if (this.uploadList.length > 0) {
+                                this.uploadList = this.uploadList.map(({ url, ...rest }) => {
+                                    return { src: url, ...rest };
+                                });
                                 this.$store.commit("setCopyAllUrl", this.uploadList);
                                 this.$emit('showBtn', this.uploadList);
                             }
@@ -368,10 +378,10 @@ export default {
         },
         getImgLink(img) {
             var host = window.location.host;
-            this.imgLinkForUrl = img.url;
+            this.imgLinkForUrl = img.src;
             this.imgLinkForBriefimgurl = img.briefimgurl;
-            this.imgLinkForHtml = '<img src="' + img.url + '" alt="' + img.name + '" />';
-            this.imgLinkForMD = '![' + img.name + '](' + img.url + ')';
+            this.imgLinkForHtml = '<img src="' + img.src + '" alt="' + img.name + '" />';
+            this.imgLinkForMD = '![' + img.name + '](' + img.src + ')';
             this.IsImgLink = true;
         },
         copyBtn() {
@@ -441,36 +451,7 @@ export default {
                 }
             }
         },
-        urlUploadHelp(){
-            this.$Modal.info({
-                title: "图片",
-                content: "<div style='width: 100%word-break: break-all;word-wrap: break-word;'>此选择为选填内容，目的是解决部分网址的防盗链功能。<br />" +
-                    "如：你想转存微博的图片地址：<br /><b>https://wx2.sinaimg.cn/mw690/s542fSdgwegsd.jpg</b><br />" +
-                    "但是微博图片的链接有防盗链，你就需要在此网址框输入上图片链接所在的网站域名：<br /><b>https://weibo.com/</b></div>"
-            });
-        },
-        imgOnOk() {
-            // var op = 0;
-            // var than = this;
-            // var interval = null
-            // try {
-            //     interval = setInterval(function(){
-            //         than.$refs.webbgimg.style.opacity=op+' ';
-            //         than.$refs.webbgimg.style.display = 'block'
-            //         op = op+0.1
-            //         if(op>=0.9){
-            //             clearInterval(interval);
-            //         }
-            //     },100)
-            // }catch (err){
-            //     clearInterval(interval);
-            //     console.log(err)
-            // }
-        },
-        imgOnError() {
-            console.log("imgOnError-none")
-            this.$refs.webbgimg.style.display = 'none'
-        },
+
         //颜色排序
         sortColor(colors) {
             var than = this

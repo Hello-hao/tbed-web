@@ -275,9 +275,9 @@ export default {
         this.urlTexts_md = '';
         for (let i = 0; i < arr.length; i++) {
           // if (arr[i].response.code == '200') {
-          this.urlTexts_url += arr[i].url + '\n'
-          this.urlTexts_html += '<img src="' + arr[i].url + '" alt="' + arr[i].name + '" />\n'
-          this.urlTexts_md += '![' + arr[i].name + '](' + arr[i].url + ')\n';
+          this.urlTexts_url += arr[i].src + '\n'
+          this.urlTexts_html += '<img src="' + arr[i].src + '" alt="' + arr[i].name + '" />\n'
+          this.urlTexts_md += '![' + arr[i].name + '](' + arr[i].src + ')\n';
           // }
         }
       }
@@ -305,7 +305,7 @@ export default {
             this.urlTexts_diy = '';
             let reg = new RegExp('@myurl@', 'g')//g代表全部
             for (let i = 0; i < arr.length; i++) {
-              var temp = this.myurl.replace(reg, arr[i].url);
+              var temp = this.myurl.replace(reg, arr[i].src);
               this.urlTexts_diy += temp + '\n'
             }
           }
