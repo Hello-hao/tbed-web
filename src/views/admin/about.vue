@@ -36,6 +36,8 @@
             <p style="font-size: 14px;"><span>开发者交流群:</span>&nbsp;
               <span style="line-height: 16px;min-width: 100px;">864800972</span>
             </p>
+            <a href="http://tbed.hellohao.cn" target="_blank" title="升级功能更强大的Core版" class="button">升级Core版本</a>
+
             <Divider/>
             <p style="font-size: 16px;">Hellohao图像托管程序这是一个基于多家对象存储源
               JAVA语言编写SpringBoot框架开发的开源图像托管程序。</p>
@@ -272,6 +274,29 @@ export default {
   position: relative;
   z-index: 2;
   height: 42px;
+}
+
+/*升级Core按钮*/
+.button {
+  display: inline-block;
+  padding: 2px 20px;
+  background-color: #000;
+  color: #ecab69!important; /* 金色 */
+  text-decoration: none;
+  border: 2px solid #ecab69; /* 金色边框 */
+  border-radius: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.button:hover {
+  background-color: #222;
+}
+
+.button:active {
+  background-color: #111;
+  box-shadow: none;
 }
 
 

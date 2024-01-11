@@ -412,6 +412,9 @@ export default {
         if (res.status == 200) {
           if (res.data.code == '200') {
             this.$Message.success(res.data.info);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1300);
           } else {
             this.$Message.error(res.data.info);
           }
