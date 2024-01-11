@@ -229,6 +229,10 @@ export default {
       } else {
         this.urls = 'updateGroup';
       }
+      if(this.formItem.groupname==null){
+        this.$Message.warning("请填写群组名称");
+        return;
+      }
       //addGroup
       request(
           "/admin/root/" + this.urls,
