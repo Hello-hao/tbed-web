@@ -23,11 +23,11 @@
             </p>
             <p style="font-size: 14px;"><span>Github开源:</span>&nbsp;
               <span style="line-height: 16px;min-width: 100px;"><a
-                  href="https://github.com/Hello-hao/Tbed">github.com/Hello-hao/Tbed</a></span>
+                  href="https://github.com/Hello-hao/Tbed" target="_blank">github.com/Hello-hao/Tbed</a></span>
             </p>
             <p style="font-size: 14px;"><span>程序官网:</span>&nbsp;
               <a style="line-height: 16px;min-width: 100px;"
-                 href="http://hellohao.cn">www.hellohao.cn</a>
+                 href="http://hellohao.cn" target="_blank">www.hellohao.cn</a>
             </p>
             <!--            <p style="font-size: 14px;"><span>开发者论坛:</span>&nbsp;-->
             <!--              <a style="line-height: 16px;min-width: 100px;"-->
@@ -279,7 +279,7 @@ export default {
 /*升级Core按钮*/
 .button {
   display: inline-block;
-  padding: 2px 20px;
+  padding: 1px 20px;
   background-color: #000;
   color: #ecab69!important; /* 金色 */
   text-decoration: none;
