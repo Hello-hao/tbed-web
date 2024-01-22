@@ -20,6 +20,7 @@ export default {
             addkeyname: null,
             bucketType: null,
             storageWindow: false,
+            systransmit:false,
             viewType: 'edit',
             bucketlist: [],
             storageList: [],
@@ -72,6 +73,12 @@ export default {
                     "storageType": 8,
                     "keyname": "S3通用协议",
                     "storageName": "S3通用协议"
+                },
+                {
+                    "id": 9,
+                    "storageType": 9,
+                    "keyname": "WebDAV",
+                    "storageName": "WebDAV"
                 }
             ]
 
@@ -195,6 +202,20 @@ export default {
                         this.$Message.warning('相关参数不能为空');
                         return;
                     }
+                }else if(this.bucketType==9){
+                    //webdav
+                    if(this.systransmit == false){
+                        if(!this.addAccessKey || !this.addAccessSecret || !this.addEndpoint || !this.addRequestAddress){
+                            this.$Message.warning('相关参数不能为空');
+                            return;
+                        }
+                    }else{
+                        if(!this.addAccessKey || !this.addAccessSecret || !this.addEndpoint){
+                            this.$Message.warning('相关参数不能为空');
+                            return;
+                        }
+                    }
+
                 }
             }
             if (!this.addkeyname) {
@@ -212,6 +233,7 @@ export default {
             paramJson.RequestAddress = this.addRequestAddress;
             paramJson.keyname = this.addkeyname;
             paramJson.RootPath = this.addRootPath;
+            paramJson.SysTransmit = this.systransmit
             request(
                 "/admin/root/updateStorage",
                 paramJson).then(res => {
@@ -276,6 +298,7 @@ export default {
                         this.addRegion = key.region;
                         this.addRootPath = key.rootPath// this.$Spin.hide();
                         this.storageWindow = true;
+                        this.systransmit = key.sysTransmit==true?true:false
                     }
                 } else {
                     this.$Message.error("请求时出现错误");

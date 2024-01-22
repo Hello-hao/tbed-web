@@ -153,7 +153,35 @@
             </FormItem>
           </div>
 
-          <FormItem label="请求域名">
+          <div v-if="bucketType==9">
+            <FormItem label="账号">
+              <Input v-model="addAccessKey"  size="large" style="width: 100%" />
+            </FormItem>
+            <FormItem label="密码">
+              <Input v-model="addAccessSecret" size="large" style="width: 100%" />
+            </FormItem>
+            <FormItem label="地址">
+              <Tooltip max-width="300" theme="light" style="width: 100%">
+                <Input v-model="addEndpoint" size="large" style="width: 100%" />
+              </Tooltip>
+            </FormItem>
+            <FormItem label="存储目录">
+              <Tooltip content="上传的总路径存储位置，默认为存储源的根目录：/，可设置子目录如：/img" max-width="250" theme="light" style="width: 100%">
+                <Input v-model="addRootPath" size="large" style="width: 100%" />
+              </Tooltip>
+            </FormItem>
+          </div>
+
+          <FormItem label="域名类型" v-if="bucketType==9">
+            <Checkbox v-model="systransmit">系统分发图片
+            </Checkbox>
+            <span>
+              <Tooltip max-width="200" content="此功能适用于支持WebDAV功能但没有文件外链的情况使用，文件的外链可由系统负责生成转发。如：支持WebDAV的网盘">
+                <Icon type="md-alert" size="16" />
+              </Tooltip>
+            </span>
+          </FormItem>
+          <FormItem label="请求域名" v-if="(!systransmit) && bucketType==9">
             <Tooltip content="需带有http://或https:// 结尾不需要带/" max-width="200" theme="light" style="width: 100%">
               <Input v-model="addRequestAddress" size="large"
                      style="width: 100%"/>
