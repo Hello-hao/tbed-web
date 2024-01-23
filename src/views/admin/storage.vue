@@ -161,7 +161,7 @@
               <Input v-model="addAccessSecret" size="large" style="width: 100%" />
             </FormItem>
             <FormItem label="地址">
-              <Tooltip max-width="300" theme="light" style="width: 100%">
+              <Tooltip max-width="300" theme="light" content="需带有http://或https:// 结尾不需要带/" style="width: 100%">
                 <Input v-model="addEndpoint" size="large" style="width: 100%" />
               </Tooltip>
             </FormItem>
@@ -181,7 +181,7 @@
               </Tooltip>
             </span>
           </FormItem>
-          <FormItem label="请求域名" v-if="(!systransmit) && bucketType==9">
+          <FormItem label="请求域名" v-if="(!systransmit) && bucketType==9 && bucketType!=5">
             <Tooltip content="需带有http://或https:// 结尾不需要带/" max-width="200" theme="light" style="width: 100%">
               <Input v-model="addRequestAddress" size="large"
                      style="width: 100%"/>

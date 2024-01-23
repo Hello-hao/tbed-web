@@ -99,8 +99,14 @@
       </div>
     </Card>
 
+    <CoolLightBox
+        :items="uploadList"
+        :index="imgIndex"
+        loop
+        @close="imgIndex = null">
+    </CoolLightBox>
+
     <Modal v-model="visible" :footer-hide="true" width="620">
-      <!--                <img :src="ViewURL" v-if="visible" style="max-height: 70vh; display: table-cell;margin: 0 auto;text-align: center;">-->
       <Tabs>
         <TabPane label="画廊" icon="ios-images">
           <album-list :albumlist="albumlist" @return-data='returnData'/>
@@ -158,20 +164,6 @@
     <!--URL上传窗-->
     <Modal v-model="urlUploadMsg" :footer-hide="true">
       <br/>
-<!--      <Form @submit.native.prevent>-->
-<!--        <FormItem>-->
-<!--          <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"-->
-<!--                 placeholder="图像链接请按照每行一条填写(部分非直链图像或防盗链图像可能会转存失败)"/>-->
-<!--        </FormItem>-->
-<!--        <p style="text-align: center;color: #d55757;" v-show="tempURLErr">您所输入的行数已经超过单次可上传的数量</p>-->
-<!--        <p style="text-align: center;color: #5f5f5f;"-->
-<!--           v-text="'单次批量上传 '+tempLink+'/'+this.uploadInfo.imgcount"></p>-->
-<!--        <FormItem>-->
-<!--          <Button :disabled="tempURLErr" type="primary" :loading="loading" icon="md-cloud-upload" long shape="circle"-->
-<!--                  @click="uploadForUrl">开始转存-->
-<!--          </Button>-->
-<!--        </FormItem>-->
-<!--      </Form>-->
       <Form  @submit.native.prevent>
         <FormItem >
           <Input @on-change="onGetLines" type="textarea" v-model="imgUrl" :rows="5"   placeholder="图像链接请按照每行一条填写(部分非直链图像可能会转存失败)" />
@@ -203,8 +195,6 @@
         </FormItem>
       </Form>
     </Modal>
-
-
     <!--上传期限-->
     <Modal v-model="termMsg" :footer-hide="true">
       <br/>
