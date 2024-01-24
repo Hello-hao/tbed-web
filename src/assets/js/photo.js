@@ -277,11 +277,9 @@ export default {
             }
         },
         startDateChange(e) {
-            console.log(e)
             this.searchData.searchStartDate = e;
         },
         stopDateChange(e) {
-            console.log(e)
             this.searchData.searchStopDate = e;
         },
         compareDate(checkStartDate, checkEndDate) {
@@ -529,12 +527,12 @@ export default {
                             reject(false)
                         }
                     } else {
-                        than.$Message.error("获取进度_请求时出现错误");
+                        console.log("获取进度_请求时出现错误");
                         reject(false)
                     }
                 }).catch(err => {
                     console.log(err);
-                    than.$Message.error('获取进度_服务器请求错误');
+                    // console.log('获取进度_服务器请求错误');
                     reject(false)
                 })
             })

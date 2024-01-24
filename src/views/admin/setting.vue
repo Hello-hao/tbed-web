@@ -223,8 +223,8 @@
                   <FormItem label="后端域名" :label-width="90">
                     <Input v-model="config.domain" maxlength="100" placeholder="请输入后端的服务域名或ip:port"
                            style="max-width: 500px;"/>
-                    <p style="font-size: 12px;">
-                      注意：如果使用本地存储源保存文件，则需要在[存储源设置]-[编辑本地策略]添加后端域名</p>
+<!--                    <p style="font-size: 12px;">-->
+<!--                      注意：如果使用本地存储源保存文件，则需要在[存储源设置]-[编辑本地策略]添加后端域名</p>-->
                   </FormItem>
                   <FormItem label="站点副标题" :label-width="90">
                     <Input v-model="config.websubtitle" maxlength="100" placeholder="请输入网站的副标题"

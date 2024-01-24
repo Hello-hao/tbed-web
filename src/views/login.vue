@@ -259,7 +259,6 @@ export default {
             this.$Spin.hide();
             if (res.status == 200) {
               var json = res.data;
-              console.log(json)
               if (json.code == '200') {
                 this.userToken = json.data.token;
                 var RoleLevel = json.data.RoleLevel;

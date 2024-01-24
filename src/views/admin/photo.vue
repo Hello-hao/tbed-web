@@ -91,12 +91,8 @@
     <!--        minHeight: '500px'-->
     <Content :style="{margin: '15px 5px 0', }">
         <p style="position: fixed;right: 30px;z-index: 1;bottom: 68px;">
-          <Button type="primary" shape="circle" icon="ios-search"
-                  style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;"
-                  @click.native="treePopup = true">筛选
-          </Button>
           <Dropdown trigger="click"
-                    style="z-index: 1;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;border-radius: 50%;">
+                    style="z-index: 1;margin-right: 8px;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;border-radius: 50%;">
             <Button type="primary" shape="circle">
               操作
               <Icon type="ios-arrow-down"></Icon>
@@ -137,6 +133,12 @@
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+
+          <Button type="primary" shape="circle" icon="ios-search"
+                  style="z-index: 1;box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px 0px;"
+                  @click.native="treePopup = true">筛选
+          </Button>
+
         </p>
 <!--        <div class="" id="box" ref="dom">-->
 <!--          <ul id="sortAble">-->
