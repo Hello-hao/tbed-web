@@ -108,6 +108,11 @@
               <Input v-model="addBucketname" size="large" style="width: 100%"/>
             </FormItem>
           </div>
+          <div v-if="(bucketType==5)">
+            <FormItem>
+              <p style="color: #e46646;">使用前请在[站点设置]-[站点配置]中填写后端域名</p>
+            </FormItem>
+          </div>
           <div v-if="(bucketType==7)">
             <FormItem label="FTP账号">
               <Input v-model="addAccessKey" size="large" style="width: 100%"/>
@@ -181,7 +186,7 @@
               </Tooltip>
             </span>
           </FormItem>
-          <FormItem label="请求域名" v-if="(!systransmit) && bucketType==9 && bucketType!=5">
+          <FormItem label="请求域名" v-if="bucketType==8?systransmit==false:bucketType!=5">
             <Tooltip content="需带有http://或https:// 结尾不需要带/" max-width="200" theme="light" style="width: 100%">
               <Input v-model="addRequestAddress" size="large"
                      style="width: 100%"/>
